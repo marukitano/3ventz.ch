@@ -18,6 +18,11 @@ $category = trim((string)($_POST['category'] ?? ''));
 $url = trim((string)($_POST['url'] ?? ''));
 $description = trim((string)($_POST['description'] ?? ''));
 $color = (string)($_POST['color'] ?? '#00f5ff');
+$allowedIcons = ['terminal', 'skull', 'chip', 'radio', 'flag', 'gamepad', 'bug', 'lock'];
+$icon = trim((string)($_POST['icon'] ?? 'terminal'));
+if (!in_array($icon, $allowedIcons, true)) {
+    $icon = 'terminal';
+}
 
 if ($title === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $start)) {
     http_response_code(422);
@@ -52,6 +57,7 @@ $params = [
     'url' => $url !== '' ? $url : null,
     'description' => $description !== '' ? $description : null,
     'color' => $color,
+    'icon' => $icon,
 ];
 
 if ($id > 0) {
@@ -59,13 +65,13 @@ if ($id > 0) {
     $stmt = $pdo->prepare(
         'UPDATE events
          SET title=:title, start_date=:start_date, end_date=:end_date,
-             category=:category, url=:url, description=:description, color=:color
+             category=:category, url=:url, description=:description, color=:color, icon=:icon
          WHERE id=:id'
     );
 } else {
     $stmt = $pdo->prepare(
-        'INSERT INTO events (title,start_date,end_date,category,url,description,color)
-         VALUES (:title,:start_date,:end_date,:category,:url,:description,:color)'
+        'INSERT INTO events (title,start_date,end_date,category,url,description,color,icon)
+         VALUES (:title,:start_date,:end_date,:category,:url,:description,:color,:icon)'
     );
 }
 

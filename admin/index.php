@@ -83,6 +83,10 @@ $iconOptions = [
                         <?php endforeach; ?>
                     </select>
                 </label>
+                <label>
+                    Kurztext (nur ohne Icon)
+                    <input name="short_text" maxlength="64" value="<?= h($edit['short_text'] ?? '') ?>" placeholder="z.B. CCC, CTF, HAM">
+                </label>
             </div>
 
             <p>

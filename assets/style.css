@@ -500,6 +500,26 @@ a { color: inherit; }
     stroke-linejoin: miter;
 }
 
+.event-span-text-overlay {
+    position: absolute;
+    z-index: 2;
+    inset: 0 5px 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: .78rem;
+    line-height: 1;
+    letter-spacing: .04em;
+    white-space: nowrap;
+    text-overflow: clip;
+    text-shadow: 0 1px 1px rgba(0,0,0,.8);
+    opacity: 1;
+    pointer-events: none;
+}
+
 .event-span:focus-visible {
     outline: 1px dashed var(--text);
     outline-offset: -4px;

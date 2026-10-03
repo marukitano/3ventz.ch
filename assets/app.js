@@ -127,7 +127,7 @@
         const outputHeight = output.getBoundingClientRect().height;
         const top = Math.max(
             0,
-            cursorRect.bottom - formRect.top - outputHeight
+            cursorRect.bottom - formRect.top - outputHeight - 2
         );
 
         output.style.top = top + 'px';

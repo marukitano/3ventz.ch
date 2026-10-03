@@ -476,6 +476,7 @@ a { color: inherit; }
     align-items: center;
     justify-content: center;
     color: var(--event-color);
+    background: transparent;
     opacity: .98;
     filter:
         drop-shadow(0 0 3px var(--event-color))
@@ -486,6 +487,7 @@ a { color: inherit; }
     width: 15px;
     height: 15px;
     overflow: visible;
+    background: transparent;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.8;

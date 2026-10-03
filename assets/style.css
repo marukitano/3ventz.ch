@@ -259,8 +259,8 @@ a { color: inherit; }
     position: absolute;
     display: block;
     left: 0;
-    top: 0;
-    transform: none;
+    top: 50%;
+    transform: translateY(-50%);
     min-width: 0;
     max-width: none;
     margin-left: 0;
@@ -575,7 +575,7 @@ button, .button {
 
 
 .terminal-suggestion-list {
-    display: block;
+    display: inline-block;
     width: 100%;
     max-width: 100%;
     white-space: nowrap;

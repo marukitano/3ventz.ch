@@ -229,6 +229,25 @@ a { color: inherit; }
     width: min(38vw, 16ch);
 }
 
+.terminal-hint {
+    display: inline-block;
+    margin-left: .18em;
+    color: var(--muted);
+    font-family: "VT323", "Courier New", monospace;
+    font-size: clamp(1.35rem, 2.15vw, 2rem);
+    line-height: .9;
+    letter-spacing: .01em;
+    opacity: .72;
+    text-shadow: none;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translateY(-.03em);
+}
+
+.terminal-hint[hidden] {
+    display: none;
+}
+
 .cursor {
     display: inline-block;
     color: var(--cyan);

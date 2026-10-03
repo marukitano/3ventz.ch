@@ -157,8 +157,8 @@ function event_short_text(string $text, int $days): string
     }
 
     // Total visible capacity including the leading terminal prompt:
-    // 1 day = 4 chars, 2 = 10, 3 = 16, then +6/day.
-    $maxChars = max(4, ($days * 6) - 2);
+    // 1 day = 5 chars, 2 = 11, 3 = 17, then +6/day.
+    $maxChars = max(5, ($days * 6) - 1);
     $textChars = max(1, $maxChars - 1);
 
     if (function_exists('mb_substr')) {

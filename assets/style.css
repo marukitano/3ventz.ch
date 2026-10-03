@@ -205,6 +205,13 @@ a { color: inherit; }
         0 0 3px rgba(0,245,255,.16);
 }
 
+.prompt-home {
+    display: inline-block;
+    font: inherit;
+    line-height: 1;
+    transform: translateY(.10em);
+}
+
 
 .brand-command-wrap {
     display: inline-flex;

@@ -153,6 +153,15 @@
         // Argument completion for commands that already have their trailing space.
         if (hasSpace && cmd === 'theme') {
             const prefix = (parts[1] || '').toLowerCase();
+
+            if (prefix === '') {
+                suggestions = [...themes];
+                suggestionIndex = 0;
+                suggestionLead = 'theme ';
+                renderSuggestions();
+                return;
+            }
+
             const matches = themes.filter((item) => item.startsWith(prefix));
 
             if (matches.length === 1) {
@@ -162,8 +171,8 @@
                 return;
             }
 
-            if (matches.length > 1 || prefix === '') {
-                suggestions = matches.length ? matches : themes;
+            if (matches.length > 1) {
+                suggestions = matches;
                 suggestionIndex = 0;
                 suggestionLead = 'theme ';
                 renderSuggestions();
@@ -265,6 +274,7 @@
         if (event.key === 'Tab') {
             event.preventDefault();
             complete();
+            return;
         }
     });
 

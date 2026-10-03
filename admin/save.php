@@ -18,6 +18,12 @@ $category = trim((string)($_POST['category'] ?? ''));
 $url = trim((string)($_POST['url'] ?? ''));
 $description = trim((string)($_POST['description'] ?? ''));
 $color = (string)($_POST['color'] ?? '#00f5ff');
+$shortText = trim((string)($_POST['short_text'] ?? ''));
+if (function_exists('mb_substr')) {
+    $shortText = mb_substr($shortText, 0, 64, 'UTF-8');
+} else {
+    $shortText = substr($shortText, 0, 64);
+}
 $allowedIcons = ['none', 'terminal', 'pebble_rocket', 'pebble_console', 'pebble_toolbox', 'pebble_floppy', 'pebble_location', 'pebble_calendar', 'pebble_warning', 'pebble_microphone', 'pebble_radio'];
 $icon = trim((string)($_POST['icon'] ?? 'terminal'));
 if (!in_array($icon, $allowedIcons, true)) {
@@ -58,6 +64,7 @@ $params = [
     'description' => $description !== '' ? $description : null,
     'color' => $color,
     'icon' => $icon,
+    'short_text' => $shortText !== '' ? $shortText : null,
 ];
 
 if ($id > 0) {
@@ -65,13 +72,14 @@ if ($id > 0) {
     $stmt = $pdo->prepare(
         'UPDATE events
          SET title=:title, start_date=:start_date, end_date=:end_date,
-             category=:category, url=:url, description=:description, color=:color, icon=:icon
+             category=:category, url=:url, description=:description, color=:color, icon=:icon,
+             short_text=:short_text
          WHERE id=:id'
     );
 } else {
     $stmt = $pdo->prepare(
-        'INSERT INTO events (title,start_date,end_date,category,url,description,color,icon)
-         VALUES (:title,:start_date,:end_date,:category,:url,:description,:color,:icon)'
+        'INSERT INTO events (title,start_date,end_date,category,url,description,color,icon,short_text)
+         VALUES (:title,:start_date,:end_date,:category,:url,:description,:color,:icon,:short_text)'
     );
 }
 

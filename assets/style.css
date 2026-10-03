@@ -139,13 +139,18 @@ body {
 a { color: inherit; }
 
 .shell {
-    width: min(1600px, calc(100% - 28px));
-    margin: 0 auto;
-    padding: 16px 0 14px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 16px 2vw 14px;
 }
 
 .topbar {
     display: flex;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
     align-items: end;
     justify-content: space-between;
     gap: 20px;
@@ -155,8 +160,10 @@ a { color: inherit; }
 }
 
 .identity {
+    position: relative;
     min-width: 0;
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    max-width: 100%;
     overflow: hidden;
 }
 
@@ -166,6 +173,7 @@ a { color: inherit; }
     align-items: baseline;
     width: 100%;
     min-width: 0;
+    max-width: 100%;
     overflow: hidden;
     gap: 0;
     margin: 0;
@@ -248,11 +256,14 @@ a { color: inherit; }
 }
 
 .terminal-output {
+    position: absolute;
     display: block;
-    flex: 1 1 0;
+    left: 0;
+    top: 50%;
+    transform: translateY(-42%);
     min-width: 0;
-    max-width: 100%;
-    margin-left: .28em;
+    max-width: none;
+    margin-left: 0;
     color: var(--pink);
     font-family: "VT323", "Courier New", monospace;
     font-size: clamp(1.55rem, 2.6vw, 2.5rem);
@@ -285,6 +296,9 @@ a { color: inherit; }
 
 .calendar-grid {
     display: grid;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
 }
@@ -561,7 +575,8 @@ button, .button {
 
 
 .terminal-suggestion-list {
-    display: inline-block;
+    display: block;
+    width: 100%;
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;

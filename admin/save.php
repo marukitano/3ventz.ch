@@ -18,7 +18,7 @@ $category = trim((string)($_POST['category'] ?? ''));
 $url = trim((string)($_POST['url'] ?? ''));
 $description = trim((string)($_POST['description'] ?? ''));
 $color = (string)($_POST['color'] ?? '#00f5ff');
-$allowedIcons = ['terminal', 'skull', 'chip', 'radio', 'flag', 'gamepad', 'bug', 'lock'];
+$allowedIcons = ['terminal', 'skull', 'chip', 'radio', 'flag', 'gamepad', 'bug', 'lock', 'soldering_iron'];
 $icon = trim((string)($_POST['icon'] ?? 'terminal'));
 if (!in_array($icon, $allowedIcons, true)) {
     $icon = 'terminal';

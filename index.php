@@ -133,6 +133,18 @@ function event_icon_svg(string $icon): string
     };
 }
 
+function event_icon_mask_uri(string $icon): string
+{
+    $svg = event_icon_svg($icon);
+    $svg = str_replace(
+        '<svg ',
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" ',
+        $svg
+    );
+
+    return 'url("data:image/svg+xml,' . rawurlencode($svg) . '")';
+}
+
 function month_calendar(int $year, int $month, array $eventsByDate): string
 {
     $first = new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month));
@@ -260,10 +272,11 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                         }
                         $hasEventUrl = !empty($event['url']) && $event['url'] !== '#';
                         $style = sprintf(
-                            '--span-start:%d;--span-end:%d;--event-color:%s',
+                            '--span-start:%d;--span-end:%d;--event-color:%s;--event-icon-mask:%s',
                             $segment['start_col'],
                             $segment['end_col'],
-                            h((string)$event['color'])
+                            h((string)$event['color']),
+                            h(event_icon_mask_uri((string)($event['icon'] ?? 'terminal')))
                         );
                     ?>
                         <?php if ($hasEventUrl): ?>
@@ -278,7 +291,6 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                data-event-description="<?= h($event['description'] ?? '') ?>"
                                data-event-url="<?= h($event['url']) ?>"
                                aria-label="<?= h($event['title']) ?>">
-                                <span class="event-span-icon"><?= event_icon_svg((string)($event['icon'] ?? 'terminal')) ?></span>
                             </a>
                         <?php else: ?>
                             <span class="event-span"
@@ -289,7 +301,6 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                   data-event-description="<?= h($event['description'] ?? '') ?>"
                                   aria-label="<?= h($event['title']) ?>"
                                   tabindex="0">
-                                <span class="event-span-icon"><?= event_icon_svg((string)($event['icon'] ?? 'terminal')) ?></span>
                             </span>
                         <?php endif; ?>
                     <?php endforeach; ?>

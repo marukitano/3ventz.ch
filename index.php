@@ -123,6 +123,12 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                 <?php endforeach; ?>
             </div>
         <?php endfor; ?>
+        <?php
+            $usedCells = $offset + $days;
+            for ($i = $usedCells; $i < 42; $i++):
+        ?>
+            <span class="day empty"></span>
+        <?php endfor; ?>
     </div>
     <?php
     return (string)ob_get_clean();
@@ -139,9 +145,23 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
 <body>
     <main class="shell">
         <header class="topbar">
-            <div>
-                <div class="brand">3VENTZ<span class="cursor">_</span></div>
+            <div class="identity">
+                <div class="brand">3VENTZ</div>
                 <div class="tagline">HACK · MAKE · BREAK · MEET</div>
+                <form class="terminal" id="terminal" autocomplete="off">
+                    <span class="terminal-prompt">guest@3ventz:~$</span>
+                    <span class="terminal-input-wrap">
+                        <input
+                            id="terminal-input"
+                            type="text"
+                            spellcheck="false"
+                            aria-label="3ventz command line"
+                            placeholder="type help"
+                        >
+                        <span class="cursor" id="terminal-cursor">_</span>
+                    </span>
+                </form>
+                <div class="terminal-output" id="terminal-output" aria-live="polite"></div>
             </div>
             <nav class="year-nav" aria-label="Jahr wählen">
                 <a href="?year=<?= $year - 1 ?>">‹</a>
@@ -170,5 +190,12 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
             <span>// <?= count($events) ?> events loaded</span>
         </footer>
     </main>
+    <script>
+        window.THREEVENTZ = {
+            year: <?= $year ?>,
+            eventCount: <?= count($events) ?>
+        };
+    </script>
+    <script src="/assets/app.js"></script>
 </body>
 </html>

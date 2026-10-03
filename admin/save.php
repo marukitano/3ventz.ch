@@ -15,6 +15,11 @@ $title = trim((string)($_POST['title'] ?? ''));
 $start = (string)($_POST['start_date'] ?? '');
 $end = trim((string)($_POST['end_date'] ?? ''));
 $category = trim((string)($_POST['category'] ?? ''));
+$allowedCategories = ['CCC', 'DEMO', 'RETRO', 'MAKER', 'MOVIE', 'LAN', 'MUSIC', 'CODING', 'HACKING'];
+if (!in_array($category, $allowedCategories, true)) {
+    http_response_code(422);
+    exit('Ungültige Kategorie.');
+}
 $url = trim((string)($_POST['url'] ?? ''));
 $description = trim((string)($_POST['description'] ?? ''));
 $color = (string)($_POST['color'] ?? '#00f5ff');

@@ -51,9 +51,35 @@
         window.location.href = '?year=' + y;
     };
 
+    const inputSizer = document.createElement('span');
+    inputSizer.setAttribute('aria-hidden', 'true');
+    Object.assign(inputSizer.style, {
+        position: 'absolute',
+        visibility: 'hidden',
+        pointerEvents: 'none',
+        whiteSpace: 'pre',
+        left: '-99999px',
+        top: '0'
+    });
+    document.body.appendChild(inputSizer);
+
     const resizeInput = () => {
-        const chars = Math.max(0, input.value.length);
-        input.style.width = chars ? Math.min(chars, 24) + 'ch' : '0';
+        const styles = getComputedStyle(input);
+
+        inputSizer.style.fontFamily = styles.fontFamily;
+        inputSizer.style.fontSize = styles.fontSize;
+        inputSizer.style.fontWeight = styles.fontWeight;
+        inputSizer.style.fontStyle = styles.fontStyle;
+        inputSizer.style.letterSpacing = styles.letterSpacing;
+        inputSizer.style.textTransform = styles.textTransform;
+
+        inputSizer.textContent = input.value;
+
+        const width = input.value
+            ? Math.ceil(inputSizer.getBoundingClientRect().width) + 1
+            : 0;
+
+        input.style.width = Math.min(width, window.innerWidth * 0.38) + 'px';
     };
 
     const applySavedAppearance = () => {
@@ -263,6 +289,10 @@
 
     applySavedAppearance();
     resizeInput();
+
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(resizeInput);
+    }
 
     requestAnimationFrame(() => {
         input.focus({ preventScroll: true });

@@ -85,4 +85,9 @@
 
     document.querySelector('.brand-terminal')?.addEventListener('click', () => input.focus());
     resizeInput();
+
+    // Start like a real terminal: keyboard focus is on the prompt immediately.
+    requestAnimationFrame(() => {
+        input.focus({ preventScroll: true });
+    });
 })();

@@ -7,6 +7,7 @@ CREATE TABLE events (
     url VARCHAR(500) NULL,
     description TEXT NULL,
     color VARCHAR(20) NOT NULL DEFAULT '#00f5ff',
+    icon VARCHAR(32) NULL DEFAULT 'terminal',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_events_start_date (start_date),

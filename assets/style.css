@@ -233,9 +233,11 @@ a { color: inherit; }
     display: inline-block;
     margin-left: .18em;
     color: var(--muted);
-    font: inherit;
-    line-height: inherit;
-    letter-spacing: inherit;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: clamp(2.8rem, 5.2vw, 4.8rem);
+    line-height: .82;
+    font-weight: 400;
+    letter-spacing: .015em;
     opacity: .72;
     text-shadow: none;
     white-space: nowrap;

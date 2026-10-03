@@ -294,8 +294,11 @@ a { color: inherit; }
         0 0 4px rgba(255,61,242,.9),
         0 0 12px rgba(255,61,242,.55);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-overflow: clip;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
     vertical-align: baseline;
 }
 
@@ -674,4 +677,9 @@ button, .button {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+
+.terminal-output::-webkit-scrollbar {
+    display: none;
 }

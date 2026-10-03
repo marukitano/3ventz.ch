@@ -473,7 +473,7 @@ a { color: inherit; }
         linear-gradient(#000 0 0),
         var(--event-text-mask);
     -webkit-mask-repeat: no-repeat, no-repeat;
-    -webkit-mask-position: center, right 5px center;
+    -webkit-mask-position: center, right 2px center;
     -webkit-mask-size: 100% 100%, auto 50%;
     -webkit-mask-composite: xor;
 
@@ -481,7 +481,7 @@ a { color: inherit; }
         linear-gradient(#000 0 0),
         var(--event-text-mask);
     mask-repeat: no-repeat, no-repeat;
-    mask-position: center, right 5px center;
+    mask-position: center, right 2px center;
     mask-size: 100% 100%, auto 50%;
     mask-composite: exclude;
 }

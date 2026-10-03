@@ -1,0 +1,63 @@
+<?php
+declare(strict_types=1);
+
+$configFile = dirname(__DIR__) . '/config.local.php';
+
+if (!is_file($configFile)) {
+    http_response_code(500);
+    exit('Missing config.local.php');
+}
+
+$config = require $configFile;
+
+$dsn = sprintf(
+    'mysql:host=%s;dbname=%s;charset=%s',
+    $config['db']['host'],
+    $config['db']['name'],
+    $config['db']['charset'] ?? 'utf8mb4'
+);
+
+$pdo = new PDO(
+    $dsn,
+    $config['db']['user'],
+    $config['db']['pass'],
+    [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ]
+);
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+function h(?string $value): string
+{
+    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+}
+
+function admin_required(): void
+{
+    if (empty($_SESSION['is_admin'])) {
+        header('Location: /admin/login.php');
+        exit;
+    }
+}
+
+function csrf_token(): string
+{
+    if (empty($_SESSION['csrf'])) {
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf'];
+}
+
+function csrf_check(): void
+{
+    $token = $_POST['csrf'] ?? '';
+    if (!hash_equals($_SESSION['csrf'] ?? '', $token)) {
+        http_response_code(403);
+        exit('Invalid CSRF token');
+    }
+}

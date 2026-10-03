@@ -36,7 +36,7 @@
         suggestions = [];
         suggestionIndex = -1;
         suggestionLead = '';
-        output.textContent = '→ ' + text;
+        output.textContent = text;
         requestAnimationFrame(positionOutput);
     };
 
@@ -81,7 +81,6 @@
         // Initial render: no transition needed.
         if (!direction || previousIndex === null) {
             output.replaceChildren();
-            output.appendChild(document.createTextNode('→ '));
             output.appendChild(buildSuggestionList(currentRotated, 0));
             requestAnimationFrame(positionOutput);
             return;
@@ -93,8 +92,6 @@
         ];
 
         output.replaceChildren();
-        output.appendChild(document.createTextNode('→ '));
-
         const viewport = document.createElement('span');
         viewport.className = 'terminal-suggestion-viewport';
 
@@ -117,7 +114,6 @@
         const cleanup = () => {
             if (!viewport.isConnected) return;
             output.replaceChildren();
-            output.appendChild(document.createTextNode('→ '));
             output.appendChild(buildSuggestionList(currentRotated, 0));
             requestAnimationFrame(positionOutput);
         };

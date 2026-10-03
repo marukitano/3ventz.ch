@@ -77,7 +77,7 @@ $iconOptions = [
                     Icon
                     <select name="icon">
                         <?php foreach ($iconOptions as $value => $label): ?>
-                            <option value="<?= h($value) ?>" <?= (($edit['icon'] ?? 'terminal') === $value) ? 'selected' : '' ?>>
+                            <option value="<?= h($value) ?>" <?= (($edit['icon'] ?? 'none') === $value) ? 'selected' : '' ?>>
                                 <?= h($label) ?>
                             </option>
                         <?php endforeach; ?>

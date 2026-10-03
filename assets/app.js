@@ -18,8 +18,14 @@
         window.location.href = '?year=' + y;
     };
 
+    const resizeInput = () => {
+        const chars = Math.max(0, input.value.length);
+        input.style.width = chars ? Math.min(chars + 1, 16) + 'ch' : '0';
+    };
+
     input.addEventListener('input', () => {
-        if (cursor) cursor.style.display = input.value ? 'none' : 'inline';
+        resizeInput();
+        if (cursor) cursor.style.display = 'inline';
     });
 
     form.addEventListener('submit', (event) => {
@@ -72,9 +78,11 @@
         }
 
         input.value = '';
+        resizeInput();
         if (cursor) cursor.style.display = 'inline';
         input.focus();
     });
 
-    document.querySelector('.brand')?.addEventListener('click', () => input.focus());
+    document.querySelector('.brand-terminal')?.addEventListener('click', () => input.focus());
+    resizeInput();
 })();

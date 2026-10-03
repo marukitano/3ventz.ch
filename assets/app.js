@@ -590,6 +590,35 @@
         });
     };
 
+    const categoryStorageKey = '3ventz-categories';
+
+    const saveCategoryFilters = () => {
+        const enabled = categoryFilterButtons
+            .filter((button) => button.classList.contains('is-active'))
+            .map((button) => button.dataset.categoryFilter || '')
+            .filter(Boolean);
+
+        localStorage.setItem(categoryStorageKey, JSON.stringify(enabled));
+    };
+
+    const restoreCategoryFilters = () => {
+        const saved = localStorage.getItem(categoryStorageKey);
+        if (!saved) return;
+
+        try {
+            const enabled = new Set(JSON.parse(saved));
+
+            categoryFilterButtons.forEach((button) => {
+                const category = button.dataset.categoryFilter || '';
+                const active = enabled.has(category);
+                button.classList.toggle('is-active', active);
+                button.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+        } catch {
+            localStorage.removeItem(categoryStorageKey);
+        }
+    };
+
     const applyCategoryFilters = () => {
         const enabled = new Set(
             categoryFilterButtons
@@ -609,6 +638,7 @@
         button.addEventListener('click', () => {
             const active = button.classList.toggle('is-active');
             button.setAttribute('aria-pressed', active ? 'true' : 'false');
+            saveCategoryFilters();
             applyCategoryFilters();
         });
     });
@@ -686,6 +716,7 @@
 
     document.querySelector('.brand-terminal')?.addEventListener('click', () => input.focus());
 
+    restoreCategoryFilters();
     applyCategoryFilters();
     applySavedAppearance();
     resizeInput();

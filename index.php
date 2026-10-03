@@ -136,8 +136,39 @@ function event_icon_svg(string $icon): string
 function month_calendar(int $year, int $month, array $eventsByDate): string
 {
     $first = new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month));
-    $days = (int)$first->format('t');
+    $daysInMonth = (int)$first->format('t');
     $offset = (int)$first->format('N') - 1;
+
+    $cells = array_fill(0, 42, null);
+    for ($day = 1; $day <= $daysInMonth; $day++) {
+        $cells[$offset + $day - 1] = $day;
+    }
+
+    $weeks = array_chunk($cells, 7);
+
+    // Deduplicate events because $eventsByDate contains the same event on every covered day.
+    $monthEvents = [];
+    foreach ($eventsByDate as $date => $dateEvents) {
+        if (substr($date, 0, 7) !== sprintf('%04d-%02d', $year, $month)) {
+            continue;
+        }
+
+        foreach ($dateEvents as $event) {
+            $key = isset($event['id'])
+                ? 'id:' . $event['id']
+                : implode('|', [
+                    (string)($event['title'] ?? ''),
+                    (string)($event['start_date'] ?? ''),
+                    (string)($event['end_date'] ?? ''),
+                    (string)($event['url'] ?? ''),
+                ]);
+
+            $monthEvents[$key] = $event;
+        }
+    }
+
+    $monthStart = $first;
+    $monthEnd = $first->modify('last day of this month');
 
     ob_start();
     ?>
@@ -146,90 +177,115 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
             <span><?= $day ?></span>
         <?php endforeach; ?>
     </div>
+
     <div class="days">
-        <?php for ($i = 0; $i < $offset; $i++): ?><span class="day empty"></span><?php endfor; ?>
-        <?php for ($day = 1; $day <= $days; $day++):
-            $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
-            $dayEvents = $eventsByDate[$date] ?? [];
-        ?>
-            <div class="day<?= $dayEvents ? ' has-event' : '' ?>">
-                <span class="number"><?= $day ?></span>
-                <?php foreach ($dayEvents as $event):
-                    $eventStart = new DateTimeImmutable($event['start_date']);
-                    $eventEnd = new DateTimeImmutable($event['end_date'] ?: $event['start_date']);
-                    $currentDate = new DateTimeImmutable($date);
-                    $eventDateLabel = $eventStart->format('d.m.Y');
-                    if ($eventEnd->format('Y-m-d') !== $eventStart->format('Y-m-d')) {
-                        $eventDateLabel .= ' – ' . $eventEnd->format('d.m.Y');
+        <?php foreach ($weeks as $weekIndex => $week):
+            $weekStart = $first->modify(sprintf('%+d days', $weekIndex * 7 - $offset));
+            $weekEnd = $weekStart->modify('+6 days');
+
+            $segments = [];
+            foreach ($monthEvents as $event) {
+                $eventStart = new DateTimeImmutable($event['start_date']);
+                $eventEnd = new DateTimeImmutable($event['end_date'] ?: $event['start_date']);
+
+                $segmentStart = $eventStart > $weekStart ? $eventStart : $weekStart;
+                $segmentEnd = $eventEnd < $weekEnd ? $eventEnd : $weekEnd;
+                $segmentStart = $segmentStart > $monthStart ? $segmentStart : $monthStart;
+                $segmentEnd = $segmentEnd < $monthEnd ? $segmentEnd : $monthEnd;
+
+                if ($segmentStart > $segmentEnd) {
+                    continue;
+                }
+
+                $segments[] = [
+                    'event' => $event,
+                    'start' => $segmentStart,
+                    'end' => $segmentEnd,
+                    'start_col' => (int)$segmentStart->format('N'),
+                    'end_col' => (int)$segmentEnd->format('N') + 1,
+                ];
+            }
+
+            $displayNumbers = [];
+            foreach ($week as $day) {
+                if ($day !== null) {
+                    $displayNumbers[$day] = (string)$day;
+                }
+            }
+
+            foreach ($segments as $segment) {
+                $eventStart = new DateTimeImmutable($segment['event']['start_date']);
+                $eventEnd = new DateTimeImmutable($segment['event']['end_date'] ?: $segment['event']['start_date']);
+
+                // Only replace the number where this visible segment begins.
+                // Example: 29 becomes 29–30. No extra date label is rendered.
+                if ($segment['start'] < $segment['end']) {
+                    $startDay = (int)$segment['start']->format('j');
+                    $endDay = (int)$segment['end']->format('j');
+                    if (array_key_exists($startDay, $displayNumbers)) {
+                        $displayNumbers[$startDay] = $startDay . '–' . $endDay;
                     }
-                    $hasEventUrl = !empty($event['url']) && $event['url'] !== '#';
-
-                    // Connect multi-day event frames horizontally inside one calendar week.
-                    // At week/month boundaries a new visual segment starts.
-                    $continuesFromLeft =
-                        $currentDate > $eventStart &&
-                        (int)$currentDate->format('N') !== 1 &&
-                        (int)$currentDate->format('m') === $month;
-
-                    $continuesToRight =
-                        $currentDate < $eventEnd &&
-                        (int)$currentDate->format('N') !== 7 &&
-                        (int)$currentDate->format('m') === $month;
-
-                    $frameClasses = ['event-frame'];
-                    if ($continuesFromLeft) $frameClasses[] = 'continues-left';
-                    if ($continuesToRight) $frameClasses[] = 'continues-right';
-                ?>
-                    <span class="<?= h(implode(' ', $frameClasses)) ?>"
-                          style="--event-color: <?= h($event['color']) ?>"
-                          aria-hidden="true"></span>
-
-                    <span class="event-accent<?= $continuesFromLeft ? ' continues-left' : '' ?><?= $continuesToRight ? ' continues-right' : '' ?>"
-                          style="--event-color: <?= h($event['color']) ?>"
-                          aria-hidden="true">
-                        <?php if (!$continuesFromLeft): ?>
-                            <span class="event-span-label">
-                                <?= $eventStart->format('j') ?>
-                                <?php if ($eventEnd->format('Y-m-d') !== $eventStart->format('Y-m-d')): ?>
-                                    –<?= $eventEnd->format('j') ?>
-                                <?php endif; ?>
-                            </span>
-                        <?php endif; ?>
-
-                        <?php if (!$continuesToRight): ?>
-                            <span class="event-icon"><?= event_icon_svg((string)($event['icon'] ?? 'terminal')) ?></span>
-                        <?php endif; ?>
-                    </span>
-
-                    <?php if ($hasEventUrl): ?>
-                        <a class="event-hit"
-                           href="<?= h($event['url']) ?>"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           data-event-title="<?= h($event['title']) ?>"
-                           data-event-date="<?= h($eventDateLabel) ?>"
-                           data-event-category="<?= h($event['category'] ?? '') ?>"
-                           data-event-description="<?= h($event['description'] ?? '') ?>"
-                           data-event-url="<?= h($event['url']) ?>"
-                           aria-label="<?= h($event['title']) ?>"></a>
+                }
+            }
+        ?>
+            <div class="week-row">
+                <?php foreach ($week as $day): ?>
+                    <?php if ($day === null): ?>
+                        <span class="day empty"></span>
                     <?php else: ?>
-                        <span class="event-hit"
-                              data-event-title="<?= h($event['title']) ?>"
-                              data-event-date="<?= h($eventDateLabel) ?>"
-                              data-event-category="<?= h($event['category'] ?? '') ?>"
-                              data-event-description="<?= h($event['description'] ?? '') ?>"
-                              aria-label="<?= h($event['title']) ?>"
-                              tabindex="0"></span>
+                        <div class="day">
+                            <span class="number"><?= h($displayNumbers[$day] ?? (string)$day) ?></span>
+                        </div>
                     <?php endif; ?>
                 <?php endforeach; ?>
+
+                <div class="week-events">
+                    <?php foreach ($segments as $segment):
+                        $event = $segment['event'];
+                        $eventStart = new DateTimeImmutable($event['start_date']);
+                        $eventEnd = new DateTimeImmutable($event['end_date'] ?: $event['start_date']);
+                        $eventDateLabel = $eventStart->format('d.m.Y');
+                        if ($eventEnd->format('Y-m-d') !== $eventStart->format('Y-m-d')) {
+                            $eventDateLabel .= ' – ' . $eventEnd->format('d.m.Y');
+                        }
+                        $hasEventUrl = !empty($event['url']) && $event['url'] !== '#';
+                        $style = sprintf(
+                            '--span-start:%d;--span-end:%d;--event-color:%s',
+                            $segment['start_col'],
+                            $segment['end_col'],
+                            h((string)$event['color'])
+                        );
+                    ?>
+                        <?php if ($hasEventUrl): ?>
+                            <a class="event-span"
+                               href="<?= h($event['url']) ?>"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               style="<?= $style ?>"
+                               data-event-title="<?= h($event['title']) ?>"
+                               data-event-date="<?= h($eventDateLabel) ?>"
+                               data-event-category="<?= h($event['category'] ?? '') ?>"
+                               data-event-description="<?= h($event['description'] ?? '') ?>"
+                               data-event-url="<?= h($event['url']) ?>"
+                               aria-label="<?= h($event['title']) ?>">
+                                <span class="event-span-icon"><?= event_icon_svg((string)($event['icon'] ?? 'terminal')) ?></span>
+                            </a>
+                        <?php else: ?>
+                            <span class="event-span"
+                                  style="<?= $style ?>"
+                                  data-event-title="<?= h($event['title']) ?>"
+                                  data-event-date="<?= h($eventDateLabel) ?>"
+                                  data-event-category="<?= h($event['category'] ?? '') ?>"
+                                  data-event-description="<?= h($event['description'] ?? '') ?>"
+                                  aria-label="<?= h($event['title']) ?>"
+                                  tabindex="0">
+                                <span class="event-span-icon"><?= event_icon_svg((string)($event['icon'] ?? 'terminal')) ?></span>
+                            </span>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
-        <?php endfor; ?>
-        <?php
-            $usedCells = $offset + $days;
-            for ($i = $usedCells; $i < 42; $i++):
-        ?>
-            <span class="day empty"></span>
-        <?php endfor; ?>
+        <?php endforeach; ?>
     </div>
     <?php
     return (string)ob_get_clean();

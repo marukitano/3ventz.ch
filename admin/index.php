@@ -13,6 +13,7 @@ if (isset($_GET['edit'])) {
 $events = $pdo->query('SELECT * FROM events ORDER BY start_date DESC, title')->fetchAll();
 
 $iconOptions = [
+    'none' => 'Kein Icon',
     'terminal' => '>_ Terminal',
     'pebble_rocket' => 'Pebble Rocket',
     'pebble_console' => 'Pebble Developer Console',
@@ -23,7 +24,7 @@ $iconOptions = [
     'pebble_warning' => 'Pebble Warning',
     'pebble_microphone' => 'Pebble Microphone',
     'pebble_radio' => 'Pebble Radio',
-]
+];
 ?>
 <!doctype html>
 <html lang="de" class="admin-page-root">

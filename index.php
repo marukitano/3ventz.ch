@@ -146,21 +146,20 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
     <main class="shell">
         <header class="topbar">
             <div class="identity">
-                <div class="brand">3VENTZ</div>
-                <div class="tagline">HACK · MAKE · BREAK · MEET</div>
-                <form class="terminal" id="terminal" autocomplete="off">
-                    <span class="terminal-prompt">guest@3ventz:~$</span>
-                    <span class="terminal-input-wrap">
+                <form class="brand-terminal" id="terminal" autocomplete="off">
+                    <span class="brand-prefix">3VENTZ.CH</span>
+                    <span class="brand-command-wrap">
                         <input
                             id="terminal-input"
                             type="text"
                             spellcheck="false"
                             aria-label="3ventz command line"
-                            placeholder="type help"
+                            placeholder=""
                         >
                         <span class="cursor" id="terminal-cursor">_</span>
                     </span>
                 </form>
+                <div class="tagline">HACK · MAKE · BREAK · MEET</div>
                 <div class="terminal-output" id="terminal-output" aria-live="polite"></div>
             </div>
             <nav class="year-nav" aria-label="Jahr wählen">

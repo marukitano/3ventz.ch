@@ -47,38 +47,82 @@
         output.textContent = '';
     };
 
-    const renderSuggestions = (direction = 0) => {
+    const buildSuggestionList = (items, selectedIndex = 0) => {
+        const list = document.createElement('span');
+        list.className = 'terminal-suggestion-list';
+
+        items.forEach((item, index) => {
+            const span = document.createElement('span');
+            span.className = 'terminal-suggestion' + (index === selectedIndex ? ' selected' : '');
+            span.textContent = item;
+            list.appendChild(span);
+
+            if (index < items.length - 1) {
+                list.appendChild(document.createTextNode(' · '));
+            }
+        });
+
+        return list;
+    };
+
+    const getRotatedSuggestions = () => [
+        ...suggestions.slice(suggestionIndex),
+        ...suggestions.slice(0, suggestionIndex)
+    ];
+
+    const renderSuggestions = (direction = 0, previousIndex = null) => {
         if (!suggestions.length) {
             output.textContent = '';
             return;
         }
 
+        const currentRotated = getRotatedSuggestions();
+
+        // Initial render: no transition needed.
+        if (!direction || previousIndex === null) {
+            output.replaceChildren();
+            output.appendChild(document.createTextNode('→ '));
+            output.appendChild(buildSuggestionList(currentRotated, 0));
+            requestAnimationFrame(positionOutput);
+            return;
+        }
+
+        const previousRotated = [
+            ...suggestions.slice(previousIndex),
+            ...suggestions.slice(0, previousIndex)
+        ];
+
         output.replaceChildren();
         output.appendChild(document.createTextNode('→ '));
 
-        const list = document.createElement('span');
-        list.className = 'terminal-suggestion-list';
+        const viewport = document.createElement('span');
+        viewport.className = 'terminal-suggestion-viewport';
 
-        if (direction < 0) list.classList.add('rotate-up');
-        if (direction > 0) list.classList.add('rotate-down');
+        const oldList = buildSuggestionList(previousRotated, 0);
+        const newList = buildSuggestionList(currentRotated, 0);
 
-        const rotated = [
-            ...suggestions.slice(suggestionIndex),
-            ...suggestions.slice(0, suggestionIndex)
-        ];
+        oldList.classList.add('suggestion-old');
+        newList.classList.add('suggestion-new');
 
-        rotated.forEach((item, index) => {
-            const span = document.createElement('span');
-            span.className = 'terminal-suggestion' + (index === 0 ? ' selected' : '');
-            span.textContent = item;
-            list.appendChild(span);
+        if (direction > 0) {
+            viewport.classList.add('move-next');
+        } else {
+            viewport.classList.add('move-prev');
+        }
 
-            if (index < rotated.length - 1) {
-                list.appendChild(document.createTextNode(' · '));
-            }
-        });
+        viewport.appendChild(oldList);
+        viewport.appendChild(newList);
+        output.appendChild(viewport);
 
-        output.appendChild(list);
+        const cleanup = () => {
+            if (!viewport.isConnected) return;
+            output.replaceChildren();
+            output.appendChild(document.createTextNode('→ '));
+            output.appendChild(buildSuggestionList(currentRotated, 0));
+            requestAnimationFrame(positionOutput);
+        };
+
+        newList.addEventListener('animationend', cleanup, { once: true });
         requestAnimationFrame(positionOutput);
     };
 
@@ -237,19 +281,21 @@
         if (suggestions.length) {
             if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
                 event.preventDefault();
+                const previousIndex = suggestionIndex;
                 suggestionIndex = suggestionIndex > 0
                     ? suggestionIndex - 1
                     : suggestions.length - 1;
-                renderSuggestions(-1);
+                renderSuggestions(-1, previousIndex);
                 return;
             }
 
             if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
                 event.preventDefault();
+                const previousIndex = suggestionIndex;
                 suggestionIndex = suggestionIndex < suggestions.length - 1
                     ? suggestionIndex + 1
                     : 0;
-                renderSuggestions(1);
+                renderSuggestions(1, previousIndex);
                 return;
             }
 

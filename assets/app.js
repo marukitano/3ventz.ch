@@ -124,7 +124,7 @@
 
         if (navStack) {
             const navRect = navStack.getBoundingClientRect();
-            rightLimit = navRect.left - formRect.left - 12;
+            rightLimit = navRect.left - formRect.left - 32;
         }
 
         const available = Math.max(0, rightLimit - left);

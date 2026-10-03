@@ -412,17 +412,66 @@ a { color: inherit; }
 }
 
 .day.has-event {
-    border-color: rgba(0,245,255,.4);
-    background: rgba(0,245,255,.045);
+    border-color: transparent;
+    background: color-mix(in srgb, var(--event-color, var(--cyan)) 4%, transparent);
+    overflow: visible;
+    z-index: 1;
+}
+
+.event-frame {
+    position: absolute;
+    z-index: 0;
+    inset: -1px;
+    border: 2px solid var(--event-color);
+    border-radius: 2px;
+    pointer-events: none;
+    box-shadow:
+        0 0 4px color-mix(in srgb, var(--event-color) 72%, transparent),
+        inset 0 0 4px color-mix(in srgb, var(--event-color) 20%, transparent);
+    animation: event-frame-flicker 7s infinite;
+}
+
+.event-frame.continues-left {
+    left: -4px;
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.event-frame.continues-right {
+    right: -4px;
+    border-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+@keyframes event-frame-flicker {
+    0%, 100% {
+        opacity: .96;
+        filter: brightness(1);
+    }
+    49% {
+        opacity: .94;
+        filter: brightness(.98);
+    }
+    50% {
+        opacity: .78;
+        filter: brightness(1.15);
+    }
+    51% {
+        opacity: .96;
+        filter: brightness(1);
+    }
 }
 
 .number {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 .event-dot {
     position: relative;
+    z-index: 2;
     float: right;
     display: block;
     width: 13px;
@@ -575,6 +624,7 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
     .brand-terminal,
     .cursor,
+    .event-frame,
     body::after {
         animation: none !important;
     }

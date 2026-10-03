@@ -476,10 +476,24 @@ a { color: inherit; }
     width: 25px;
     height: 25px;
     transform: translateY(-50%);
-    object-fit: contain;
-    image-rendering: pixelated;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
     opacity: 1;
     pointer-events: none;
+}
+
+.event-span-icon-overlay svg {
+    width: 25px;
+    height: 25px;
+    display: block;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
 }
 
 .event-span:focus-visible {

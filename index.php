@@ -155,6 +155,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                             spellcheck="false"
                             aria-label="3ventz command line"
                             placeholder=""
+                            autofocus
                         >
                         <span class="cursor" id="terminal-cursor">_</span>
                     </span>

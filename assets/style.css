@@ -466,22 +466,20 @@ a { color: inherit; }
             color-mix(in srgb, var(--event-color) 50%, transparent) 50%,
             color-mix(in srgb, var(--event-color) 100%, transparent) 100%
         );
+}
 
-    -webkit-mask-image:
-        linear-gradient(#000 0 0),
-        var(--event-icon-mask);
-    -webkit-mask-repeat: no-repeat, no-repeat;
-    -webkit-mask-position: center, right 6px center;
-    -webkit-mask-size: 100% 100%, 25px 25px;
-    -webkit-mask-composite: xor;
-
-    mask-image:
-        linear-gradient(#000 0 0),
-        var(--event-icon-mask);
-    mask-repeat: no-repeat, no-repeat;
-    mask-position: center, right 6px center;
-    mask-size: 100% 100%, 25px 25px;
-    mask-composite: exclude;
+.event-span-icon-overlay {
+    position: absolute;
+    z-index: 2;
+    right: 6px;
+    top: 50%;
+    width: 25px;
+    height: 25px;
+    transform: translateY(-50%);
+    object-fit: contain;
+    image-rendering: pixelated;
+    opacity: 1;
+    pointer-events: none;
 }
 
 .event-span:focus-visible {

@@ -164,7 +164,7 @@
 
     const updateThemeIndicator = (theme) => {
         if (themeIndicator) {
-            themeIndicator.textContent = 'echo theme ' + theme;
+            themeIndicator.textContent = 'echo $theme=' + theme;
         }
     };
 

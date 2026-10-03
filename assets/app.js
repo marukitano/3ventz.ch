@@ -30,6 +30,19 @@
 
     const commandsWithArguments = new Set(['theme', 'year']);
 
+    const manualPages = {
+        next: 'next — show the next calendar year',
+        prev: 'prev — show the previous calendar year',
+        year: 'year YYYY — jump to a specific year, e.g. year 2027',
+        today: 'today — return to the current year',
+        events: 'events — show how many events are loaded for this year',
+        admin: 'admin — open the private event administration',
+        theme: 'theme NAME — switch the terminal theme; press Tab after theme for choices',
+        clear: 'clear — clear the CLI output',
+        whoami: 'whoami — identify the current 3ventz visitor',
+        sudo: 'sudo — nice try.'
+    };
+
     let commandIndex = -1;
     let suggestions = [];
     let suggestionIndex = -1;
@@ -114,7 +127,17 @@
     const acceptSuggestion = () => {
         if (!suggestions.length || suggestionIndex < 0) return false;
 
-        input.value = suggestionLead + suggestions[suggestionIndex];
+        const selected = suggestions[suggestionIndex];
+
+        if (suggestionMode === 'manual') {
+            clearSuggestions();
+            input.value = '';
+            resizeInput();
+            showManual(selected);
+            return true;
+        }
+
+        input.value = suggestionLead + selected;
         resizeInput();
         clearSuggestions();
         return true;
@@ -208,6 +231,22 @@
         localStorage.setItem('3ventz-theme', theme);
         updateThemeIndicator(theme);
         clearSuggestions();
+    };
+
+    const showManual = (command) => {
+        const name = (command || '').trim().toLowerCase();
+
+        if (!name) {
+            openManual();
+            return;
+        }
+
+        if (manualPages[name]) {
+            say(manualPages[name]);
+            return;
+        }
+
+        say('no manual entry for ' + name);
     };
 
     const openManual = () => {
@@ -371,6 +410,9 @@
                 say('type help');
                 break;
             case 'man':
+                if (arg) showManual(arg);
+                else openManual();
+                break;
             case '?':
                 openManual();
                 break;

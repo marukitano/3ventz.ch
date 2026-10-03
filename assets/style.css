@@ -276,6 +276,54 @@ a { color: inherit; }
     font-size: .68rem;
 }
 
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 10px;
+    margin-top: 4px;
+    min-height: 1.1rem;
+}
+
+.category-filter {
+    width: auto;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--green);
+    font-family: "VT323", "Courier New", monospace;
+    font-size: .88rem;
+    line-height: 1;
+    letter-spacing: .06em;
+    cursor: pointer;
+    text-shadow: 0 0 4px color-mix(in srgb, var(--green) 28%, transparent);
+}
+
+.category-filter::before {
+    content: "[x] ";
+    color: var(--cyan);
+}
+
+.category-filter:not(.is-active) {
+    color: var(--muted);
+    opacity: .55;
+    text-shadow: none;
+}
+
+.category-filter:not(.is-active)::before {
+    content: "[ ] ";
+    color: var(--muted);
+}
+
+.category-filter:hover,
+.category-filter:focus-visible {
+    color: var(--text);
+    outline: none;
+}
+
+.event-span.category-filtered-out {
+    display: none !important;
+}
+
 .terminal-output {
     position: absolute;
     display: block;

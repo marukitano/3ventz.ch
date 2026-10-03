@@ -736,11 +736,16 @@ button, .button {
     .shell {
         height: 100dvh;
         display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .shell.demo-mode {
         grid-template-rows: auto auto minmax(0, 1fr) auto;
     }
 
     .calendar-grid {
         min-height: 0;
+        height: 100%;
         grid-template-rows: repeat(3, minmax(0, 1fr));
     }
 }

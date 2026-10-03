@@ -146,8 +146,8 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
     <main class="shell">
         <header class="topbar">
             <div class="identity">
-                <form class="brand-terminal" id="terminal" autocomplete="off">
-                    <span class="brand-prefix">3VENTZ.CH</span>
+                <form class="brand-terminal crt-title" id="terminal" autocomplete="off">
+                    <span class="brand-prefix">3VENTZ:~$</span>
                     <span class="brand-command-wrap">
                         <input
                             id="terminal-input"

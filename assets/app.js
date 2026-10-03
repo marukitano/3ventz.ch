@@ -561,6 +561,77 @@
         input.focus();
     });
 
+    const eventTooltip = document.createElement('div');
+    eventTooltip.className = 'event-tooltip';
+    eventTooltip.hidden = true;
+    document.body.appendChild(eventTooltip);
+
+    const positionEventTooltip = (marker) => {
+        const markerRect = marker.getBoundingClientRect();
+        const tooltipRect = eventTooltip.getBoundingClientRect();
+        const gap = 10;
+        const edge = 10;
+
+        let left = markerRect.left + markerRect.width / 2 - tooltipRect.width / 2;
+        left = Math.max(edge, Math.min(left, window.innerWidth - tooltipRect.width - edge));
+
+        let top = markerRect.top - tooltipRect.height - gap;
+        if (top < edge) {
+            top = markerRect.bottom + gap;
+        }
+
+        eventTooltip.style.left = Math.round(left) + 'px';
+        eventTooltip.style.top = Math.round(top) + 'px';
+    };
+
+    const showEventTooltip = (marker) => {
+        const title = marker.dataset.eventTitle || '';
+        const date = marker.dataset.eventDate || '';
+        const category = marker.dataset.eventCategory || '';
+        const description = marker.dataset.eventDescription || '';
+        const hasUrl = Boolean(marker.dataset.eventUrl);
+
+        eventTooltip.replaceChildren();
+
+        const heading = document.createElement('div');
+        heading.className = 'event-tooltip-title';
+        heading.textContent = title;
+        eventTooltip.appendChild(heading);
+
+        const meta = document.createElement('div');
+        meta.className = 'event-tooltip-meta';
+        meta.textContent = [date, category].filter(Boolean).join(' // ');
+        if (meta.textContent) eventTooltip.appendChild(meta);
+
+        if (description) {
+            const body = document.createElement('div');
+            body.className = 'event-tooltip-description';
+            body.textContent = description;
+            eventTooltip.appendChild(body);
+        }
+
+        if (hasUrl) {
+            const action = document.createElement('div');
+            action.className = 'event-tooltip-action';
+            action.textContent = 'click // open website';
+            eventTooltip.appendChild(action);
+        }
+
+        eventTooltip.hidden = false;
+        requestAnimationFrame(() => positionEventTooltip(marker));
+    };
+
+    const hideEventTooltip = () => {
+        eventTooltip.hidden = true;
+    };
+
+    document.querySelectorAll('.event-dot').forEach((marker) => {
+        marker.addEventListener('mouseenter', () => showEventTooltip(marker));
+        marker.addEventListener('mouseleave', hideEventTooltip);
+        marker.addEventListener('focus', () => showEventTooltip(marker));
+        marker.addEventListener('blur', hideEventTooltip);
+    });
+
     document.querySelector('.brand-terminal')?.addEventListener('click', () => input.focus());
 
     applySavedAppearance();

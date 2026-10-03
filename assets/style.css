@@ -322,7 +322,7 @@ a { color: inherit; }
         0 0 4px rgba(255,61,242,.9),
         0 0 12px rgba(255,61,242,.55);
     transform: none;
-    margin: 0 0 2px 0;
+    margin: 0;
 }
 
 .year-nav {
@@ -343,6 +343,7 @@ a { color: inherit; }
 
 .calendar-grid {
     display: grid;
+    margin-top: 5px;
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -663,4 +664,13 @@ button, .button {
     .terminal-suggestion-list.snap-prev {
         animation: none !important;
     }
+}
+
+
+.terminal-suggestion-list.manual-list {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

@@ -29,9 +29,15 @@ if ($end !== '' && $end < $start) {
     exit('Enddatum darf nicht vor dem Startdatum liegen.');
 }
 
-if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL) === false) {
-    http_response_code(422);
-    exit('Ungültige URL.');
+if ($url !== '') {
+    if (!preg_match('~^[a-z][a-z0-9+.-]*://~i', $url)) {
+        $url = 'https://' . $url;
+    }
+
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        http_response_code(422);
+        exit('Ungültige URL.');
+    }
 }
 
 if (!preg_match('/^#[0-9a-fA-F]{6}$/', $color)) {

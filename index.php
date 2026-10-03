@@ -138,12 +138,32 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                 <?php foreach ($dayEvents as $event):
                     $eventStart = new DateTimeImmutable($event['start_date']);
                     $eventEnd = new DateTimeImmutable($event['end_date'] ?: $event['start_date']);
+                    $currentDate = new DateTimeImmutable($date);
                     $eventDateLabel = $eventStart->format('d.m.Y');
                     if ($eventEnd->format('Y-m-d') !== $eventStart->format('Y-m-d')) {
                         $eventDateLabel .= ' – ' . $eventEnd->format('d.m.Y');
                     }
                     $hasEventUrl = !empty($event['url']) && $event['url'] !== '#';
+
+                    // Connect multi-day event frames horizontally inside one calendar week.
+                    // At week/month boundaries a new visual segment starts.
+                    $continuesFromLeft =
+                        $currentDate > $eventStart &&
+                        (int)$currentDate->format('N') !== 1 &&
+                        (int)$currentDate->format('m') === $month;
+
+                    $continuesToRight =
+                        $currentDate < $eventEnd &&
+                        (int)$currentDate->format('N') !== 7 &&
+                        (int)$currentDate->format('m') === $month;
+
+                    $frameClasses = ['event-frame'];
+                    if ($continuesFromLeft) $frameClasses[] = 'continues-left';
+                    if ($continuesToRight) $frameClasses[] = 'continues-right';
                 ?>
+                    <span class="<?= h(implode(' ', $frameClasses)) ?>"
+                          style="--event-color: <?= h($event['color']) ?>"
+                          aria-hidden="true"></span>
                     <?php if ($hasEventUrl): ?>
                         <a class="event-dot"
                            href="<?= h($event['url']) ?>"

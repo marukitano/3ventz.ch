@@ -217,13 +217,23 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                 $eventStart = new DateTimeImmutable($segment['event']['start_date']);
                 $eventEnd = new DateTimeImmutable($segment['event']['end_date'] ?: $segment['event']['start_date']);
 
-                // Only replace the number where this visible segment begins.
-                // Example: 29 becomes 29–30. No extra date label is rendered.
+                // For a multi-day visible segment, replace the first day with a range
+                // (e.g. 29–30) and hide the following day numbers inside the same frame.
                 if ($segment['start'] < $segment['end']) {
                     $startDay = (int)$segment['start']->format('j');
                     $endDay = (int)$segment['end']->format('j');
+
                     if (array_key_exists($startDay, $displayNumbers)) {
                         $displayNumbers[$startDay] = $startDay . '–' . $endDay;
+                    }
+
+                    $cursor = $segment['start']->modify('+1 day');
+                    while ($cursor <= $segment['end']) {
+                        $coveredDay = (int)$cursor->format('j');
+                        if (array_key_exists($coveredDay, $displayNumbers)) {
+                            $displayNumbers[$coveredDay] = '';
+                        }
+                        $cursor = $cursor->modify('+1 day');
                     }
                 }
             }

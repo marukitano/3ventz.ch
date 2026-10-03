@@ -472,7 +472,7 @@ a { color: inherit; }
         var(--event-icon-mask);
     -webkit-mask-repeat: no-repeat, no-repeat;
     -webkit-mask-position: center, right 6px center;
-    -webkit-mask-size: 100% 100%, 15px 15px;
+    -webkit-mask-size: 100% 100%, 25px 25px;
     -webkit-mask-composite: xor;
 
     mask-image:
@@ -480,7 +480,7 @@ a { color: inherit; }
         var(--event-icon-mask);
     mask-repeat: no-repeat, no-repeat;
     mask-position: center, right 6px center;
-    mask-size: 100% 100%, 15px 15px;
+    mask-size: 100% 100%, 25px 25px;
     mask-composite: exclude;
 }
 

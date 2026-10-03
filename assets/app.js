@@ -37,6 +37,7 @@
         suggestionIndex = -1;
         suggestionLead = '';
         output.textContent = '→ ' + text;
+        requestAnimationFrame(positionOutput);
     };
 
     const clearSuggestions = () => {
@@ -78,6 +79,7 @@
         });
 
         output.appendChild(list);
+        requestAnimationFrame(positionOutput);
     };
 
     const acceptSuggestion = () => {
@@ -106,6 +108,16 @@
     });
     document.body.appendChild(inputSizer);
 
+    const positionOutput = () => {
+        const formRect = form.getBoundingClientRect();
+        const cursorRect = cursor.getBoundingClientRect();
+        const left = Math.max(0, cursorRect.right - formRect.left + 6);
+        const available = Math.max(0, formRect.width - left);
+
+        output.style.left = left + 'px';
+        output.style.width = available + 'px';
+    };
+
     const resizeInput = () => {
         const styles = getComputedStyle(input);
 
@@ -123,6 +135,7 @@
             : 0;
 
         input.style.width = Math.min(width, window.innerWidth * 0.38) + 'px';
+        requestAnimationFrame(positionOutput);
     };
 
     const applySavedAppearance = () => {
@@ -345,10 +358,16 @@
     resizeInput();
 
     if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(resizeInput);
+        document.fonts.ready.then(() => {
+            resizeInput();
+            positionOutput();
+        });
     }
 
+    window.addEventListener('resize', positionOutput);
+
     requestAnimationFrame(() => {
+        positionOutput();
         input.focus({ preventScroll: true });
     });
 })();

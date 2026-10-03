@@ -48,11 +48,39 @@
     let suggestionIndex = -1;
     let suggestionLead = '';
     let suggestionMode = 'default';
+    let outputScrollX = 0;
 
     const updateHint = () => {
         if (!hint) return;
         const shouldShow = input.value.length === 0 && suggestions.length === 0 && output.textContent === '';
         hint.hidden = !shouldShow;
+    };
+
+    const resetOutputScroll = () => {
+        outputScrollX = 0;
+        output.scrollTo({ left: 0, behavior: 'auto' });
+    };
+
+    const canScrollOutput = () =>
+        output.scrollWidth > output.clientWidth + 2;
+
+    const scrollOutput = (direction) => {
+        if (!canScrollOutput()) return false;
+
+        const step = Math.max(80, Math.round(output.clientWidth * 0.28));
+        const maxScroll = Math.max(0, output.scrollWidth - output.clientWidth);
+
+        outputScrollX = Math.max(
+            0,
+            Math.min(maxScroll, outputScrollX + direction * step)
+        );
+
+        output.scrollTo({
+            left: outputScrollX,
+            behavior: 'smooth'
+        });
+
+        return true;
     };
 
     const say = (text) => {
@@ -61,6 +89,7 @@
         suggestionLead = '';
         suggestionMode = 'default';
         output.textContent = text;
+        resetOutputScroll();
         updateHint();
         requestAnimationFrame(positionOutput);
     };
@@ -71,6 +100,7 @@
         suggestionLead = '';
         suggestionMode = 'default';
         output.textContent = '';
+        resetOutputScroll();
         updateHint();
     };
 
@@ -366,6 +396,20 @@
             if (event.key === 'Escape') {
                 event.preventDefault();
                 clearSuggestions();
+                return;
+            }
+        }
+
+        if (!suggestions.length && canScrollOutput()) {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                scrollOutput(-1);
+                return;
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                event.preventDefault();
+                scrollOutput(1);
                 return;
             }
         }

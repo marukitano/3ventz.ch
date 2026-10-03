@@ -12,6 +12,113 @@
     --pink: #ff3df2;
 }
 
+
+/* CLI-selectable color themes */
+:root[data-theme="default"] {
+    --bg: #04070a;
+    --panel: #071016;
+    --line: #12303a;
+    --text: #d9fbff;
+    --muted: #61808a;
+    --cyan: #00f5ff;
+    --green: #59ff8b;
+    --pink: #ff3df2;
+}
+
+:root[data-theme="c64"] {
+    --bg: #25236b;
+    --panel: #34328a;
+    --line: #7776d9;
+    --text: #aaa9ff;
+    --muted: #7776bb;
+    --cyan: #b8b7ff;
+    --green: #8fe388;
+    --pink: #e7a3ff;
+}
+
+:root[data-theme="amiga"] {
+    --bg: #07101b;
+    --panel: #0b1726;
+    --line: #24445f;
+    --text: #d7ecff;
+    --muted: #7192ad;
+    --cyan: #4db8ff;
+    --green: #7cffbc;
+    --pink: #ff78cb;
+}
+
+:root[data-theme="atari"] {
+    --bg: #100b08;
+    --panel: #1a120c;
+    --line: #5a3b20;
+    --text: #ffe4bb;
+    --muted: #aa8158;
+    --cyan: #ffb347;
+    --green: #b6ff66;
+    --pink: #ff6b35;
+}
+
+:root[data-theme="edgerunner"] {
+    --bg: #071014;
+    --panel: #0c171c;
+    --line: #28434d;
+    --text: #e9ffff;
+    --muted: #7a9398;
+    --cyan: #f6ff00;
+    --green: #00f5d4;
+    --pink: #ff2d95;
+}
+
+:root[data-theme="hackers"] {
+    --bg: #020504;
+    --panel: #06100b;
+    --line: #163b27;
+    --text: #d8ffe7;
+    --muted: #557b63;
+    --cyan: #39ff14;
+    --green: #00ff8c;
+    --pink: #ff2ad4;
+}
+
+/* Light/dark is independent of the selected accent theme. */
+:root[data-mode="light"] {
+    --bg: #e8edf0;
+    --panel: #f6f9fa;
+    --line: #a7bbc2;
+    --text: #142027;
+    --muted: #657981;
+}
+
+:root[data-mode="dark"] {
+    color-scheme: dark;
+}
+
+:root[data-mode="light"] {
+    color-scheme: light;
+}
+
+:root[data-mode="light"] body {
+    background:
+        linear-gradient(rgba(0,0,0,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.035) 1px, transparent 1px),
+        radial-gradient(circle at 50% -20%, rgba(255,255,255,.95) 0, transparent 48%),
+        var(--bg);
+}
+
+:root[data-mode="light"] .month {
+    background: rgba(255,255,255,.72);
+}
+
+:root[data-mode="light"] .day {
+    color: #43555d;
+    border-color: rgba(80,110,120,.24);
+}
+
+:root[data-mode="light"] body::before,
+:root[data-mode="light"] body::after {
+    opacity: .10;
+}
+
 * { box-sizing: border-box; }
 
 html { background: var(--bg); }

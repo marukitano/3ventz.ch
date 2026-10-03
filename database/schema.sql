@@ -12,3 +12,9 @@ CREATE TABLE events (
     INDEX idx_events_start_date (start_date),
     INDEX idx_events_end_date (end_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE pageview_counter (
+    visit_year SMALLINT UNSIGNED NOT NULL PRIMARY KEY,
+    views BIGINT UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -426,10 +426,10 @@ a { color: inherit; }
     border-radius: 6px;
     pointer-events: none;
     box-shadow:
-        0 0 3px color-mix(in srgb, var(--event-color) 95%, transparent),
-        0 0 8px color-mix(in srgb, var(--event-color) 72%, transparent),
-        0 0 14px color-mix(in srgb, var(--event-color) 38%, transparent),
-        inset 0 0 6px color-mix(in srgb, var(--event-color) 28%, transparent);
+        0 0 4px color-mix(in srgb, var(--event-color) 100%, transparent),
+        0 0 10px color-mix(in srgb, var(--event-color) 80%, transparent),
+        0 0 18px color-mix(in srgb, var(--event-color) 45%, transparent),
+        inset 0 0 8px color-mix(in srgb, var(--event-color) 25%, transparent);
     animation: event-frame-flicker 7s infinite;
 }
 
@@ -477,33 +477,63 @@ a { color: inherit; }
     top: 1px;
     right: 1px;
     bottom: 1px;
-    left: 42%;
+    left: 1px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding-right: 5px;
-    border-radius: 0 5px 5px 0;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 0 6px;
+    border-radius: 5px;
     pointer-events: none;
+    overflow: hidden;
     background:
         linear-gradient(
             270deg,
             color-mix(in srgb, var(--event-color) 100%, transparent) 0%,
+            color-mix(in srgb, var(--event-color) 75%, transparent) 25%,
             color-mix(in srgb, var(--event-color) 50%, transparent) 50%,
             color-mix(in srgb, var(--event-color) 10%, transparent) 100%
         );
+}
+
+.event-accent.continues-left {
+    left: -3px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.event-accent.continues-right {
+    right: -3px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.event-span-label {
+    position: relative;
+    z-index: 2;
+    color: var(--text);
+    font-family: "VT323", "Courier New", monospace;
+    font-size: .78rem;
+    line-height: 1;
+    letter-spacing: .03em;
+    white-space: nowrap;
+    text-shadow:
+        0 0 2px color-mix(in srgb, var(--event-color) 70%, transparent),
+        0 0 5px color-mix(in srgb, var(--event-color) 40%, transparent);
 }
 
 .event-icon {
     display: inline-flex;
     width: 15px;
     height: 15px;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     color: var(--event-color);
-    opacity: .96;
+    opacity: .98;
     filter:
-        drop-shadow(0 0 2px var(--event-color))
-        drop-shadow(0 0 4px color-mix(in srgb, var(--event-color) 45%, transparent));
+        drop-shadow(0 0 3px var(--event-color))
+        drop-shadow(0 0 7px color-mix(in srgb, var(--event-color) 50%, transparent));
 }
 
 .event-icon svg {

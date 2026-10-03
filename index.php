@@ -121,6 +121,10 @@ $monthNames = [
 
 function event_icon_markup(string $icon): string
 {
+    if ($icon === 'none') {
+        return '';
+    }
+
     $pebbleIcons = [
         'pebble_rocket' => '25px_Rocket.svg',
         'pebble_console' => '25px_Developer_console.svg',
@@ -286,7 +290,9 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                data-event-description="<?= h($event['description'] ?? '') ?>"
                                data-event-url="<?= h($event['url']) ?>"
                                aria-label="<?= h($event['title']) ?>">
-                                <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php if ($eventIconMarkup !== ''): ?>
+                                    <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php endif; ?>
                             </a>
                         <?php else: ?>
                             <span class="event-span"
@@ -297,7 +303,9 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                   data-event-description="<?= h($event['description'] ?? '') ?>"
                                   aria-label="<?= h($event['title']) ?>"
                                   tabindex="0">
-                                <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php if ($eventIconMarkup !== ''): ?>
+                                    <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php endif; ?>
                             </span>
                         <?php endif; ?>
                     <?php endforeach; ?>

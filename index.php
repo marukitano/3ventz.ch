@@ -158,6 +158,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                             autofocus
                         >
                         <span class="cursor" id="terminal-cursor">_</span>
+                        <span class="terminal-hint" id="terminal-hint">try: man</span>
                     </span>
                     <span class="terminal-output" id="terminal-output" aria-live="polite"></span>
                 </form>

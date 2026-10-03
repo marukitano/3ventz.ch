@@ -20,7 +20,7 @@
 
     const resizeInput = () => {
         const chars = Math.max(0, input.value.length);
-        input.style.width = chars ? Math.min(chars + 1, 16) + 'ch' : '0';
+        input.style.width = chars ? Math.min(chars + 1, 18) + 'ch' : '0';
     };
 
     input.addEventListener('input', () => {

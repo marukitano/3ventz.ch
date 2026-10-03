@@ -391,7 +391,7 @@ $legalReady =
         <header class="topbar">
             <div class="identity">
                 <form class="brand-terminal crt-title" id="terminal" autocomplete="off">
-                    <span class="brand-prefix">Nerd@3ventz:&gt;</span>
+                    <span class="brand-prefix">nerd@3ventz:~$</span>
                     <span class="brand-command-wrap">
                         <input
                             id="terminal-input"

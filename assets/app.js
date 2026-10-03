@@ -80,7 +80,8 @@
 
         output.replaceChildren();
 
-        const list = buildSuggestionList(getRotatedSuggestions(), 0);
+        const visibleSuggestions = getRotatedSuggestions().slice(0, 4);
+        const list = buildSuggestionList(visibleSuggestions, 0);
 
         if (direction < 0) list.classList.add('snap-prev');
         if (direction > 0) list.classList.add('snap-next');

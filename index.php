@@ -122,11 +122,11 @@ $monthNames = [
 function event_icon_svg(string $icon): string
 {
     return match ($icon) {
-        'skull' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10a6 6 0 1 1 12 0c0 3-1.8 5-4 6v3h-4v-3c-2.2-1-4-3-4-6Z"/><rect x="8" y="9" width="2" height="2" fill="currentColor" stroke="none"/><rect x="14" y="9" width="2" height="2" fill="currentColor" stroke="none"/><path d="M10 14h4"/></svg>',
+        'skull' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10a6 6 0 1 1 12 0c0 3-1.8 5-4 6v3h-4v-3c-2.2-1-4-3-4-6Z"/><rect x="8" y="9" width="2" height="2"/><rect x="14" y="9" width="2" height="2"/><path d="M10 14h4"/></svg>',
         'chip' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M9 3v4M12 3v4M15 3v4M9 17v4M12 17v4M15 17v4M3 9h4M3 12h4M3 15h4M17 9h4M17 12h4M17 15h4"/></svg>',
-        'radio' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><circle cx="12" cy="5" r="1" fill="currentColor" stroke="none"/><path d="M8 9c1-1.3 2.3-2 4-2s3 .7 4 2M6 12c1.8-2.1 3.8-3.2 6-3.2s4.2 1.1 6 3.2"/></svg>',
+        'radio' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><circle cx="12" cy="5" r="1"/><path d="M8 9c1-1.3 2.3-2 4-2s3 .7 4 2M6 12c1.8-2.1 3.8-3.2 6-3.2s4.2 1.1 6 3.2"/></svg>',
         'flag' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16M7 5h10l-3 4 3 4H7"/></svg>',
-        'gamepad' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9h8c2 0 3.5 1.4 4 3.2l1 3.4c.4 1.5-.6 2.9-2.1 2.9-1 0-1.6-.4-2.3-1.1L15 16H9l-1.6 1.4c-.7.7-1.3 1.1-2.3 1.1-1.5 0-2.5-1.4-2.1-2.9l1-3.4C4.5 10.4 6 9 8 9Z"/><path d="M8 12.5h3M9.5 11v3"/><circle cx="15.5" cy="12" r=".8" fill="currentColor" stroke="none"/><circle cx="17.5" cy="14" r=".8" fill="currentColor" stroke="none"/></svg>',
+        'gamepad' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9h8c2 0 3.5 1.4 4 3.2l1 3.4c.4 1.5-.6 2.9-2.1 2.9-1 0-1.6-.4-2.3-1.1L15 16H9l-1.6 1.4c-.7.7-1.3 1.1-2.3 1.1-1.5 0-2.5-1.4-2.1-2.9l1-3.4C4.5 10.4 6 9 8 9Z"/><path d="M8 12.5h3M9.5 11v3"/><circle cx="15.5" cy="12" r=".8"/><circle cx="17.5" cy="14" r=".8"/></svg>',
         'bug' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="2"/><rect x="8" y="10" width="8" height="8" rx="3"/><path d="M7 12 4 10M7 15l-3 2M17 12l3-2M17 15l3 2M10 6 8 4M14 6l2-2"/></svg>',
         'lock' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="11" width="10" height="8" rx="1.5"/><path d="M9 11V8.8A3 3 0 0 1 12 6a3 3 0 0 1 3 2.8V11"/></svg>',
         default => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 8 4 4-4 4M12 16h6"/></svg>',

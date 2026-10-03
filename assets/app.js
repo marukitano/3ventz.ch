@@ -46,7 +46,7 @@
         output.textContent = '';
     };
 
-    const renderSuggestions = () => {
+    const renderSuggestions = (direction = 0) => {
         if (!suggestions.length) {
             output.textContent = '';
             return;
@@ -54,6 +54,12 @@
 
         output.replaceChildren();
         output.appendChild(document.createTextNode('→ '));
+
+        const list = document.createElement('span');
+        list.className = 'terminal-suggestion-list';
+
+        if (direction < 0) list.classList.add('rotate-up');
+        if (direction > 0) list.classList.add('rotate-down');
 
         const rotated = [
             ...suggestions.slice(suggestionIndex),
@@ -64,12 +70,14 @@
             const span = document.createElement('span');
             span.className = 'terminal-suggestion' + (index === 0 ? ' selected' : '');
             span.textContent = item;
-            output.appendChild(span);
+            list.appendChild(span);
 
             if (index < rotated.length - 1) {
-                output.appendChild(document.createTextNode(' · '));
+                list.appendChild(document.createTextNode(' · '));
             }
         });
+
+        output.appendChild(list);
     };
 
     const acceptSuggestion = () => {
@@ -210,7 +218,7 @@
                 suggestionIndex = suggestionIndex > 0
                     ? suggestionIndex - 1
                     : suggestions.length - 1;
-                renderSuggestions();
+                renderSuggestions(-1);
                 return;
             }
 
@@ -219,11 +227,11 @@
                 suggestionIndex = suggestionIndex < suggestions.length - 1
                     ? suggestionIndex + 1
                     : 0;
-                renderSuggestions();
+                renderSuggestions(1);
                 return;
             }
 
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' || event.key === 'Tab') {
                 event.preventDefault();
                 acceptSuggestion();
                 return;

@@ -11,18 +11,6 @@
     const root = document.documentElement;
 
     const themes = ['default', 'c64', 'amiga', 'atari', 'edgerunner', 'hackers'];
-    const colors = {
-        cyan: '#00f5ff',
-        green: '#39ff14',
-        pink: '#ff3df2',
-        amber: '#ffbf00',
-        orange: '#ff7a00',
-        red: '#ff3344',
-        blue: '#3b82ff',
-        purple: '#a855f7',
-        white: '#ffffff'
-    };
-
     const commands = [
         'help',
         'next',
@@ -31,14 +19,13 @@
         'today',
         'events',
         'admin',
-        'color',
         'theme',
-        'dark',
-        'light',
         'clear',
         'whoami',
         'sudo'
     ];
+
+    const commandsWithArguments = new Set(['theme', 'year']);
 
     let commandIndex = -1;
     let suggestions = [];
@@ -66,17 +53,20 @@
         }
 
         output.replaceChildren();
+        output.appendChild(document.createTextNode('→ '));
 
-        const arrow = document.createTextNode('→ ');
-        output.appendChild(arrow);
+        const rotated = [
+            ...suggestions.slice(suggestionIndex),
+            ...suggestions.slice(0, suggestionIndex)
+        ];
 
-        suggestions.forEach((item, index) => {
+        rotated.forEach((item, index) => {
             const span = document.createElement('span');
-            span.className = 'terminal-suggestion' + (index === suggestionIndex ? ' selected' : '');
+            span.className = 'terminal-suggestion' + (index === 0 ? ' selected' : '');
             span.textContent = item;
             output.appendChild(span);
 
-            if (index < suggestions.length - 1) {
+            if (index < rotated.length - 1) {
                 output.appendChild(document.createTextNode(' · '));
             }
         });
@@ -129,15 +119,7 @@
 
     const applySavedAppearance = () => {
         const savedTheme = localStorage.getItem('3ventz-theme') || 'default';
-        const savedMode = localStorage.getItem('3ventz-mode') || 'dark';
-        const savedColor = localStorage.getItem('3ventz-color');
-
         root.dataset.theme = themes.includes(savedTheme) ? savedTheme : 'default';
-        root.dataset.mode = savedMode === 'light' ? 'light' : 'dark';
-
-        if (savedColor && /^#[0-9a-f]{6}$/i.test(savedColor)) {
-            root.style.setProperty('--cyan', savedColor);
-        }
     };
 
     const setTheme = (name) => {
@@ -149,43 +131,8 @@
         }
 
         root.dataset.theme = theme;
-        root.style.removeProperty('--cyan');
         localStorage.setItem('3ventz-theme', theme);
-        localStorage.removeItem('3ventz-color');
         say('theme = ' + theme);
-    };
-
-    const setMode = (mode) => {
-        root.dataset.mode = mode;
-        localStorage.setItem('3ventz-mode', mode);
-        say('mode = ' + mode);
-    };
-
-    const setColor = (value) => {
-        if (!value) {
-            say('colors: ' + Object.keys(colors).join(' · ') + ' · #RRGGBB · reset');
-            return;
-        }
-
-        const requested = value.toLowerCase();
-
-        if (requested === 'reset') {
-            root.style.removeProperty('--cyan');
-            localStorage.removeItem('3ventz-color');
-            say('color reset');
-            return;
-        }
-
-        const resolved = colors[requested] || requested;
-
-        if (!/^#[0-9a-f]{6}$/i.test(resolved)) {
-            say('usage: color cyan | color #00ff88 | color reset');
-            return;
-        }
-
-        root.style.setProperty('--cyan', resolved);
-        localStorage.setItem('3ventz-color', resolved);
-        say('color = ' + resolved);
     };
 
     const complete = () => {
@@ -195,24 +142,37 @@
         const cmd = (parts[0] || '').toLowerCase();
         const hasSpace = /\s/.test(trimmed);
 
-        let pool = commands;
-        let prefix = cmd;
-        let lead = '';
-
+        // Argument completion for commands that already have their trailing space.
         if (hasSpace && cmd === 'theme') {
-            pool = themes;
-            prefix = (parts[1] || '').toLowerCase();
-            lead = 'theme ';
-        } else if (hasSpace && cmd === 'color') {
-            pool = [...Object.keys(colors), 'reset'];
-            prefix = (parts[1] || '').toLowerCase();
-            lead = 'color ';
+            const prefix = (parts[1] || '').toLowerCase();
+            const matches = themes.filter((item) => item.startsWith(prefix));
+
+            if (matches.length === 1) {
+                input.value = 'theme ' + matches[0];
+                resizeInput();
+                clearSuggestions();
+                return;
+            }
+
+            if (matches.length > 1 || prefix === '') {
+                suggestions = matches.length ? matches : themes;
+                suggestionIndex = 0;
+                suggestionLead = 'theme ';
+                renderSuggestions();
+                return;
+            }
+
+            say('no match');
+            return;
         }
 
-        const matches = pool.filter((item) => item.startsWith(prefix));
+        // Complete command names. Commands with arguments get a trailing space
+        // immediately, so a second Tab can open argument suggestions.
+        const matches = commands.filter((item) => item.startsWith(cmd));
 
         if (matches.length === 1) {
-            input.value = lead + matches[0];
+            const match = matches[0];
+            input.value = match + (commandsWithArguments.has(match) ? ' ' : '');
             resizeInput();
             clearSuggestions();
             return;
@@ -221,15 +181,15 @@
         if (matches.length > 1) {
             suggestions = matches;
             suggestionIndex = 0;
-            suggestionLead = lead;
+            suggestionLead = '';
             renderSuggestions();
             return;
         }
 
-        if (prefix === '') {
-            suggestions = pool;
+        if (cmd === '') {
+            suggestions = commands;
             suggestionIndex = 0;
-            suggestionLead = lead;
+            suggestionLead = '';
             renderSuggestions();
         } else {
             say('no match');
@@ -316,7 +276,7 @@
                 break;
             case 'help':
             case '?':
-                say('help · next · prev · year · today · events · admin · color · theme · dark · light');
+                say('help · next · prev · year · today · events · admin · theme · clear');
                 break;
             case 'next':
                 goYear(currentYear + 1);
@@ -338,17 +298,8 @@
             case 'admin':
                 window.location.href = '/admin/';
                 break;
-            case 'color':
-                setColor(arg);
-                break;
             case 'theme':
                 setTheme(arg);
-                break;
-            case 'dark':
-                setMode('dark');
-                break;
-            case 'light':
-                setMode('light');
                 break;
             case 'clear':
                 output.textContent = '';

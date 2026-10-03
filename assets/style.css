@@ -209,7 +209,7 @@ a { color: inherit; }
     display: inline-block;
     font: inherit;
     line-height: 1;
-    transform: translateY(.10em);
+    transform: translateY(.30em);
 }
 
 

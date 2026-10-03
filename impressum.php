@@ -1,0 +1,78 @@
+<?php
+declare(strict_types=1);
+require __DIR__ . '/lib/bootstrap.php';
+
+$legal = $config['legal'] ?? [];
+$legalReady =
+    !empty($legal['name']) &&
+    !empty($legal['address']) &&
+    !empty($legal['email']);
+
+if (!$legalReady) {
+    http_response_code(503);
+}
+?>
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Impressum + Datenschutz // 3ventz.ch</title>
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+<main class="legal-page">
+    <h1>impressum + datenschutz</h1>
+
+    <?php if (!$legalReady): ?>
+        <p>Die rechtlichen Kontaktdaten sind noch nicht konfiguriert.</p>
+    <?php else: ?>
+        <h2>Impressum</h2>
+        <address>
+            <?= nl2br(h((string)$legal['name'] . "\n" . (string)$legal['address'])) ?><br>
+            E-Mail: <a href="mailto:<?= h((string)$legal['email']) ?>"><?= h((string)$legal['email']) ?></a>
+        </address>
+
+        <h2>Datenschutz</h2>
+        <p>
+            Verantwortlich für die Bearbeitung von Personendaten auf dieser Website ist die oben
+            genannte Person. Fragen zum Datenschutz können an die angegebene E-Mail-Adresse gerichtet werden.
+        </p>
+
+        <p>
+            Die Website wird bei ALL-INKL.COM – Neue Medien Münnich in Deutschland gehostet.
+            Beim Abruf der Website können durch den Hosting-Anbieter technisch erforderliche
+            Server-Logdaten verarbeitet werden, insbesondere IP-Adresse, Zeitpunkt, angeforderte Datei,
+            Referrer sowie Angaben zu Browser und Betriebssystem. Diese Daten dienen insbesondere dem
+            sicheren und zuverlässigen Betrieb des Webservers.
+        </p>
+
+        <p>
+            3ventz.ch verwendet keinen Analyse- oder Werbetracker. Für den sichtbaren Besucherzähler
+            wird bei jedem Aufruf lediglich ein gemeinsamer Zähler für das jeweilige Kalenderjahr um
+            eins erhöht. Dabei wird für diesen Zähler keine Besucher-ID, IP-Adresse oder sonstige
+            Kennung gespeichert.
+        </p>
+
+        <p>
+            Die ausgewählte Darstellung («Theme») wird ausschliesslich lokal im Browser mittels
+            localStorage gespeichert, damit die Auswahl beim nächsten Besuch wiederhergestellt werden
+            kann. Diese Theme-Einstellung wird nicht an 3ventz.ch übertragen und nicht zu Werbe- oder
+            Profilingzwecken verwendet.
+        </p>
+
+        <p>
+            Externe Links führen zu Angeboten Dritter. Für deren Inhalte und Datenbearbeitungen gelten
+            die jeweiligen Bestimmungen der Drittanbieter.
+        </p>
+
+        <p>
+            Betroffene Personen können sich für Auskunft, Berichtigung oder Löschung ihrer bei uns
+            bearbeiteten Personendaten an die oben angegebene Kontaktadresse wenden.
+        </p>
+    <?php endif; ?>
+
+    <a class="legal-back" href="/">← back to 3ventz</a>
+</main>
+</body>
+</html>

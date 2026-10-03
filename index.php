@@ -175,7 +175,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
         </header>
 
         <?php if ($demoMode): ?>
-            <div style="margin:-8px 0 18px;color:#ff3df2;font-size:.75rem;letter-spacing:.08em">
+            <div style="margin:-3px 0 18px;color:#ff3df2;font-size:.75rem;letter-spacing:.08em">
                 // LOCAL DEMO MODE · sample events
             </div>
         <?php endif; ?>

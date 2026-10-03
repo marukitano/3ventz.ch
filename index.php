@@ -163,11 +163,14 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                 </form>
                 <div class="tagline">HACK · MAKE · BREAK · MEET</div>
             </div>
-            <nav class="year-nav" aria-label="Jahr wählen">
-                <a href="?year=<?= $year - 1 ?>">‹</a>
-                <strong><?= $year ?></strong>
-                <a href="?year=<?= $year + 1 ?>">›</a>
-            </nav>
+            <div class="nav-stack">
+                <div class="theme-indicator" id="theme-indicator">THEME // DEFAULT</div>
+                <nav class="year-nav" aria-label="Jahr wählen">
+                    <a href="?year=<?= $year - 1 ?>">‹</a>
+                    <strong><?= $year ?></strong>
+                    <a href="?year=<?= $year + 1 ?>">›</a>
+                </nav>
+            </div>
         </header>
 
         <?php if ($demoMode): ?>

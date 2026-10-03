@@ -426,8 +426,10 @@ a { color: inherit; }
     border-radius: 6px;
     pointer-events: none;
     box-shadow:
-        0 0 5px color-mix(in srgb, var(--event-color) 72%, transparent),
-        inset 0 0 5px color-mix(in srgb, var(--event-color) 20%, transparent);
+        0 0 3px color-mix(in srgb, var(--event-color) 95%, transparent),
+        0 0 8px color-mix(in srgb, var(--event-color) 72%, transparent),
+        0 0 14px color-mix(in srgb, var(--event-color) 38%, transparent),
+        inset 0 0 6px color-mix(in srgb, var(--event-color) 28%, transparent);
     animation: event-frame-flicker 7s infinite;
 }
 
@@ -485,10 +487,9 @@ a { color: inherit; }
     background:
         linear-gradient(
             270deg,
-            color-mix(in srgb, var(--event-color) 36%, transparent) 0%,
-            color-mix(in srgb, var(--event-color) 22%, transparent) 34%,
-            color-mix(in srgb, var(--event-color) 10%, transparent) 62%,
-            transparent 100%
+            color-mix(in srgb, var(--event-color) 100%, transparent) 0%,
+            color-mix(in srgb, var(--event-color) 50%, transparent) 50%,
+            color-mix(in srgb, var(--event-color) 10%, transparent) 100%
         );
 }
 

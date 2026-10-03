@@ -70,55 +70,20 @@
         ...suggestions.slice(0, suggestionIndex)
     ];
 
-    const renderSuggestions = (direction = 0, previousIndex = null) => {
+    const renderSuggestions = (direction = 0) => {
         if (!suggestions.length) {
             output.textContent = '';
             return;
         }
 
-        const currentRotated = getRotatedSuggestions();
-
-        // Initial render: no transition needed.
-        if (!direction || previousIndex === null) {
-            output.replaceChildren();
-            output.appendChild(buildSuggestionList(currentRotated, 0));
-            requestAnimationFrame(positionOutput);
-            return;
-        }
-
-        const previousRotated = [
-            ...suggestions.slice(previousIndex),
-            ...suggestions.slice(0, previousIndex)
-        ];
-
         output.replaceChildren();
-        const viewport = document.createElement('span');
-        viewport.className = 'terminal-suggestion-viewport';
 
-        const oldList = buildSuggestionList(previousRotated, 0);
-        const newList = buildSuggestionList(currentRotated, 0);
+        const list = buildSuggestionList(getRotatedSuggestions(), 0);
 
-        oldList.classList.add('suggestion-old');
-        newList.classList.add('suggestion-new');
+        if (direction < 0) list.classList.add('snap-prev');
+        if (direction > 0) list.classList.add('snap-next');
 
-        if (direction > 0) {
-            viewport.classList.add('move-next');
-        } else {
-            viewport.classList.add('move-prev');
-        }
-
-        viewport.appendChild(oldList);
-        viewport.appendChild(newList);
-        output.appendChild(viewport);
-
-        const cleanup = () => {
-            if (!viewport.isConnected) return;
-            output.replaceChildren();
-            output.appendChild(buildSuggestionList(currentRotated, 0));
-            requestAnimationFrame(positionOutput);
-        };
-
-        newList.addEventListener('animationend', cleanup, { once: true });
+        output.appendChild(list);
         requestAnimationFrame(positionOutput);
     };
 
@@ -277,21 +242,19 @@
         if (suggestions.length) {
             if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
                 event.preventDefault();
-                const previousIndex = suggestionIndex;
                 suggestionIndex = suggestionIndex > 0
                     ? suggestionIndex - 1
                     : suggestions.length - 1;
-                renderSuggestions(-1, previousIndex);
+                renderSuggestions(-1);
                 return;
             }
 
             if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
                 event.preventDefault();
-                const previousIndex = suggestionIndex;
                 suggestionIndex = suggestionIndex < suggestions.length - 1
                     ? suggestionIndex + 1
                     : 0;
-                renderSuggestions(1, previousIndex);
+                renderSuggestions(1);
                 return;
             }
 

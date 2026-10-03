@@ -235,7 +235,7 @@
 
     input.addEventListener('keydown', (event) => {
         if (suggestions.length) {
-            if (event.key === 'ArrowUp') {
+            if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
                 event.preventDefault();
                 suggestionIndex = suggestionIndex > 0
                     ? suggestionIndex - 1
@@ -244,7 +244,7 @@
                 return;
             }
 
-            if (event.key === 'ArrowDown') {
+            if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
                 event.preventDefault();
                 suggestionIndex = suggestionIndex < suggestions.length - 1
                     ? suggestionIndex + 1

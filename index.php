@@ -156,14 +156,34 @@ function event_short_text(string $text, int $days): string
         return '';
     }
 
-    // Approximate capacity: 1 day = 4 chars, 2 = 10, 3 = 16, then +6/day.
+    // Total visible capacity including the leading terminal prompt:
+    // 1 day = 4 chars, 2 = 10, 3 = 16, then +6/day.
     $maxChars = max(4, ($days * 6) - 2);
+    $textChars = max(1, $maxChars - 1);
 
     if (function_exists('mb_substr')) {
-        return mb_substr($text, 0, $maxChars, 'UTF-8');
+        $text = mb_substr($text, 0, $textChars, 'UTF-8');
+    } else {
+        $text = substr($text, 0, $textChars);
     }
 
-    return substr($text, 0, $maxChars);
+    return '>' . $text;
+}
+
+function event_text_mask_uri(string $text): string
+{
+    if ($text === '') {
+        return 'none';
+    }
+
+    $escaped = htmlspecialchars($text, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="40" viewBox="0 0 320 40">'
+         . '<text x="314" y="27" text-anchor="end" fill="white" '
+         . 'font-family="VT323, Courier New, monospace" font-size="22" letter-spacing="1">'
+         . $escaped
+         . '</text></svg>';
+
+    return 'url("data:image/svg+xml,' . rawurlencode($svg) . '")';
 }
 
 function month_calendar(int $year, int $month, array $eventsByDate): string
@@ -304,6 +324,9 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                         $eventShortText = $eventIconKey === 'none'
                             ? event_short_text((string)($event['short_text'] ?? ''), $segmentDays)
                             : '';
+                        if ($eventShortText !== '') {
+                            $style .= ';--event-text-mask:' . h(event_text_mask_uri($eventShortText));
+                        }
                     ?>
                         <?php if ($hasEventUrl): ?>
                             <a class="event-span"
@@ -319,8 +342,6 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                aria-label="<?= h($event['title']) ?>">
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
-                                <?php elseif ($eventShortText !== ''): ?>
-                                    <span class="event-span-text-overlay" aria-hidden="true"><?= h($eventShortText) ?></span>
                                 <?php endif; ?>
                             </a>
                         <?php else: ?>
@@ -334,8 +355,6 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                   tabindex="0">
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
-                                <?php elseif ($eventShortText !== ''): ?>
-                                    <span class="event-span-text-overlay" aria-hidden="true"><?= h($eventShortText) ?></span>
                                 <?php endif; ?>
                             </span>
                         <?php endif; ?>

@@ -21,6 +21,7 @@ $iconOptions = [
     'gamepad' => '✣ Gamepad',
     'bug' => 'BUG',
     'lock' => '⌾ Lock',
+    'soldering_iron' => '⌁ Lötkolben',
 ];
 ?>
 <!doctype html>

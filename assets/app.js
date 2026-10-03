@@ -3,6 +3,7 @@
     const input = document.getElementById('terminal-input');
     const output = document.getElementById('terminal-output');
     const cursor = document.getElementById('terminal-cursor');
+    const hint = document.getElementById('terminal-hint');
     const themeIndicator = document.getElementById('theme-indicator');
     const navStack = document.querySelector('.nav-stack');
 
@@ -21,6 +22,7 @@
         'today',
         'events',
         'admin',
+        'man',
         'theme',
         'clear',
         'whoami',
@@ -34,11 +36,18 @@
     let suggestionIndex = -1;
     let suggestionLead = '';
 
+    const updateHint = () => {
+        if (!hint) return;
+        const shouldShow = input.value.length === 0 && suggestions.length === 0 && output.textContent === '';
+        hint.hidden = !shouldShow;
+    };
+
     const say = (text) => {
         suggestions = [];
         suggestionIndex = -1;
         suggestionLead = '';
         output.textContent = text;
+        updateHint();
         requestAnimationFrame(positionOutput);
     };
 
@@ -47,6 +56,7 @@
         suggestionIndex = -1;
         suggestionLead = '';
         output.textContent = '';
+        updateHint();
     };
 
     const buildSuggestionList = (items, selectedIndex = 0) => {
@@ -87,6 +97,7 @@
         if (direction > 0) list.classList.add('snap-next');
 
         output.appendChild(list);
+        updateHint();
         requestAnimationFrame(positionOutput);
     };
 
@@ -263,6 +274,7 @@
         resizeInput();
         commandIndex = -1;
         clearSuggestions();
+        updateHint();
         if (cursor) cursor.style.display = 'inline';
     });
 
@@ -339,8 +351,9 @@
                 say('type help');
                 break;
             case 'help':
+            case 'man':
             case '?':
-                say('help · next · prev · year · today · events · admin · theme · clear');
+                say('help · man · next · prev · year · today · events · admin · theme · clear');
                 break;
             case 'next':
                 goYear(currentYear + 1);
@@ -381,6 +394,7 @@
         input.value = '';
         commandIndex = -1;
         resizeInput();
+        updateHint();
         if (cursor) cursor.style.display = 'inline';
         input.focus();
     });
@@ -389,6 +403,7 @@
 
     applySavedAppearance();
     resizeInput();
+    updateHint();
 
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {

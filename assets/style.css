@@ -187,6 +187,8 @@ a { color: inherit; }
     align-items: baseline;
     min-width: 1ch;
     max-width: 42vw;
+    padding-right: 12px;
+    overflow: visible;
 }
 
 #terminal-input {
@@ -223,9 +225,9 @@ a { color: inherit; }
     font-weight: 400;
     transform: translateY(.02em);
     text-shadow:
-        0 0 5px rgba(0,245,255,1),
-        0 0 14px rgba(0,245,255,.85),
-        0 0 32px rgba(0,245,255,.45);
+        0 0 3px rgba(0,245,255,.95),
+        0 0 8px rgba(0,245,255,.62),
+        0 0 16px rgba(0,245,255,.24);
     animation:
         cursor-blink .82s steps(1, end) infinite,
         cursor-bloom 2.6s ease-in-out infinite;

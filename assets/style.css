@@ -649,6 +649,14 @@ body::after {
 }
 
 /* Admin */
+.admin-page-root,
+.admin-page {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .admin-shell {
     width: min(980px, calc(100% - 32px));
     margin: 40px auto;

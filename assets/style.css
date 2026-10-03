@@ -1284,3 +1284,216 @@ footer {
         display: none;
     }
 }
+
+
+/* HACKERS // cinematic background pass */
+:root[data-theme="hackers"] body {
+    background:
+        radial-gradient(52vw 30vh at 50% 2%, rgba(255,25,209,.22) 0%, rgba(255,25,209,.07) 42%, transparent 72%),
+        radial-gradient(34vw 34vh at 8% 24%, rgba(0,247,255,.17) 0%, rgba(0,247,255,.05) 48%, transparent 76%),
+        radial-gradient(34vw 30vh at 92% 18%, rgba(255,144,0,.15) 0%, rgba(255,144,0,.04) 48%, transparent 76%),
+        radial-gradient(40vw 34vh at 18% 88%, rgba(255,25,209,.10) 0%, transparent 72%),
+        radial-gradient(42vw 34vh at 84% 84%, rgba(0,247,255,.10) 0%, transparent 72%),
+        linear-gradient(115deg, transparent 0 18%, rgba(0,247,255,.035) 31%, transparent 45% 58%, rgba(255,25,209,.04) 72%, transparent 86%),
+        repeating-linear-gradient(90deg, rgba(0,247,255,.018) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(0deg, rgba(255,25,209,.014) 0 1px, transparent 1px 18px),
+        #020207;
+    background-attachment: fixed;
+}
+
+:root[data-theme="hackers"] .shell {
+    width: min(1500px, 84vw);
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+:root[data-theme="hackers"] .calendar-grid {
+    gap: 10px;
+}
+
+:root[data-theme="hackers"] .month {
+    background:
+        linear-gradient(180deg, rgba(3,14,20,.78), rgba(2,7,12,.88));
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+}
+
+:root[data-theme="hackers"] .hackers-popculture {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+:root[data-theme="hackers"] .hackers-popculture::before,
+:root[data-theme="hackers"] .hackers-popculture::after {
+    content: "";
+    position: absolute;
+    top: 8vh;
+    bottom: 7vh;
+    width: 7vw;
+    min-width: 72px;
+    opacity: .52;
+    filter: saturate(1.25);
+}
+
+:root[data-theme="hackers"] .hackers-popculture::before {
+    left: 0;
+    background:
+        linear-gradient(90deg, rgba(255,25,209,.32), transparent 75%),
+        repeating-linear-gradient(0deg, rgba(0,247,255,.32) 0 2px, transparent 2px 17px),
+        repeating-linear-gradient(90deg, rgba(255,230,0,.20) 0 2px, transparent 2px 23px);
+    clip-path: polygon(0 0, 76% 4%, 100% 18%, 72% 34%, 98% 50%, 76% 70%, 100% 87%, 70% 100%, 0 96%);
+    box-shadow: 0 0 34px rgba(255,25,209,.18);
+}
+
+:root[data-theme="hackers"] .hackers-popculture::after {
+    right: 0;
+    background:
+        linear-gradient(270deg, rgba(0,247,255,.30), transparent 75%),
+        repeating-linear-gradient(0deg, rgba(255,25,209,.28) 0 2px, transparent 2px 19px),
+        repeating-linear-gradient(90deg, rgba(56,255,18,.18) 0 2px, transparent 2px 25px);
+    clip-path: polygon(100% 0, 28% 4%, 0 22%, 24% 40%, 0 57%, 30% 73%, 0 90%, 32% 100%, 100% 96%);
+    box-shadow: 0 0 34px rgba(0,247,255,.16);
+}
+
+:root[data-theme="hackers"] .hackers-smiley {
+    top: 15vh;
+    left: 1.8vw;
+    width: 74px;
+    height: 74px;
+    opacity: .95;
+    transform: rotate(-9deg);
+    box-shadow:
+        0 0 0 2px rgba(255,230,0,.15),
+        0 0 22px rgba(255,230,0,.30),
+        0 0 44px rgba(255,25,209,.12);
+}
+
+:root[data-theme="hackers"] .hackers-smiley-eye {
+    top: 22px;
+    right: 18px;
+}
+
+:root[data-theme="hackers"] .hackers-smiley-patch {
+    top: 20px;
+    left: 13px;
+    width: 22px;
+    height: 16px;
+}
+
+:root[data-theme="hackers"] .hackers-smiley-strap {
+    top: 21px;
+    left: 5px;
+    width: 54px;
+}
+
+:root[data-theme="hackers"] .hackers-smiley-mouth {
+    left: 17px;
+    bottom: 13px;
+    width: 38px;
+    height: 18px;
+}
+
+:root[data-theme="hackers"] .hackers-slogan-planet {
+    top: 26vh;
+    left: 1.3vw;
+    font-size: clamp(.9rem, 1.25vw, 1.35rem);
+    color: #ffe600;
+    transform: rotate(-7deg);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: .06em;
+    text-shadow:
+        0 0 5px rgba(255,230,0,.82),
+        2px 2px 0 rgba(255,25,209,.45);
+}
+
+:root[data-theme="hackers"] .hackers-slogan-boredom {
+    top: auto;
+    bottom: 16vh;
+    left: auto;
+    right: 1.25vw;
+    font-size: clamp(.85rem, 1.15vw, 1.25rem);
+    color: #00f7ff;
+    transform: rotate(7deg);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    text-shadow:
+        0 0 5px rgba(0,247,255,.80),
+        2px 2px 0 rgba(255,25,209,.42);
+}
+
+:root[data-theme="hackers"] .hackers-floppy {
+    right: 1.4vw;
+    bottom: 7vh;
+    width: 78px;
+    height: 78px;
+    transform: rotate(10deg);
+    box-shadow:
+        0 0 18px rgba(255,230,0,.24),
+        4px 4px 0 rgba(255,25,209,.14);
+}
+
+:root[data-theme="hackers"] .hackers-floppy::before {
+    left: 13px;
+    width: 46px;
+    height: 27px;
+}
+
+:root[data-theme="hackers"] .hackers-floppy::after {
+    left: 15px;
+    right: 15px;
+    height: 26px;
+    bottom: 8px;
+}
+
+:root[data-theme="hackers"] .hackers-floppy-label {
+    left: 19px;
+    bottom: 14px;
+    font-size: .56rem;
+}
+
+:root[data-theme="hackers"] .hackers-floppy-window {
+    top: 4px;
+    left: 22px;
+    width: 18px;
+    height: 17px;
+}
+
+:root[data-theme="hackers"] .topbar {
+    background:
+        linear-gradient(90deg, rgba(0,247,255,.025), rgba(255,25,209,.055) 62%, rgba(255,25,209,.02));
+}
+
+:root[data-theme="hackers"] footer {
+    background:
+        linear-gradient(90deg, transparent, rgba(255,25,209,.035), transparent);
+}
+
+@media (max-width: 1300px) {
+    :root[data-theme="hackers"] .shell {
+        width: min(1500px, 91vw);
+    }
+
+    :root[data-theme="hackers"] .hackers-popculture::before,
+    :root[data-theme="hackers"] .hackers-popculture::after,
+    :root[data-theme="hackers"] .hackers-smiley,
+    :root[data-theme="hackers"] .hackers-slogan,
+    :root[data-theme="hackers"] .hackers-floppy {
+        opacity: .28;
+    }
+}
+
+@media (max-width: 900px) {
+    :root[data-theme="hackers"] .shell {
+        width: 96vw;
+    }
+
+    :root[data-theme="hackers"] .hackers-popculture::before,
+    :root[data-theme="hackers"] .hackers-popculture::after {
+        display: none;
+    }
+}

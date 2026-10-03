@@ -423,11 +423,11 @@ a { color: inherit; }
     z-index: 0;
     inset: -1px;
     border: 2px solid var(--event-color);
-    border-radius: 2px;
+    border-radius: 6px;
     pointer-events: none;
     box-shadow:
-        0 0 4px color-mix(in srgb, var(--event-color) 72%, transparent),
-        inset 0 0 4px color-mix(in srgb, var(--event-color) 20%, transparent);
+        0 0 5px color-mix(in srgb, var(--event-color) 72%, transparent),
+        inset 0 0 5px color-mix(in srgb, var(--event-color) 20%, transparent);
     animation: event-frame-flicker 7s infinite;
 }
 
@@ -466,45 +466,70 @@ a { color: inherit; }
 
 .number {
     position: relative;
-    z-index: 2;
+    z-index: 3;
 }
 
-.event-dot {
-    position: relative;
-    z-index: 2;
-    float: right;
+.event-accent {
+    position: absolute;
+    z-index: 1;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 5px;
+    border-radius: 0 5px 5px 0;
+    pointer-events: none;
+    background:
+        linear-gradient(
+            270deg,
+            color-mix(in srgb, var(--event-color) 36%, transparent) 0%,
+            color-mix(in srgb, var(--event-color) 22%, transparent) 34%,
+            color-mix(in srgb, var(--event-color) 10%, transparent) 62%,
+            transparent 100%
+        );
+}
+
+.event-icon {
+    display: inline-flex;
+    width: 15px;
+    height: 15px;
+    align-items: center;
+    justify-content: center;
+    color: var(--event-color);
+    opacity: .96;
+    filter:
+        drop-shadow(0 0 2px var(--event-color))
+        drop-shadow(0 0 4px color-mix(in srgb, var(--event-color) 45%, transparent));
+}
+
+.event-icon svg {
+    width: 15px;
+    height: 15px;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+}
+
+.event-hit {
+    position: absolute;
+    z-index: 4;
+    inset: -1px;
     display: block;
-    width: 13px;
-    height: 13px;
-    margin: 2px -2px 0 0;
-    border-radius: 50%;
-    background: transparent;
+    border-radius: 6px;
     cursor: pointer;
     text-decoration: none;
+    background: transparent;
 }
 
-.event-dot::before {
-    content: "";
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    left: 4px;
-    top: 4px;
-    border-radius: 50%;
-    background: var(--event-color);
-    box-shadow: 0 0 7px var(--event-color);
-    transition: transform 120ms ease, box-shadow 120ms ease;
-}
-
-.event-dot:hover::before,
-.event-dot:focus-visible::before {
-    transform: scale(1.5);
-    box-shadow: 0 0 10px var(--event-color);
-}
-
-.event-dot:focus-visible {
-    outline: 1px solid var(--event-color);
-    outline-offset: 1px;
+.event-hit:focus-visible {
+    outline: 1px dashed var(--text);
+    outline-offset: -4px;
 }
 
 .event-tooltip {

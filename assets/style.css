@@ -584,69 +584,36 @@ button, .button {
     will-change: transform, opacity;
 }
 
-.terminal-suggestion-viewport {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 1em;
-    line-height: 1em;
-    overflow: hidden;
+
+
+
+
+
+.terminal-suggestion-list.snap-next {
+    animation: suggestion-snap-next 280ms cubic-bezier(.18,.86,.25,1);
 }
 
-.terminal-suggestion-viewport .terminal-suggestion-list {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: max-content;
-    max-width: none;
-    line-height: 1em;
-    overflow: visible;
-    text-overflow: clip;
+.terminal-suggestion-list.snap-prev {
+    animation: suggestion-snap-prev 280ms cubic-bezier(.18,.86,.25,1);
 }
 
-.terminal-suggestion-viewport.move-next .suggestion-old {
-    animation: suggestion-old-next 360ms cubic-bezier(.22,.78,.26,1) forwards;
-}
-
-.terminal-suggestion-viewport.move-next .suggestion-new {
-    animation: suggestion-new-next 360ms cubic-bezier(.16,.9,.26,1) forwards;
-}
-
-.terminal-suggestion-viewport.move-prev .suggestion-old {
-    animation: suggestion-old-prev 360ms cubic-bezier(.22,.78,.26,1) forwards;
-}
-
-.terminal-suggestion-viewport.move-prev .suggestion-new {
-    animation: suggestion-new-prev 360ms cubic-bezier(.16,.9,.26,1) forwards;
-}
-
-@keyframes suggestion-old-next {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-42px); }
-}
-
-@keyframes suggestion-new-next {
-    0%   { transform: translateX(52px); }
-    72%  { transform: translateX(-5px); }
-    88%  { transform: translateX(2px); }
+@keyframes suggestion-snap-next {
+    0%   { transform: translateX(28px); }
+    70%  { transform: translateX(-4px); }
+    88%  { transform: translateX(1.5px); }
     100% { transform: translateX(0); }
 }
 
-@keyframes suggestion-old-prev {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(42px); }
-}
-
-@keyframes suggestion-new-prev {
-    0%   { transform: translateX(-52px); }
-    72%  { transform: translateX(5px); }
-    88%  { transform: translateX(-2px); }
+@keyframes suggestion-snap-prev {
+    0%   { transform: translateX(-28px); }
+    70%  { transform: translateX(4px); }
+    88%  { transform: translateX(-1.5px); }
     100% { transform: translateX(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .terminal-suggestion-viewport .suggestion-old,
-    .terminal-suggestion-viewport .suggestion-new {
+    .terminal-suggestion-list.snap-next,
+    .terminal-suggestion-list.snap-prev {
         animation: none !important;
     }
 }

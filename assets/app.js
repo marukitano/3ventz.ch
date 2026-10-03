@@ -407,7 +407,7 @@
 
         switch (cmd) {
             case '':
-                say('type help');
+                clearSuggestions();
                 break;
             case 'man':
                 if (arg) showManual(arg);

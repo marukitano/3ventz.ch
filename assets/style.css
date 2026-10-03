@@ -585,30 +585,44 @@ button, .button {
 }
 
 .terminal-suggestion-list.rotate-down {
-    animation: suggestion-slide-down 140ms ease-out;
+    animation: suggestion-snap-next 220ms cubic-bezier(.22,.9,.24,1);
 }
 
 .terminal-suggestion-list.rotate-up {
-    animation: suggestion-slide-up 140ms ease-out;
+    animation: suggestion-snap-prev 220ms cubic-bezier(.22,.9,.24,1);
 }
 
-@keyframes suggestion-slide-down {
-    from {
-        opacity: .35;
-        transform: translateX(10px);
+@keyframes suggestion-snap-next {
+    0% {
+        opacity: .72;
+        transform: translateX(18px);
     }
-    to {
+    68% {
+        opacity: 1;
+        transform: translateX(-4px);
+    }
+    86% {
+        transform: translateX(1.5px);
+    }
+    100% {
         opacity: 1;
         transform: translateX(0);
     }
 }
 
-@keyframes suggestion-slide-up {
-    from {
-        opacity: .35;
-        transform: translateX(-10px);
+@keyframes suggestion-snap-prev {
+    0% {
+        opacity: .72;
+        transform: translateX(-18px);
     }
-    to {
+    68% {
+        opacity: 1;
+        transform: translateX(4px);
+    }
+    86% {
+        transform: translateX(-1.5px);
+    }
+    100% {
         opacity: 1;
         transform: translateX(0);
     }

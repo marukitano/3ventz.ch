@@ -15,7 +15,6 @@
 
     const themes = ['default', 'c64', 'amiga', 'atari', 'edgerunner', 'hackers'];
     const commands = [
-        'help',
         'next',
         'prev',
         'year',
@@ -35,6 +34,7 @@
     let suggestions = [];
     let suggestionIndex = -1;
     let suggestionLead = '';
+    let suggestionMode = 'default';
 
     const updateHint = () => {
         if (!hint) return;
@@ -46,6 +46,7 @@
         suggestions = [];
         suggestionIndex = -1;
         suggestionLead = '';
+        suggestionMode = 'default';
         output.textContent = text;
         updateHint();
         requestAnimationFrame(positionOutput);
@@ -55,6 +56,7 @@
         suggestions = [];
         suggestionIndex = -1;
         suggestionLead = '';
+        suggestionMode = 'default';
         output.textContent = '';
         updateHint();
     };
@@ -90,8 +92,16 @@
 
         output.replaceChildren();
 
-        const visibleSuggestions = getRotatedSuggestions().slice(0, 4);
+        const rotated = getRotatedSuggestions();
+        const visibleSuggestions = suggestionMode === 'theme'
+            ? rotated.slice(0, 4)
+            : rotated;
+
         const list = buildSuggestionList(visibleSuggestions, 0);
+
+        if (suggestionMode === 'manual') {
+            list.classList.add('manual-list');
+        }
 
         if (direction < 0) list.classList.add('snap-prev');
         if (direction > 0) list.classList.add('snap-next');
@@ -200,6 +210,14 @@
         clearSuggestions();
     };
 
+    const openManual = () => {
+        suggestions = commands.filter((item) => item !== 'man');
+        suggestionIndex = 0;
+        suggestionLead = '';
+        suggestionMode = 'manual';
+        renderSuggestions();
+    };
+
     const complete = () => {
         const raw = input.value;
         const trimmed = raw.trimStart();
@@ -215,6 +233,7 @@
                 suggestions = [...themes];
                 suggestionIndex = 0;
                 suggestionLead = 'theme ';
+                suggestionMode = 'theme';
                 renderSuggestions();
                 return;
             }
@@ -232,6 +251,7 @@
                 suggestions = matches;
                 suggestionIndex = 0;
                 suggestionLead = 'theme ';
+                suggestionMode = 'theme';
                 renderSuggestions();
                 return;
             }
@@ -350,10 +370,10 @@
             case '':
                 say('type help');
                 break;
-            case 'help':
             case 'man':
             case '?':
-                say('help · man · next · prev · year · today · events · admin · theme · clear');
+                openManual();
+                break;
                 break;
             case 'next':
                 goYear(currentYear + 1);

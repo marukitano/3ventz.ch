@@ -5,6 +5,34 @@ require __DIR__ . '/lib/bootstrap.php';
 $year = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT) ?: (int)date('Y');
 $year = max(2000, min(2100, $year));
 
+$visitYear = (int)date('Y');
+$pageViewNumber = 0;
+
+if (!$demoMode) {
+    // Aggregate page-view counter only: no visitor ID, IP address or cookie is stored here.
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS pageview_counter (
+            visit_year SMALLINT UNSIGNED NOT NULL PRIMARY KEY,
+            views BIGINT UNSIGNED NOT NULL DEFAULT 0
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+    );
+
+    $counterInsert = $pdo->prepare(
+        'INSERT IGNORE INTO pageview_counter (visit_year, views) VALUES (:visit_year, 0)'
+    );
+    $counterInsert->execute(['visit_year' => $visitYear]);
+
+    // LAST_INSERT_ID(expr) is connection-local, so concurrent requests each
+    // receive the exact ordinal number assigned to their own page view.
+    $counterUpdate = $pdo->prepare(
+        'UPDATE pageview_counter
+         SET views = LAST_INSERT_ID(views + 1)
+         WHERE visit_year = :visit_year'
+    );
+    $counterUpdate->execute(['visit_year' => $visitYear]);
+    $pageViewNumber = (int)$pdo->lastInsertId();
+}
+
 if ($demoMode) {
     $events = [
         [
@@ -133,6 +161,11 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
     <?php
     return (string)ob_get_clean();
 }
+$legal = $config['legal'] ?? [];
+$legalReady =
+    !empty($legal['name']) &&
+    !empty($legal['address']) &&
+    !empty($legal['email']);
 ?>
 <!doctype html>
 <html lang="de">
@@ -190,14 +223,21 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
         </section>
 
         <footer>
-            <span>3ventz.ch</span>
+            <span>
+                3ventz.ch
+                <?php if ($legalReady): ?>
+                    · <a href="/impressum.php">impressum + datenschutz</a>
+                <?php endif; ?>
+            </span>
             <span>// <?= count($events) ?> events loaded</span>
         </footer>
     </main>
     <script>
         window.THREEVENTZ = {
             year: <?= $year ?>,
-            eventCount: <?= count($events) ?>
+            eventCount: <?= count($events) ?>,
+            visitYear: <?= $visitYear ?>,
+            pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
     <script src="/assets/app.js"></script>

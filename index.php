@@ -159,9 +159,9 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                         >
                         <span class="cursor" id="terminal-cursor">_</span>
                     </span>
+                    <span class="terminal-output" id="terminal-output" aria-live="polite"></span>
                 </form>
                 <div class="tagline">HACK · MAKE · BREAK · MEET</div>
-                <div class="terminal-output" id="terminal-output" aria-live="polite"></div>
             </div>
             <nav class="year-nav" aria-label="Jahr wählen">
                 <a href="?year=<?= $year - 1 ?>">‹</a>

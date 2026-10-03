@@ -551,3 +551,46 @@ button, .button {
     text-shadow: none;
     box-shadow: 0 0 5px color-mix(in srgb, var(--pink) 45%, transparent);
 }
+
+
+.terminal-suggestion-list {
+    display: inline-block;
+    will-change: transform, opacity;
+}
+
+.terminal-suggestion-list.rotate-down {
+    animation: suggestion-slide-down 140ms ease-out;
+}
+
+.terminal-suggestion-list.rotate-up {
+    animation: suggestion-slide-up 140ms ease-out;
+}
+
+@keyframes suggestion-slide-down {
+    from {
+        opacity: .35;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes suggestion-slide-up {
+    from {
+        opacity: .35;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .terminal-suggestion-list.rotate-down,
+    .terminal-suggestion-list.rotate-up {
+        animation: none;
+    }
+}

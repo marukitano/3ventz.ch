@@ -10,7 +10,7 @@
     const currentYear = Number(state.year) || new Date().getFullYear();
 
     const say = (text) => {
-        output.textContent = '// ' + text;
+        output.textContent = '→ ' + text;
     };
 
     const goYear = (year) => {
@@ -25,6 +25,9 @@
 
     input.addEventListener('input', () => {
         resizeInput();
+        if (input.value.length > 0) {
+            output.textContent = '';
+        }
         if (cursor) cursor.style.display = 'inline';
     });
 

@@ -8,14 +8,19 @@
 
     const state = window.THREEVENTZ || {};
     const currentYear = Number(state.year) || new Date().getFullYear();
+    const root = document.documentElement;
 
-    const say = (text) => {
-        output.textContent = '→ ' + text;
-    };
-
-    const goYear = (year) => {
-        const y = Math.max(2000, Math.min(2100, Number(year)));
-        window.location.href = '?year=' + y;
+    const themes = ['default', 'c64', 'amiga', 'atari', 'edgerunner', 'hackers'];
+    const colors = {
+        cyan: '#00f5ff',
+        green: '#39ff14',
+        pink: '#ff3df2',
+        amber: '#ffbf00',
+        orange: '#ff7a00',
+        red: '#ff3344',
+        blue: '#3b82ff',
+        purple: '#a855f7',
+        white: '#ffffff'
     };
 
     const commands = [
@@ -26,6 +31,10 @@
         'today',
         'events',
         'admin',
+        'color',
+        'theme',
+        'dark',
+        'light',
         'clear',
         'whoami',
         'sudo'
@@ -33,17 +42,127 @@
 
     let commandIndex = -1;
 
+    const say = (text) => {
+        output.textContent = '→ ' + text;
+    };
+
+    const goYear = (year) => {
+        const y = Math.max(2000, Math.min(2100, Number(year)));
+        window.location.href = '?year=' + y;
+    };
+
     const resizeInput = () => {
         const chars = Math.max(0, input.value.length);
-        input.style.width = chars ? Math.min(chars, 18) + 'ch' : '0';
+        input.style.width = chars ? Math.min(chars, 24) + 'ch' : '0';
+    };
+
+    const applySavedAppearance = () => {
+        const savedTheme = localStorage.getItem('3ventz-theme') || 'default';
+        const savedMode = localStorage.getItem('3ventz-mode') || 'dark';
+        const savedColor = localStorage.getItem('3ventz-color');
+
+        root.dataset.theme = themes.includes(savedTheme) ? savedTheme : 'default';
+        root.dataset.mode = savedMode === 'light' ? 'light' : 'dark';
+
+        if (savedColor && /^#[0-9a-f]{6}$/i.test(savedColor)) {
+            root.style.setProperty('--cyan', savedColor);
+        }
+    };
+
+    const setTheme = (name) => {
+        const theme = (name || '').toLowerCase();
+
+        if (!themes.includes(theme)) {
+            say('themes: ' + themes.join(' · '));
+            return;
+        }
+
+        root.dataset.theme = theme;
+        root.style.removeProperty('--cyan');
+        localStorage.setItem('3ventz-theme', theme);
+        localStorage.removeItem('3ventz-color');
+        say('theme = ' + theme);
+    };
+
+    const setMode = (mode) => {
+        root.dataset.mode = mode;
+        localStorage.setItem('3ventz-mode', mode);
+        say('mode = ' + mode);
+    };
+
+    const setColor = (value) => {
+        if (!value) {
+            say('colors: ' + Object.keys(colors).join(' · ') + ' · #RRGGBB · reset');
+            return;
+        }
+
+        const requested = value.toLowerCase();
+
+        if (requested === 'reset') {
+            root.style.removeProperty('--cyan');
+            localStorage.removeItem('3ventz-color');
+            say('color reset');
+            return;
+        }
+
+        const resolved = colors[requested] || requested;
+
+        if (!/^#[0-9a-f]{6}$/i.test(resolved)) {
+            say('usage: color cyan | color #00ff88 | color reset');
+            return;
+        }
+
+        root.style.setProperty('--cyan', resolved);
+        localStorage.setItem('3ventz-color', resolved);
+        say('color = ' + resolved);
+    };
+
+    const complete = () => {
+        const raw = input.value;
+        const trimmed = raw.trimStart();
+        const parts = trimmed.split(/\s+/);
+        const cmd = (parts[0] || '').toLowerCase();
+        const hasSpace = /\s/.test(trimmed);
+
+        let pool = commands;
+        let prefix = cmd;
+        let lead = '';
+
+        if (hasSpace && cmd === 'theme') {
+            pool = themes;
+            prefix = (parts[1] || '').toLowerCase();
+            lead = 'theme ';
+        } else if (hasSpace && cmd === 'color') {
+            pool = [...Object.keys(colors), 'reset'];
+            prefix = (parts[1] || '').toLowerCase();
+            lead = 'color ';
+        }
+
+        const matches = pool.filter((item) => item.startsWith(prefix));
+
+        if (matches.length === 1) {
+            input.value = lead + matches[0];
+            resizeInput();
+            output.textContent = '';
+            return;
+        }
+
+        if (matches.length > 1) {
+            say(matches.join(' · '));
+            return;
+        }
+
+        if (prefix === '') {
+            say(pool.join(' · '));
+        } else {
+            say('no match');
+        }
     };
 
     input.addEventListener('input', () => {
         resizeInput();
         commandIndex = -1;
-        if (input.value.length > 0) {
-            output.textContent = '';
-        }
+        if (input.value.length > 0) output.textContent = '';
         if (cursor) cursor.style.display = 'inline';
     });
 
@@ -68,27 +187,7 @@
 
         if (event.key === 'Tab') {
             event.preventDefault();
-
-            const value = input.value.trim().toLowerCase();
-            const matches = commands.filter((command) => command.startsWith(value));
-
-            if (matches.length === 1) {
-                input.value = matches[0];
-                resizeInput();
-                output.textContent = '';
-                return;
-            }
-
-            if (matches.length > 1) {
-                output.textContent = '→ ' + matches.join(' · ');
-                return;
-            }
-
-            if (value === '') {
-                output.textContent = '→ ' + commands.join(' · ');
-            } else {
-                output.textContent = '→ no match';
-            }
+            complete();
         }
     });
 
@@ -98,7 +197,7 @@
         const raw = input.value.trim();
         const parts = raw.split(/\s+/);
         const cmd = (parts[0] || '').toLowerCase();
-        const arg = parts[1];
+        const arg = parts.slice(1).join(' ');
 
         switch (cmd) {
             case '':
@@ -106,7 +205,7 @@
                 break;
             case 'help':
             case '?':
-                say('help · next · prev · year 2027 · today · events · admin · clear');
+                say('help · next · prev · year · today · events · admin · color · theme · dark · light');
                 break;
             case 'next':
                 goYear(currentYear + 1);
@@ -116,7 +215,7 @@
                 goYear(currentYear - 1);
                 break;
             case 'year':
-                if (/^\d{4}$/.test(arg || '')) goYear(arg);
+                if (/^\d{4}$/.test(arg)) goYear(arg);
                 else say('usage: year 2027');
                 break;
             case 'today':
@@ -127,6 +226,18 @@
                 break;
             case 'admin':
                 window.location.href = '/admin/';
+                break;
+            case 'color':
+                setColor(arg);
+                break;
+            case 'theme':
+                setTheme(arg);
+                break;
+            case 'dark':
+                setMode('dark');
+                break;
+            case 'light':
+                setMode('light');
                 break;
             case 'clear':
                 output.textContent = '';
@@ -149,9 +260,10 @@
     });
 
     document.querySelector('.brand-terminal')?.addEventListener('click', () => input.focus());
+
+    applySavedAppearance();
     resizeInput();
 
-    // Start like a real terminal: keyboard focus is on the prompt immediately.
     requestAnimationFrame(() => {
         input.focus({ preventScroll: true });
     });

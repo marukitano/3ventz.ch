@@ -11,6 +11,17 @@ if (isset($_GET['edit'])) {
 }
 
 $events = $pdo->query('SELECT * FROM events ORDER BY start_date DESC, title')->fetchAll();
+
+$iconOptions = [
+    'terminal' => '>_ Terminal',
+    'skull' => '☠ Skull',
+    'chip' => '▦ Chip',
+    'radio' => '⌁ Radio',
+    'flag' => '⚑ CTF Flag',
+    'gamepad' => '✣ Gamepad',
+    'bug' => 'BUG',
+    'lock' => '⌾ Lock',
+];
 ?>
 <!doctype html>
 <html lang="de">
@@ -58,6 +69,16 @@ $events = $pdo->query('SELECT * FROM events ORDER BY start_date DESC, title')->f
                 <label>
                     Neonfarbe
                     <input type="color" name="color" value="<?= h($edit['color'] ?? '#00f5ff') ?>">
+                </label>
+                <label>
+                    Icon
+                    <select name="icon">
+                        <?php foreach ($iconOptions as $value => $label): ?>
+                            <option value="<?= h($value) ?>" <?= (($edit['icon'] ?? 'terminal') === $value) ? 'selected' : '' ?>>
+                                <?= h($label) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </label>
             </div>
 

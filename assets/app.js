@@ -156,7 +156,7 @@
 
     const updateThemeIndicator = (theme) => {
         if (themeIndicator) {
-            themeIndicator.textContent = 'THEME // ' + theme.toUpperCase();
+            themeIndicator.textContent = 'theme ' + theme;
         }
     };
 

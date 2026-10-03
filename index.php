@@ -5,17 +5,67 @@ require __DIR__ . '/lib/bootstrap.php';
 $year = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT) ?: (int)date('Y');
 $year = max(2000, min(2100, $year));
 
-$stmt = $pdo->prepare(
-    'SELECT * FROM events
-     WHERE start_date <= :year_end
-       AND COALESCE(end_date, start_date) >= :year_start
-     ORDER BY start_date, title'
-);
-$stmt->execute([
-    'year_start' => sprintf('%04d-01-01', $year),
-    'year_end' => sprintf('%04d-12-31', $year),
-]);
-$events = $stmt->fetchAll();
+if ($demoMode) {
+    $events = [
+        [
+            'title' => 'Hacknacht Zürich',
+            'start_date' => sprintf('%04d-02-14', $year),
+            'end_date' => null,
+            'category' => 'Meetup',
+            'url' => '#',
+            'description' => 'Demo event',
+            'color' => '#00f5ff',
+        ],
+        [
+            'title' => 'Open Source Weekend',
+            'start_date' => sprintf('%04d-04-18', $year),
+            'end_date' => sprintf('%04d-04-19', $year),
+            'category' => 'Open Source',
+            'url' => '#',
+            'description' => 'Demo event',
+            'color' => '#59ff8b',
+        ],
+        [
+            'title' => 'CTF // Basel',
+            'start_date' => sprintf('%04d-06-06', $year),
+            'end_date' => null,
+            'category' => 'CTF',
+            'url' => '#',
+            'description' => 'Demo event',
+            'color' => '#ff3df2',
+        ],
+        [
+            'title' => 'Retrocomputing Meetup',
+            'start_date' => sprintf('%04d-09-12', $year),
+            'end_date' => null,
+            'category' => 'Retro',
+            'url' => '#',
+            'description' => 'Demo event',
+            'color' => '#ffe45e',
+        ],
+        [
+            'title' => 'Chaos Weekend',
+            'start_date' => sprintf('%04d-12-27', $year),
+            'end_date' => sprintf('%04d-12-30', $year),
+            'category' => 'Congress',
+            'url' => '#',
+            'description' => 'Demo event',
+            'color' => '#00f5ff',
+        ],
+    ];
+} else {
+    $stmt = $pdo->prepare(
+        'SELECT * FROM events
+         WHERE start_date <= :year_end
+           AND COALESCE(end_date, start_date) >= :year_start
+         ORDER BY start_date, title'
+    );
+    $stmt->execute([
+        'year_start' => sprintf('%04d-01-01', $year),
+        'year_end' => sprintf('%04d-12-31', $year),
+    ]);
+    $events = $stmt->fetchAll();
+}
 
 $eventsByDate = [];
 foreach ($events as $event) {
@@ -58,7 +108,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
             <div class="day<?= $dayEvents ? ' has-event' : '' ?>">
                 <span class="number"><?= $day ?></span>
                 <?php foreach ($dayEvents as $event): ?>
-                    <?php if (!empty($event['url'])): ?>
+                    <?php if (!empty($event['url']) && $event['url'] !== '#'): ?>
                         <a class="event-dot"
                            href="<?= h($event['url']) ?>"
                            target="_blank"
@@ -99,6 +149,12 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                 <a href="?year=<?= $year + 1 ?>">›</a>
             </nav>
         </header>
+
+        <?php if ($demoMode): ?>
+            <div style="margin:-8px 0 18px;color:#ff3df2;font-size:.75rem;letter-spacing:.08em">
+                // LOCAL DEMO MODE · sample events
+            </div>
+        <?php endif; ?>
 
         <section class="calendar-grid">
             <?php for ($month = 1; $month <= 12; $month++): ?>

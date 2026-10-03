@@ -37,7 +37,7 @@
         today: 'today — return to the current year',
         events: 'events — show how many events are loaded for this year',
         admin: 'admin — open the private event administration',
-        theme: 'theme NAME — switch the terminal theme; press Tab after theme for choices',
+        theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
         clear: 'clear — clear the CLI output',
         whoami: 'whoami — show your page-view number for the current calendar year',
         sudo: 'sudo — nice try.'

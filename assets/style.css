@@ -196,6 +196,15 @@ a { color: inherit; }
         0 0 3px rgba(0,245,255,.16);
 }
 
+.prompt-home {
+    display: inline-block;
+    font-family: "Courier New", Courier, monospace;
+    font-size: .78em;
+    line-height: 1;
+    transform: translateY(-.03em);
+    margin: 0 .02em;
+}
+
 .brand-command-wrap {
     display: inline-flex;
     align-items: baseline;

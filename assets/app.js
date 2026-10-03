@@ -561,6 +561,58 @@
         input.focus();
     });
 
+    const categoryFilterButtons = [...document.querySelectorAll('[data-category-filter]')];
+    const eventMarkers = [...document.querySelectorAll('.event-span')];
+
+    const refreshVisibleDateRanges = () => {
+        document.querySelectorAll('.week-row').forEach((row) => {
+            const numbers = [...row.querySelectorAll('.number[data-day]')];
+
+            numbers.forEach((number) => {
+                number.textContent = number.dataset.day || '';
+            });
+
+            const visibleMarkers = [...row.querySelectorAll('.event-span:not(.category-filtered-out)')];
+
+            visibleMarkers.forEach((marker) => {
+                const startDay = Number(marker.dataset.segmentStartDay || 0);
+                const endDay = Number(marker.dataset.segmentEndDay || 0);
+                if (!startDay || !endDay || endDay <= startDay) return;
+
+                const startNumber = numbers.find((number) => Number(number.dataset.day) === startDay);
+                if (startNumber) startNumber.textContent = startDay + '–' + endDay;
+
+                numbers.forEach((number) => {
+                    const day = Number(number.dataset.day || 0);
+                    if (day > startDay && day <= endDay) number.textContent = '';
+                });
+            });
+        });
+    };
+
+    const applyCategoryFilters = () => {
+        const enabled = new Set(
+            categoryFilterButtons
+                .filter((button) => button.classList.contains('is-active'))
+                .map((button) => button.dataset.categoryFilter || '')
+        );
+
+        eventMarkers.forEach((marker) => {
+            const category = marker.dataset.eventCategory || '';
+            marker.classList.toggle('category-filtered-out', !enabled.has(category));
+        });
+
+        refreshVisibleDateRanges();
+    };
+
+    categoryFilterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const active = button.classList.toggle('is-active');
+            button.setAttribute('aria-pressed', active ? 'true' : 'false');
+            applyCategoryFilters();
+        });
+    });
+
     const eventTooltip = document.createElement('div');
     eventTooltip.className = 'event-tooltip';
     eventTooltip.hidden = true;
@@ -634,6 +686,7 @@
 
     document.querySelector('.brand-terminal')?.addEventListener('click', () => input.focus());
 
+    applyCategoryFilters();
     applySavedAppearance();
     resizeInput();
     updateHint();

@@ -4,6 +4,7 @@
     const output = document.getElementById('terminal-output');
     const cursor = document.getElementById('terminal-cursor');
     const themeIndicator = document.getElementById('theme-indicator');
+    const navStack = document.querySelector('.nav-stack');
 
     if (!form || !input || !output) return;
 
@@ -117,14 +118,20 @@
     const positionOutput = () => {
         const formRect = form.getBoundingClientRect();
         const cursorRect = cursor.getBoundingClientRect();
-        const left = Math.max(0, cursorRect.right - formRect.left + 6);
-        const available = Math.max(0, formRect.width - left);
+        const left = Math.max(0, cursorRect.right - formRect.left + 8);
+
+        let rightLimit = formRect.width;
+
+        if (navStack) {
+            const navRect = navStack.getBoundingClientRect();
+            rightLimit = navRect.left - formRect.left - 12;
+        }
+
+        const available = Math.max(0, rightLimit - left);
 
         output.style.left = left + 'px';
         output.style.width = available + 'px';
 
-        // Anchor the suggestion/output text to the same visual baseline
-        // as the terminal input instead of centering it vertically.
         const outputHeight = output.getBoundingClientRect().height;
         const top = Math.max(
             0,

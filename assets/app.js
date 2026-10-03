@@ -49,6 +49,9 @@
     let suggestionLead = '';
     let suggestionMode = 'default';
     let outputScrollX = 0;
+    let outputScrollDirection = 0;
+    let outputScrollFrame = null;
+    let outputScrollLastTime = null;
 
     const updateHint = () => {
         if (!hint) return;
@@ -56,29 +59,65 @@
         hint.hidden = !shouldShow;
     };
 
+    const stopOutputScroll = () => {
+        outputScrollDirection = 0;
+        outputScrollLastTime = null;
+
+        if (outputScrollFrame !== null) {
+            cancelAnimationFrame(outputScrollFrame);
+            outputScrollFrame = null;
+        }
+    };
+
     const resetOutputScroll = () => {
+        stopOutputScroll();
         outputScrollX = 0;
-        output.scrollTo({ left: 0, behavior: 'auto' });
+        output.scrollLeft = 0;
     };
 
     const canScrollOutput = () =>
         output.scrollWidth > output.clientWidth + 2;
 
-    const scrollOutput = (direction) => {
-        if (!canScrollOutput()) return false;
+    const animateOutputScroll = (time) => {
+        if (!outputScrollDirection || !canScrollOutput()) {
+            stopOutputScroll();
+            return;
+        }
 
-        const step = Math.max(80, Math.round(output.clientWidth * 0.28));
+        if (outputScrollLastTime === null) {
+            outputScrollLastTime = time;
+        }
+
+        const delta = Math.min(40, time - outputScrollLastTime);
+        outputScrollLastTime = time;
+
+        const speed = 170; // pixels per second
         const maxScroll = Math.max(0, output.scrollWidth - output.clientWidth);
 
-        outputScrollX = Math.max(
-            0,
-            Math.min(maxScroll, outputScrollX + direction * step)
-        );
+        outputScrollX += outputScrollDirection * speed * (delta / 1000);
+        outputScrollX = Math.max(0, Math.min(maxScroll, outputScrollX));
+        output.scrollLeft = outputScrollX;
 
-        output.scrollTo({
-            left: outputScrollX,
-            behavior: 'smooth'
-        });
+        if (
+            (outputScrollDirection < 0 && outputScrollX <= 0) ||
+            (outputScrollDirection > 0 && outputScrollX >= maxScroll)
+        ) {
+            stopOutputScroll();
+            return;
+        }
+
+        outputScrollFrame = requestAnimationFrame(animateOutputScroll);
+    };
+
+    const startOutputScroll = (direction) => {
+        if (!canScrollOutput()) return false;
+
+        outputScrollDirection = direction;
+
+        if (outputScrollFrame === null) {
+            outputScrollLastTime = null;
+            outputScrollFrame = requestAnimationFrame(animateOutputScroll);
+        }
 
         return true;
     };
@@ -403,13 +442,13 @@
         if (!suggestions.length && canScrollOutput()) {
             if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
                 event.preventDefault();
-                scrollOutput(-1);
+                startOutputScroll(-1);
                 return;
             }
 
             if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
                 event.preventDefault();
-                scrollOutput(1);
+                startOutputScroll(1);
                 return;
             }
         }
@@ -438,6 +477,19 @@
             return;
         }
     });
+
+    input.addEventListener('keyup', (event) => {
+        if (
+            event.key === 'ArrowLeft' ||
+            event.key === 'ArrowRight' ||
+            event.key === 'ArrowUp' ||
+            event.key === 'ArrowDown'
+        ) {
+            stopOutputScroll();
+        }
+    });
+
+    input.addEventListener('blur', stopOutputScroll);
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();

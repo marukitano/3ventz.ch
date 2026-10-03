@@ -53,7 +53,7 @@ if ($demoMode) {
             'url' => '#',
             'description' => 'Demo event',
             'color' => '#59ff8b',
-            'icon' => 'chip',
+            'icon' => 'pebble_toolbox',
         ],
         [
             'title' => 'CTF // Basel',
@@ -63,7 +63,7 @@ if ($demoMode) {
             'url' => '#',
             'description' => 'Demo event',
             'color' => '#ff3df2',
-            'icon' => 'flag',
+            'icon' => 'pebble_warning',
         ],
         [
             'title' => 'Retrocomputing Meetup',
@@ -73,7 +73,7 @@ if ($demoMode) {
             'url' => '#',
             'description' => 'Demo event',
             'color' => '#ffe45e',
-            'icon' => 'gamepad',
+            'icon' => 'pebble_floppy',
         ],
         [
             'title' => 'Chaos Weekend',
@@ -119,21 +119,27 @@ $monthNames = [
     'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'
 ];
 
-function event_icon_svg(string $icon): string
+function event_icon_markup(string $icon): string
 {
-    return match ($icon) {
-        'skull' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10a6 6 0 1 1 12 0c0 3-1.8 5-4 6v3h-4v-3c-2.2-1-4-3-4-6Z"/><rect x="8" y="9" width="2" height="2"/><rect x="14" y="9" width="2" height="2"/><path d="M10 14h4"/></svg>',
-        'chip' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M9 3v4M12 3v4M15 3v4M9 17v4M12 17v4M15 17v4M3 9h4M3 12h4M3 15h4M17 9h4M17 12h4M17 15h4"/></svg>',
-        'radio' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><circle cx="12" cy="5" r="1"/><path d="M8 9c1-1.3 2.3-2 4-2s3 .7 4 2M6 12c1.8-2.1 3.8-3.2 6-3.2s4.2 1.1 6 3.2"/></svg>',
-        'flag' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16M7 5h10l-3 4 3 4H7"/></svg>',
-        'gamepad' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5.5" r="3.3"/><path d="M10.2 9v4.2h3.6V9"/><path d="M8.5 12.5h7l2.3 3.2v3.8H6.2v-3.8l2.3-3.2Z"/><path d="M7.2 17.2h9.6"/><circle cx="15.4" cy="15.2" r="1"/><path d="M10.8 5.8c.2-1.2.9-1.9 2-2.1"/></svg>',
-        'bug' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="2"/><rect x="8" y="10" width="8" height="8" rx="3"/><path d="M7 12 4 10M7 15l-3 2M17 12l3-2M17 15l3 2M10 6 8 4M14 6l2-2"/></svg>',
-        'lock' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="11" width="10" height="8" rx="1.5"/><path d="M9 11V8.8A3 3 0 0 1 12 6a3 3 0 0 1 3 2.8V11"/></svg>',
-        'soldering_iron' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 9.2 14.8M8.2 15.8l2.7-2.7M10.9 13.1l4.6-4.6M14.5 7.5l2-2 2 2-2 2M15.5 8.5l2 2M9.2 14.8l2 2M5 19l-1 2 2-1M18.5 6.5l1.7-1.7c.8-.8 2.1-.8 2.8 0M20 4.5l1-1"/><path d="M11.6 12.4l2 2"/></svg>',
-        default => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 8 4 4-4 4M12 16h6"/></svg>',
-    };
-}
+    $pebbleIcons = [
+        'pebble_rocket' => '25px_Rocket.svg',
+        'pebble_console' => '25px_Developer_console.svg',
+        'pebble_toolbox' => '25px_Apps_toolbox_closed.svg',
+        'pebble_floppy' => '25px_Floppy_disk_generic.svg',
+        'pebble_location' => '25px_Location.svg',
+        'pebble_calendar' => '25px_Calendar.svg',
+        'pebble_warning' => '25px_Warning_sign.svg',
+        'pebble_microphone' => '25px_Microphone.svg',
+        'pebble_radio' => '25px_Music_radio.svg',
+    ];
 
+    if (isset($pebbleIcons[$icon])) {
+        return '<img src="/assets/icons/' . $pebbleIcons[$icon] . '" alt="" width="20" height="20">';
+    }
+
+    // Terminal is the built-in fallback for old/unknown icon keys.
+    return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 8 4 4-4 4M12 16h6"/></svg>';
+}
 function month_calendar(int $year, int $month, array $eventsByDate): string
 {
     $first = new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month));
@@ -266,7 +272,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                             $segment['end_col'],
                             h((string)$event['color'])
                         );
-                        $eventIconSvg = event_icon_svg((string)($event['icon'] ?? 'terminal'));
+                        $eventIconMarkup = event_icon_markup((string)($event['icon'] ?? 'terminal'));
                     ?>
                         <?php if ($hasEventUrl): ?>
                             <a class="event-span"
@@ -280,7 +286,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                data-event-description="<?= h($event['description'] ?? '') ?>"
                                data-event-url="<?= h($event['url']) ?>"
                                aria-label="<?= h($event['title']) ?>">
-                                <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconSvg ?></span>
+                                <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
                             </a>
                         <?php else: ?>
                             <span class="event-span"
@@ -291,7 +297,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                   data-event-description="<?= h($event['description'] ?? '') ?>"
                                   aria-label="<?= h($event['title']) ?>"
                                   tabindex="0">
-                                <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconSvg ?></span>
+                                <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
                             </span>
                         <?php endif; ?>
                     <?php endforeach; ?>

@@ -385,26 +385,9 @@ $legalReady =
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
     <link rel="stylesheet" href="/assets/style.css">
-    <link rel="stylesheet" href="/assets/hackers-live.css">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
-        <div class="hackers-popculture" aria-hidden="true">
-            <div class="hackers-slogan hackers-slogan-planet">HACK THE PLANET</div>
-            <div class="hackers-slogan hackers-slogan-boredom">HACK BOREDOM</div>
-
-            <div class="hackers-smiley">
-                <span class="hackers-smiley-eye"></span>
-                <span class="hackers-smiley-patch"></span>
-                <span class="hackers-smiley-strap"></span>
-                <span class="hackers-smiley-mouth"></span>
-            </div>
-
-            <div class="hackers-floppy">
-                <span class="hackers-floppy-label">3VENTZ</span>
-                <span class="hackers-floppy-window"></span>
-            </div>
-        </div>
         <header class="topbar">
             <div class="identity">
                 <form class="brand-terminal crt-title" id="terminal" autocomplete="off">

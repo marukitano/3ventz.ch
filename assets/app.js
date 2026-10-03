@@ -41,9 +41,54 @@
     ];
 
     let commandIndex = -1;
+    let suggestions = [];
+    let suggestionIndex = -1;
+    let suggestionLead = '';
 
     const say = (text) => {
+        suggestions = [];
+        suggestionIndex = -1;
+        suggestionLead = '';
         output.textContent = '→ ' + text;
+    };
+
+    const clearSuggestions = () => {
+        suggestions = [];
+        suggestionIndex = -1;
+        suggestionLead = '';
+        output.textContent = '';
+    };
+
+    const renderSuggestions = () => {
+        if (!suggestions.length) {
+            output.textContent = '';
+            return;
+        }
+
+        output.replaceChildren();
+
+        const arrow = document.createTextNode('→ ');
+        output.appendChild(arrow);
+
+        suggestions.forEach((item, index) => {
+            const span = document.createElement('span');
+            span.className = 'terminal-suggestion' + (index === suggestionIndex ? ' selected' : '');
+            span.textContent = item;
+            output.appendChild(span);
+
+            if (index < suggestions.length - 1) {
+                output.appendChild(document.createTextNode(' · '));
+            }
+        });
+    };
+
+    const acceptSuggestion = () => {
+        if (!suggestions.length || suggestionIndex < 0) return false;
+
+        input.value = suggestionLead + suggestions[suggestionIndex];
+        resizeInput();
+        clearSuggestions();
+        return true;
     };
 
     const goYear = (year) => {
@@ -169,17 +214,23 @@
         if (matches.length === 1) {
             input.value = lead + matches[0];
             resizeInput();
-            output.textContent = '';
+            clearSuggestions();
             return;
         }
 
         if (matches.length > 1) {
-            say(matches.join(' · '));
+            suggestions = matches;
+            suggestionIndex = 0;
+            suggestionLead = lead;
+            renderSuggestions();
             return;
         }
 
         if (prefix === '') {
-            say(pool.join(' · '));
+            suggestions = pool;
+            suggestionIndex = 0;
+            suggestionLead = lead;
+            renderSuggestions();
         } else {
             say('no match');
         }
@@ -188,17 +239,49 @@
     input.addEventListener('input', () => {
         resizeInput();
         commandIndex = -1;
-        if (input.value.length > 0) output.textContent = '';
+        clearSuggestions();
         if (cursor) cursor.style.display = 'inline';
     });
 
     input.addEventListener('keydown', (event) => {
+        if (suggestions.length) {
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                suggestionIndex = suggestionIndex > 0
+                    ? suggestionIndex - 1
+                    : suggestions.length - 1;
+                renderSuggestions();
+                return;
+            }
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                suggestionIndex = suggestionIndex < suggestions.length - 1
+                    ? suggestionIndex + 1
+                    : 0;
+                renderSuggestions();
+                return;
+            }
+
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                acceptSuggestion();
+                return;
+            }
+
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                clearSuggestions();
+                return;
+            }
+        }
+
         if (event.key === 'ArrowUp') {
             event.preventDefault();
             commandIndex = commandIndex < commands.length - 1 ? commandIndex + 1 : 0;
             input.value = commands[commandIndex];
             resizeInput();
-            output.textContent = '';
+            clearSuggestions();
             return;
         }
 
@@ -207,7 +290,7 @@
             commandIndex = commandIndex > 0 ? commandIndex - 1 : commands.length - 1;
             input.value = commands[commandIndex];
             resizeInput();
-            output.textContent = '';
+            clearSuggestions();
             return;
         }
 
@@ -219,6 +302,8 @@
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
+
+        clearSuggestions();
 
         const raw = input.value.trim();
         const parts = raw.split(/\s+/);

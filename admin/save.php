@@ -18,7 +18,7 @@ $category = trim((string)($_POST['category'] ?? ''));
 $url = trim((string)($_POST['url'] ?? ''));
 $description = trim((string)($_POST['description'] ?? ''));
 $color = (string)($_POST['color'] ?? '#00f5ff');
-$allowedIcons = ['terminal', 'pebble_rocket', 'pebble_console', 'pebble_toolbox', 'pebble_floppy', 'pebble_location', 'pebble_calendar', 'pebble_warning', 'pebble_microphone', 'pebble_radio'];
+$allowedIcons = ['none', 'terminal', 'pebble_rocket', 'pebble_console', 'pebble_toolbox', 'pebble_floppy', 'pebble_location', 'pebble_calendar', 'pebble_warning', 'pebble_microphone', 'pebble_radio'];
 $icon = trim((string)($_POST['icon'] ?? 'terminal'));
 if (!in_array($icon, $allowedIcons, true)) {
     $icon = 'terminal';

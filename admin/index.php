@@ -12,6 +12,18 @@ if (isset($_GET['edit'])) {
 
 $events = $pdo->query('SELECT * FROM events ORDER BY start_date DESC, title')->fetchAll();
 
+$categoryOptions = [
+    'CCC',
+    'DEMO',
+    'RETRO',
+    'MAKER',
+    'MOVIE',
+    'LAN',
+    'MUSIC',
+    'CODING',
+    'HACKING',
+];
+
 $iconOptions = [
     'none' => 'Kein Icon',
     'terminal' => '>_ Terminal',
@@ -55,7 +67,13 @@ $iconOptions = [
                 </label>
                 <label>
                     Kategorie
-                    <input name="category" maxlength="80" value="<?= h($edit['category'] ?? '') ?>" placeholder="CCC, CTF, Meetup ...">
+                    <select name="category" required>
+                        <?php foreach ($categoryOptions as $category): ?>
+                            <option value="<?= h($category) ?>" <?= (($edit['category'] ?? 'CCC') === $category) ? 'selected' : '' ?>>
+                                <?= h($category) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </label>
                 <label>
                     Start

@@ -287,12 +287,16 @@ a { color: inherit; }
 }
 
 .theme-indicator {
-    color: var(--muted);
-    font-size: .55rem;
-    line-height: 1;
-    letter-spacing: .14em;
-    text-transform: uppercase;
+    color: var(--pink);
+    font-family: "VT323", "Courier New", monospace;
+    font-size: clamp(1.55rem, 2.6vw, 2.5rem);
+    line-height: .9;
+    letter-spacing: .01em;
+    text-transform: none;
     white-space: nowrap;
+    text-shadow:
+        0 0 4px rgba(255,61,242,.9),
+        0 0 12px rgba(255,61,242,.55);
 }
 
 .year-nav {

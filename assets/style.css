@@ -47,7 +47,17 @@ a { color: inherit; }
 
 .identity { min-width: 0; }
 
-.brand {
+.brand-terminal {
+    display: flex;
+    align-items: baseline;
+    gap: .08em;
+    margin: 0;
+    min-width: 0;
+    white-space: nowrap;
+    cursor: text;
+}
+
+.brand-prefix {
     color: var(--cyan);
     font-size: clamp(2rem, 4.7vw, 4rem);
     line-height: .92;
@@ -56,8 +66,41 @@ a { color: inherit; }
     text-shadow: 0 0 12px rgba(0,245,255,.8), 0 0 42px rgba(0,245,255,.25);
 }
 
+.brand-command-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    min-width: 1ch;
+    max-width: 42vw;
+}
+
+#terminal-input {
+    width: 0;
+    min-width: 0;
+    max-width: 38vw;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--pink);
+    font: inherit;
+    font-size: clamp(2rem, 4.7vw, 4rem);
+    line-height: .92;
+    font-weight: 900;
+    letter-spacing: -.08em;
+    text-shadow: 0 0 12px rgba(255,61,242,.75), 0 0 34px rgba(255,61,242,.22);
+    caret-color: transparent;
+}
+
+#terminal-input:not(:placeholder-shown) {
+    width: min(38vw, 16ch);
+}
+
 .cursor {
     color: var(--pink);
+    font-size: clamp(2rem, 4.7vw, 4rem);
+    line-height: .92;
+    font-weight: 900;
+    text-shadow: 0 0 12px rgba(255,61,242,.8), 0 0 34px rgba(255,61,242,.25);
     animation: blink 1s steps(1) infinite;
 }
 
@@ -70,44 +113,9 @@ a { color: inherit; }
     font-size: .68rem;
 }
 
-.terminal {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin-top: 7px;
-    min-height: 17px;
-    font-size: .68rem;
-}
-
-.terminal-prompt {
-    color: var(--green);
-    white-space: nowrap;
-}
-
-.terminal-input-wrap {
-    display: inline-flex;
-    align-items: center;
-    min-width: 220px;
-}
-
-#terminal-input {
-    width: min(38vw, 440px);
-    border: 0;
-    outline: 0;
-    padding: 0;
-    background: transparent;
-    color: var(--text);
-    font: inherit;
-    caret-color: transparent;
-}
-
-#terminal-input::placeholder {
-    color: #31515a;
-}
-
 .terminal-output {
     height: 14px;
-    margin-top: 2px;
+    margin-top: 5px;
     color: var(--pink);
     font-size: .61rem;
     white-space: nowrap;
@@ -321,11 +329,12 @@ button, .button {
 @media (max-width: 760px) {
     .calendar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .form-grid { grid-template-columns: 1fr; }
-    .terminal-input-wrap { min-width: 120px; }
+    .brand-command-wrap { max-width: 44vw; }
 }
 
 @media (max-width: 520px) {
     .calendar-grid { grid-template-columns: 1fr; }
     .topbar { align-items: flex-start; }
-    .terminal { flex-wrap: wrap; }
+    .brand-terminal { white-space: normal; flex-wrap: wrap; }
+    #terminal-input { max-width: 70vw; }
 }

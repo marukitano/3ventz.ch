@@ -121,6 +121,16 @@
 
         output.style.left = left + 'px';
         output.style.width = available + 'px';
+
+        // Anchor the suggestion/output text to the same visual baseline
+        // as the terminal input instead of centering it vertically.
+        const outputHeight = output.getBoundingClientRect().height;
+        const top = Math.max(
+            0,
+            cursorRect.bottom - formRect.top - outputHeight
+        );
+
+        output.style.top = top + 'px';
     };
 
     const resizeInput = () => {

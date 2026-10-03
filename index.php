@@ -184,13 +184,22 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                           style="--event-color: <?= h($event['color']) ?>"
                           aria-hidden="true"></span>
 
-                    <?php if (!$continuesToRight): ?>
-                        <span class="event-accent"
-                              style="--event-color: <?= h($event['color']) ?>"
-                              aria-hidden="true">
+                    <span class="event-accent<?= $continuesFromLeft ? ' continues-left' : '' ?><?= $continuesToRight ? ' continues-right' : '' ?>"
+                          style="--event-color: <?= h($event['color']) ?>"
+                          aria-hidden="true">
+                        <?php if (!$continuesFromLeft): ?>
+                            <span class="event-span-label">
+                                <?= $eventStart->format('j') ?>
+                                <?php if ($eventEnd->format('Y-m-d') !== $eventStart->format('Y-m-d')): ?>
+                                    –<?= $eventEnd->format('j') ?>
+                                <?php endif; ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if (!$continuesToRight): ?>
                             <span class="event-icon"><?= event_icon_svg((string)($event['icon'] ?? 'terminal')) ?></span>
-                        </span>
-                    <?php endif; ?>
+                        <?php endif; ?>
+                    </span>
 
                     <?php if ($hasEventUrl): ?>
                         <a class="event-hit"

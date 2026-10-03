@@ -44,6 +44,7 @@ if ($demoMode) {
             'description' => 'Demo event',
             'color' => '#00f5ff',
             'icon' => 'terminal',
+            'short_text' => null,
         ],
         [
             'title' => 'Open Source Weekend',
@@ -54,6 +55,7 @@ if ($demoMode) {
             'description' => 'Demo event',
             'color' => '#59ff8b',
             'icon' => 'pebble_toolbox',
+            'short_text' => null,
         ],
         [
             'title' => 'CTF // Basel',
@@ -64,6 +66,7 @@ if ($demoMode) {
             'description' => 'Demo event',
             'color' => '#ff3df2',
             'icon' => 'pebble_warning',
+            'short_text' => null,
         ],
         [
             'title' => 'Retrocomputing Meetup',
@@ -74,6 +77,7 @@ if ($demoMode) {
             'description' => 'Demo event',
             'color' => '#ffe45e',
             'icon' => 'pebble_floppy',
+            'short_text' => null,
         ],
         [
             'title' => 'Chaos Weekend',
@@ -84,6 +88,7 @@ if ($demoMode) {
             'description' => 'Demo event',
             'color' => '#00f5ff',
             'icon' => 'terminal',
+            'short_text' => null,
         ],
     ];
 } else {
@@ -144,6 +149,23 @@ function event_icon_markup(string $icon): string
     // Terminal is the built-in fallback for old/unknown icon keys.
     return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 8 4 4-4 4M12 16h6"/></svg>';
 }
+function event_short_text(string $text, int $days): string
+{
+    $text = trim($text);
+    if ($text === '') {
+        return '';
+    }
+
+    // Approximate capacity: 1 day = 4 chars, 2 = 10, 3 = 16, then +6/day.
+    $maxChars = max(4, ($days * 6) - 2);
+
+    if (function_exists('mb_substr')) {
+        return mb_substr($text, 0, $maxChars, 'UTF-8');
+    }
+
+    return substr($text, 0, $maxChars);
+}
+
 function month_calendar(int $year, int $month, array $eventsByDate): string
 {
     $first = new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month));
@@ -276,7 +298,12 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                             $segment['end_col'],
                             h((string)$event['color'])
                         );
-                        $eventIconMarkup = event_icon_markup((string)($event['icon'] ?? 'terminal'));
+                        $eventIconKey = (string)($event['icon'] ?? 'none');
+                        $eventIconMarkup = event_icon_markup($eventIconKey);
+                        $segmentDays = ((int)$segment['end']->diff($segment['start'])->days) + 1;
+                        $eventShortText = $eventIconKey === 'none'
+                            ? event_short_text((string)($event['short_text'] ?? ''), $segmentDays)
+                            : '';
                     ?>
                         <?php if ($hasEventUrl): ?>
                             <a class="event-span"
@@ -292,6 +319,8 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                aria-label="<?= h($event['title']) ?>">
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php elseif ($eventShortText !== ''): ?>
+                                    <span class="event-span-text-overlay" aria-hidden="true"><?= h($eventShortText) ?></span>
                                 <?php endif; ?>
                             </a>
                         <?php else: ?>
@@ -305,6 +334,8 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                   tabindex="0">
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php elseif ($eventShortText !== ''): ?>
+                                    <span class="event-span-text-overlay" aria-hidden="true"><?= h($eventShortText) ?></span>
                                 <?php endif; ?>
                             </span>
                         <?php endif; ?>

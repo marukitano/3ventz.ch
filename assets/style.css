@@ -584,53 +584,68 @@ button, .button {
     will-change: transform, opacity;
 }
 
-.terminal-suggestion-list.rotate-down {
-    animation: suggestion-snap-next 220ms cubic-bezier(.22,.9,.24,1);
+.terminal-suggestion-viewport {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 1em;
+    overflow: hidden;
+    vertical-align: baseline;
 }
 
-.terminal-suggestion-list.rotate-up {
-    animation: suggestion-snap-prev 220ms cubic-bezier(.22,.9,.24,1);
+.terminal-suggestion-viewport .terminal-suggestion-list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: max-content;
+    max-width: none;
+    overflow: visible;
+    text-overflow: clip;
 }
 
-@keyframes suggestion-snap-next {
-    0% {
-        opacity: .72;
-        transform: translateX(18px);
-    }
-    68% {
-        opacity: 1;
-        transform: translateX(-4px);
-    }
-    86% {
-        transform: translateX(1.5px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.terminal-suggestion-viewport.move-next .suggestion-old {
+    animation: suggestion-old-next 360ms cubic-bezier(.22,.78,.26,1) forwards;
 }
 
-@keyframes suggestion-snap-prev {
-    0% {
-        opacity: .72;
-        transform: translateX(-18px);
-    }
-    68% {
-        opacity: 1;
-        transform: translateX(4px);
-    }
-    86% {
-        transform: translateX(-1.5px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.terminal-suggestion-viewport.move-next .suggestion-new {
+    animation: suggestion-new-next 360ms cubic-bezier(.16,.9,.26,1) forwards;
+}
+
+.terminal-suggestion-viewport.move-prev .suggestion-old {
+    animation: suggestion-old-prev 360ms cubic-bezier(.22,.78,.26,1) forwards;
+}
+
+.terminal-suggestion-viewport.move-prev .suggestion-new {
+    animation: suggestion-new-prev 360ms cubic-bezier(.16,.9,.26,1) forwards;
+}
+
+@keyframes suggestion-old-next {
+    0%   { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(-42px); opacity: .18; }
+}
+
+@keyframes suggestion-new-next {
+    0%   { transform: translateX(52px); opacity: .18; }
+    72%  { transform: translateX(-5px); opacity: 1; }
+    88%  { transform: translateX(2px); }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes suggestion-old-prev {
+    0%   { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(42px); opacity: .18; }
+}
+
+@keyframes suggestion-new-prev {
+    0%   { transform: translateX(-52px); opacity: .18; }
+    72%  { transform: translateX(5px); opacity: 1; }
+    88%  { transform: translateX(-2px); }
+    100% { transform: translateX(0); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .terminal-suggestion-list.rotate-down,
-    .terminal-suggestion-list.rotate-up {
-        animation: none;
+    .terminal-suggestion-viewport .suggestion-old,
+    .terminal-suggestion-viewport .suggestion-new {
+        animation: none !important;
     }
 }

@@ -3,6 +3,7 @@
     const input = document.getElementById('terminal-input');
     const output = document.getElementById('terminal-output');
     const cursor = document.getElementById('terminal-cursor');
+    const themeIndicator = document.getElementById('theme-indicator');
 
     if (!form || !input || !output) return;
 
@@ -153,9 +154,17 @@
         requestAnimationFrame(positionOutput);
     };
 
+    const updateThemeIndicator = (theme) => {
+        if (themeIndicator) {
+            themeIndicator.textContent = 'THEME // ' + theme.toUpperCase();
+        }
+    };
+
     const applySavedAppearance = () => {
         const savedTheme = localStorage.getItem('3ventz-theme') || 'default';
-        root.dataset.theme = themes.includes(savedTheme) ? savedTheme : 'default';
+        const theme = themes.includes(savedTheme) ? savedTheme : 'default';
+        root.dataset.theme = theme;
+        updateThemeIndicator(theme);
     };
 
     const setTheme = (name) => {
@@ -168,6 +177,7 @@
 
         root.dataset.theme = theme;
         localStorage.setItem('3ventz-theme', theme);
+        updateThemeIndicator(theme);
         say('theme = ' + theme);
     };
 

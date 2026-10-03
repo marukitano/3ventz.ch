@@ -39,7 +39,7 @@
         admin: 'admin — open the private event administration',
         theme: 'theme NAME — switch the terminal theme; press Tab after theme for choices',
         clear: 'clear — clear the CLI output',
-        whoami: 'whoami — identify the current 3ventz visitor',
+        whoami: 'whoami — show your page-view number for the current calendar year',
         sudo: 'sudo — nice try.'
     };
 
@@ -540,13 +540,17 @@
                 output.textContent = '';
                 break;
             case 'whoami':
-                say('guest@3ventz');
+                if (Number(state.pageViewNumber) > 0) {
+                    say('visitor #' + state.pageViewNumber + ' // ' + state.visitYear);
+                } else {
+                    say('visitor #demo // ' + (state.visitYear || new Date().getFullYear()));
+                }
                 break;
             case 'sudo':
                 say('nice try.');
                 break;
             default:
-                say('command not found: ' + cmd + ' · try help');
+                say('command not found: ' + cmd + ' · try man');
         }
 
         input.value = '';

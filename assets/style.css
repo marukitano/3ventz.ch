@@ -243,8 +243,9 @@ a { color: inherit; }
 
 .terminal-output {
     display: inline-block;
-    min-width: 0;
-    max-width: 46vw;
+    flex: 1 1 auto;
+    min-width: 220px;
+    max-width: none;
     margin-left: .28em;
     color: var(--pink);
     font-family: "VT323", "Courier New", monospace;
@@ -555,6 +556,7 @@ button, .button {
 
 .terminal-suggestion-list {
     display: inline-block;
+    white-space: nowrap;
     will-change: transform, opacity;
 }
 

@@ -154,13 +154,19 @@ a { color: inherit; }
     padding-bottom: 9px;
 }
 
-.identity { min-width: 0; }
+.identity {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
 
 .brand-terminal {
     position: relative;
     display: flex;
     align-items: baseline;
     width: 100%;
+    min-width: 0;
+    overflow: hidden;
     gap: 0;
     margin: 0;
     min-width: 0;
@@ -242,10 +248,10 @@ a { color: inherit; }
 }
 
 .terminal-output {
-    display: inline-block;
-    flex: 1 1 auto;
-    min-width: 220px;
-    max-width: none;
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
     margin-left: .28em;
     color: var(--pink);
     font-family: "VT323", "Courier New", monospace;
@@ -556,7 +562,10 @@ button, .button {
 
 .terminal-suggestion-list {
     display: inline-block;
+    max-width: 100%;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
     will-change: transform, opacity;
 }
 

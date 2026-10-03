@@ -177,8 +177,8 @@ function event_text_mask_uri(string $text): string
     }
 
     $escaped = htmlspecialchars($text, ENT_QUOTES | ENT_XML1, 'UTF-8');
-    $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="40" viewBox="0 0 320 40">'
-         . '<text x="314" y="27" text-anchor="end" fill="white" '
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="22" viewBox="0 0 320 22">'
+         . '<text x="318" y="18" text-anchor="end" fill="white" '
          . 'font-family="VT323, Courier New, monospace" font-size="20" letter-spacing="0.8">'
          . $escaped
          . '</text></svg>';

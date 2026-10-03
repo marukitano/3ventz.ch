@@ -135,18 +135,36 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
         ?>
             <div class="day<?= $dayEvents ? ' has-event' : '' ?>">
                 <span class="number"><?= $day ?></span>
-                <?php foreach ($dayEvents as $event): ?>
-                    <?php if (!empty($event['url']) && $event['url'] !== '#'): ?>
+                <?php foreach ($dayEvents as $event):
+                    $eventStart = new DateTimeImmutable($event['start_date']);
+                    $eventEnd = new DateTimeImmutable($event['end_date'] ?: $event['start_date']);
+                    $eventDateLabel = $eventStart->format('d.m.Y');
+                    if ($eventEnd->format('Y-m-d') !== $eventStart->format('Y-m-d')) {
+                        $eventDateLabel .= ' – ' . $eventEnd->format('d.m.Y');
+                    }
+                    $hasEventUrl = !empty($event['url']) && $event['url'] !== '#';
+                ?>
+                    <?php if ($hasEventUrl): ?>
                         <a class="event-dot"
                            href="<?= h($event['url']) ?>"
                            target="_blank"
                            rel="noopener noreferrer"
                            style="--event-color: <?= h($event['color']) ?>"
-                           title="<?= h($event['title']) ?>"></a>
+                           data-event-title="<?= h($event['title']) ?>"
+                           data-event-date="<?= h($eventDateLabel) ?>"
+                           data-event-category="<?= h($event['category'] ?? '') ?>"
+                           data-event-description="<?= h($event['description'] ?? '') ?>"
+                           data-event-url="<?= h($event['url']) ?>"
+                           aria-label="<?= h($event['title']) ?>"></a>
                     <?php else: ?>
                         <span class="event-dot"
                               style="--event-color: <?= h($event['color']) ?>"
-                              title="<?= h($event['title']) ?>"></span>
+                              data-event-title="<?= h($event['title']) ?>"
+                              data-event-date="<?= h($eventDateLabel) ?>"
+                              data-event-category="<?= h($event['category'] ?? '') ?>"
+                              data-event-description="<?= h($event['description'] ?? '') ?>"
+                              aria-label="<?= h($event['title']) ?>"
+                              tabindex="0"></span>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>

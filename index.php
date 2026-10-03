@@ -240,7 +240,7 @@ $legalReady =
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-    <main class="shell">
+    <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
         <header class="topbar">
             <div class="identity">
                 <form class="brand-terminal crt-title" id="terminal" autocomplete="off">

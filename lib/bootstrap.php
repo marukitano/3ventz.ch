@@ -26,6 +26,12 @@ if (!$demoMode) {
             PDO::ATTR_EMULATE_PREPARES => false,
         ]
     );
+
+    // Lightweight schema migration for installations that predate event short text.
+    $shortTextColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'short_text'")->fetch();
+    if (!$shortTextColumn) {
+        $pdo->exec("ALTER TABLE events ADD COLUMN short_text VARCHAR(64) NULL AFTER icon");
+    }
 }
 
 if (session_status() !== PHP_SESSION_ACTIVE) {

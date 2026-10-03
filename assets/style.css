@@ -538,3 +538,16 @@ button, .button {
     .brand-terminal { white-space: normal; flex-wrap: wrap; }
     #terminal-input { max-width: 70vw; }
 }
+
+
+.terminal-suggestion {
+    color: var(--pink);
+    padding: 0 .08em;
+}
+
+.terminal-suggestion.selected {
+    color: var(--bg);
+    background: var(--pink);
+    text-shadow: none;
+    box-shadow: 0 0 5px color-mix(in srgb, var(--pink) 45%, transparent);
+}

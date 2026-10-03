@@ -625,7 +625,7 @@
         eventTooltip.hidden = true;
     };
 
-    document.querySelectorAll('.event-dot').forEach((marker) => {
+    document.querySelectorAll('.event-hit').forEach((marker) => {
         marker.addEventListener('mouseenter', () => showEventTooltip(marker));
         marker.addEventListener('mouseleave', hideEventTooltip);
         marker.addEventListener('focus', () => showEventTooltip(marker));

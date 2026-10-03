@@ -978,3 +978,309 @@ footer a:hover,
 .legal-back:hover {
     text-decoration: underline;
 }
+
+
+/* =========================================================
+   HACKERS // 1995 cyber-pop theme
+   ========================================================= */
+
+.shell {
+    position: relative;
+    isolation: isolate;
+}
+
+.topbar,
+.calendar-grid,
+footer {
+    position: relative;
+    z-index: 2;
+}
+
+.hackers-popculture {
+    display: none;
+}
+
+:root[data-theme="hackers"] {
+    --bg: #020207;
+    --panel: #041016;
+    --line: #10404a;
+    --text: #d9fff2;
+    --muted: #477f74;
+    --cyan: #00f7ff;
+    --green: #38ff12;
+    --pink: #ff19d1;
+}
+
+:root[data-theme="hackers"] body {
+    background:
+        radial-gradient(circle at 72% 3%, rgba(255,25,209,.13) 0, transparent 24%),
+        radial-gradient(circle at 10% 18%, rgba(0,247,255,.10) 0, transparent 25%),
+        radial-gradient(circle at 88% 78%, rgba(56,255,18,.08) 0, transparent 27%),
+        linear-gradient(rgba(0,247,255,.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,25,209,.018) 1px, transparent 1px),
+        var(--bg);
+    background-size: auto, auto, auto, 18px 18px, 18px 18px, auto;
+}
+
+:root[data-theme="hackers"] .topbar {
+    border-bottom-color: rgba(0,247,255,.55);
+    box-shadow:
+        0 9px 30px rgba(0,247,255,.05),
+        0 1px 0 rgba(255,25,209,.25);
+}
+
+:root[data-theme="hackers"] .brand-prefix,
+:root[data-theme="hackers"] #terminal-input,
+:root[data-theme="hackers"] .cursor {
+    color: #39ff14;
+    text-shadow:
+        0 0 2px rgba(57,255,20,.92),
+        0 0 8px rgba(57,255,20,.36),
+        0 0 18px rgba(0,247,255,.12);
+}
+
+:root[data-theme="hackers"] .theme-indicator {
+    color: #ff19d1;
+    text-shadow:
+        0 0 3px rgba(255,25,209,.95),
+        0 0 10px rgba(255,25,209,.55);
+}
+
+:root[data-theme="hackers"] .category-filter {
+    color: #38ff12;
+    text-shadow: 0 0 5px rgba(56,255,18,.30);
+}
+
+:root[data-theme="hackers"] .category-filter:nth-child(3n+2) {
+    color: #00f7ff;
+    text-shadow: 0 0 5px rgba(0,247,255,.30);
+}
+
+:root[data-theme="hackers"] .category-filter:nth-child(3n) {
+    color: #ff19d1;
+    text-shadow: 0 0 5px rgba(255,25,209,.28);
+}
+
+:root[data-theme="hackers"] .category-filter:not(.is-active) {
+    color: #31554e;
+    opacity: .46;
+    text-shadow: none;
+}
+
+:root[data-theme="hackers"] .calendar-grid {
+    gap: 8px;
+}
+
+:root[data-theme="hackers"] .month {
+    --hack-accent: #00f7ff;
+    border-color: color-mix(in srgb, var(--hack-accent) 58%, #07161b);
+    background:
+        linear-gradient(180deg, rgba(3,15,20,.95), rgba(2,7,11,.97));
+    box-shadow:
+        inset 0 0 18px color-mix(in srgb, var(--hack-accent) 4%, transparent),
+        0 0 8px color-mix(in srgb, var(--hack-accent) 8%, transparent);
+}
+
+:root[data-theme="hackers"] .month:nth-child(4n+2) { --hack-accent: #ff19d1; }
+:root[data-theme="hackers"] .month:nth-child(4n+3) { --hack-accent: #38ff12; }
+:root[data-theme="hackers"] .month:nth-child(4n+4) { --hack-accent: #ffe600; }
+
+:root[data-theme="hackers"] .month h2 {
+    color: var(--hack-accent);
+    text-shadow: 0 0 5px color-mix(in srgb, var(--hack-accent) 38%, transparent);
+}
+
+:root[data-theme="hackers"] .month h2 span {
+    color: var(--hack-accent);
+}
+
+:root[data-theme="hackers"] .day {
+    border-color: rgba(0,247,255,.10);
+}
+
+:root[data-theme="hackers"] .hackers-popculture {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.hackers-slogan {
+    position: absolute;
+    font-family: "Terminus", "Fixed", "DejaVu Sans Mono", monospace;
+    font-weight: 400;
+    letter-spacing: .04em;
+    line-height: .82;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.hackers-slogan-planet {
+    top: 18px;
+    left: 54%;
+    color: #ffe600;
+    font-size: clamp(.9rem, 1.4vw, 1.55rem);
+    transform: rotate(-4deg);
+    text-shadow:
+        0 0 4px rgba(255,230,0,.75),
+        2px 2px 0 rgba(255,25,209,.35);
+}
+
+.hackers-slogan-boredom {
+    top: 55px;
+    left: 57%;
+    color: #00f7ff;
+    font-size: clamp(.72rem, 1.0vw, 1.05rem);
+    transform: rotate(2deg);
+    text-shadow:
+        0 0 4px rgba(0,247,255,.65),
+        1px 1px 0 rgba(255,25,209,.45);
+}
+
+.hackers-smiley {
+    position: absolute;
+    top: 10px;
+    left: 47%;
+    width: 58px;
+    height: 58px;
+    border: 3px solid #241d00;
+    border-radius: 50%;
+    background: #ffe600;
+    transform: rotate(-7deg);
+    box-shadow:
+        0 0 0 2px rgba(255,230,0,.18),
+        0 0 15px rgba(255,230,0,.24);
+}
+
+.hackers-smiley-eye {
+    position: absolute;
+    width: 6px;
+    height: 10px;
+    top: 17px;
+    right: 14px;
+    border-radius: 50%;
+    background: #191500;
+}
+
+.hackers-smiley-patch {
+    position: absolute;
+    width: 18px;
+    height: 13px;
+    top: 15px;
+    left: 10px;
+    border-radius: 50% 50% 44% 44%;
+    background: #141100;
+    transform: rotate(-10deg);
+}
+
+.hackers-smiley-strap {
+    position: absolute;
+    width: 42px;
+    height: 3px;
+    top: 16px;
+    left: 4px;
+    background: #141100;
+    transform: rotate(-17deg);
+}
+
+.hackers-smiley-mouth {
+    position: absolute;
+    left: 13px;
+    bottom: 10px;
+    width: 30px;
+    height: 15px;
+    border-bottom: 4px solid #191500;
+    border-radius: 0 0 50% 50%;
+    transform: rotate(3deg);
+}
+
+.hackers-floppy {
+    position: absolute;
+    right: 3vw;
+    bottom: 23px;
+    width: 62px;
+    height: 62px;
+    background: #ffe600;
+    border: 2px solid #312900;
+    border-radius: 2px;
+    transform: rotate(8deg);
+    box-shadow:
+        0 0 14px rgba(255,230,0,.18),
+        3px 3px 0 rgba(255,25,209,.10);
+}
+
+.hackers-floppy::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 10px;
+    width: 37px;
+    height: 22px;
+    background: #252000;
+    border: 2px solid #312900;
+}
+
+.hackers-floppy::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 7px;
+    height: 21px;
+    background: #fff9b0;
+    border: 2px solid #312900;
+}
+
+.hackers-floppy-label {
+    position: absolute;
+    z-index: 2;
+    left: 15px;
+    bottom: 12px;
+    color: #181500;
+    font-family: "Terminus", "Fixed", monospace;
+    font-size: .48rem;
+    letter-spacing: .04em;
+}
+
+.hackers-floppy-window {
+    position: absolute;
+    z-index: 2;
+    top: 3px;
+    left: 18px;
+    width: 15px;
+    height: 14px;
+    background: #a99b00;
+    border: 1px solid #0e0d00;
+}
+
+:root[data-theme="hackers"] footer::after {
+    content: "HACK THE PLANET // HACK BOREDOM // SAME PEOPLE · DIFFERENT PLANET";
+    color: #ff19d1;
+    margin-left: auto;
+    padding-left: 16px;
+    text-shadow: 0 0 5px rgba(255,25,209,.35);
+}
+
+@media (max-width: 1100px) {
+    :root[data-theme="hackers"] .hackers-slogan,
+    :root[data-theme="hackers"] .hackers-smiley,
+    :root[data-theme="hackers"] .hackers-floppy {
+        opacity: .18;
+    }
+
+    .hackers-slogan-planet { left: 44%; }
+    .hackers-slogan-boredom { left: 50%; }
+}
+
+@media (max-width: 760px) {
+    :root[data-theme="hackers"] .hackers-popculture {
+        display: none;
+    }
+
+    :root[data-theme="hackers"] footer::after {
+        display: none;
+    }
+}

@@ -124,6 +124,8 @@ $monthNames = [
     'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'
 ];
 
+$categoryFilters = ['CCC', 'DEMO', 'RETRO', 'MAKER', 'MOVIE', 'LAN', 'MUSIC', 'CODING', 'HACKING'];
+
 function event_icon_markup(string $icon): string
 {
     if ($icon === 'none') {
@@ -297,7 +299,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                         <span class="day empty"></span>
                     <?php else: ?>
                         <div class="day">
-                            <span class="number"><?= h($displayNumbers[$day] ?? (string)$day) ?></span>
+                            <span class="number" data-day="<?= (int)$day ?>"><?= h($displayNumbers[$day] ?? (string)$day) ?></span>
                         </div>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -335,6 +337,8 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                rel="noopener noreferrer"
                                style="<?= $style ?>"
                                data-event-title="<?= h($event['title']) ?>"
+                               data-segment-start-day="<?= (int)$segment['start']->format('j') ?>"
+                               data-segment-end-day="<?= (int)$segment['end']->format('j') ?>"
                                data-event-date="<?= h($eventDateLabel) ?>"
                                data-event-category="<?= h($event['category'] ?? '') ?>"
                                data-event-description="<?= h($event['description'] ?? '') ?>"
@@ -348,6 +352,8 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                             <span class="event-span"
                                   style="<?= $style ?>"
                                   data-event-title="<?= h($event['title']) ?>"
+                               data-segment-start-day="<?= (int)$segment['start']->format('j') ?>"
+                               data-segment-end-day="<?= (int)$segment['end']->format('j') ?>"
                                   data-event-date="<?= h($eventDateLabel) ?>"
                                   data-event-category="<?= h($event['category'] ?? '') ?>"
                                   data-event-description="<?= h($event['description'] ?? '') ?>"
@@ -400,7 +406,16 @@ $legalReady =
                     </span>
                     <span class="terminal-output" id="terminal-output" aria-live="polite"></span>
                 </form>
-                <div class="tagline">HACK · MAKE · BREAK · MEET</div>
+                <div class="category-filters" aria-label="Event-Kategorien filtern">
+                    <?php foreach ($categoryFilters as $category): ?>
+                        <button
+                            type="button"
+                            class="category-filter is-active"
+                            data-category-filter="<?= h($category) ?>"
+                            aria-pressed="true"
+                        ><?= h($category) ?></button>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="nav-stack">
                 <div class="theme-indicator" id="theme-indicator">THEME // DEFAULT</div>

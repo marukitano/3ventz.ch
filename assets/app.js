@@ -18,17 +18,78 @@
         window.location.href = '?year=' + y;
     };
 
+    const commands = [
+        'help',
+        'next',
+        'prev',
+        'year',
+        'today',
+        'events',
+        'admin',
+        'clear',
+        'whoami',
+        'sudo'
+    ];
+
+    let commandIndex = -1;
+
     const resizeInput = () => {
         const chars = Math.max(0, input.value.length);
-        input.style.width = chars ? Math.min(chars + 1, 18) + 'ch' : '0';
+        input.style.width = chars ? Math.min(chars, 18) + 'ch' : '0';
     };
 
     input.addEventListener('input', () => {
         resizeInput();
+        commandIndex = -1;
         if (input.value.length > 0) {
             output.textContent = '';
         }
         if (cursor) cursor.style.display = 'inline';
+    });
+
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            commandIndex = commandIndex < commands.length - 1 ? commandIndex + 1 : 0;
+            input.value = commands[commandIndex];
+            resizeInput();
+            output.textContent = '';
+            return;
+        }
+
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            commandIndex = commandIndex > 0 ? commandIndex - 1 : commands.length - 1;
+            input.value = commands[commandIndex];
+            resizeInput();
+            output.textContent = '';
+            return;
+        }
+
+        if (event.key === 'Tab') {
+            event.preventDefault();
+
+            const value = input.value.trim().toLowerCase();
+            const matches = commands.filter((command) => command.startsWith(value));
+
+            if (matches.length === 1) {
+                input.value = matches[0];
+                resizeInput();
+                output.textContent = '';
+                return;
+            }
+
+            if (matches.length > 1) {
+                output.textContent = '→ ' + matches.join(' · ');
+                return;
+            }
+
+            if (value === '') {
+                output.textContent = '→ ' + commands.join(' · ');
+            } else {
+                output.textContent = '→ no match';
+            }
+        }
     });
 
     form.addEventListener('submit', (event) => {
@@ -81,6 +142,7 @@
         }
 
         input.value = '';
+        commandIndex = -1;
         resizeInput();
         if (cursor) cursor.style.display = 'inline';
         input.focus();

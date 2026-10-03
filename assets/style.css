@@ -301,8 +301,8 @@ a { color: inherit; }
     text-shadow:
         0 0 4px rgba(255,61,242,.9),
         0 0 12px rgba(255,61,242,.55);
-    transform: translateY(2px);
-    margin: 0 0 2px 0;
+    transform: translateY(5px);
+    margin: 0 0 5px 0;
 }
 
 .year-nav {

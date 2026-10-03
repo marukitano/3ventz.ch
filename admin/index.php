@@ -14,15 +14,16 @@ $events = $pdo->query('SELECT * FROM events ORDER BY start_date DESC, title')->f
 
 $iconOptions = [
     'terminal' => '>_ Terminal',
-    'skull' => '☠ Skull',
-    'chip' => '▦ Chip',
-    'radio' => '⌁ Radio',
-    'flag' => '⚑ CTF Flag',
-    'gamepad' => '✣ C64 Joystick',
-    'bug' => 'BUG',
-    'lock' => '⌾ Lock',
-    'soldering_iron' => '⌁ Lötkolben',
-];
+    'pebble_rocket' => 'Pebble Rocket',
+    'pebble_console' => 'Pebble Developer Console',
+    'pebble_toolbox' => 'Pebble Toolbox',
+    'pebble_floppy' => 'Pebble Floppy Disk',
+    'pebble_location' => 'Pebble Location',
+    'pebble_calendar' => 'Pebble Calendar',
+    'pebble_warning' => 'Pebble Warning',
+    'pebble_microphone' => 'Pebble Microphone',
+    'pebble_radio' => 'Pebble Radio',
+]
 ?>
 <!doctype html>
 <html lang="de">

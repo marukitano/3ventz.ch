@@ -53,7 +53,7 @@ $events = $pdo->query('SELECT * FROM events ORDER BY start_date DESC, title')->f
                 </label>
                 <label>
                     URL
-                    <input type="url" name="url" maxlength="500" value="<?= h($edit['url'] ?? '') ?>" placeholder="https://">
+                    <input type="text" name="url" maxlength="500" value="<?= h($edit['url'] ?? '') ?>" placeholder="odenwilusenz.ch oder https://...">
                 </label>
                 <label>
                     Neonfarbe

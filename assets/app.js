@@ -178,7 +178,7 @@
         root.dataset.theme = theme;
         localStorage.setItem('3ventz-theme', theme);
         updateThemeIndicator(theme);
-        say('theme = ' + theme);
+        clearSuggestions();
     };
 
     const complete = () => {

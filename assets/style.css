@@ -259,8 +259,8 @@ a { color: inherit; }
     position: absolute;
     display: block;
     left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
+    transform: none;
     min-width: 0;
     max-width: none;
     margin-left: 0;

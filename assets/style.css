@@ -278,6 +278,23 @@ a { color: inherit; }
     vertical-align: baseline;
 }
 
+.nav-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    flex: 0 0 auto;
+}
+
+.theme-indicator {
+    color: var(--muted);
+    font-size: .55rem;
+    line-height: 1;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 .year-nav {
     display: flex;
     align-items: center;

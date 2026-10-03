@@ -26,14 +26,14 @@ $iconOptions = [
 ]
 ?>
 <!doctype html>
-<html lang="de">
+<html lang="de" class="admin-page-root">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // admin</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
-<body>
+<body class="admin-page">
 <main class="admin-shell">
     <div class="actions" style="justify-content:space-between;margin-bottom:18px">
         <a class="button secondary" href="/">← Kalender</a>

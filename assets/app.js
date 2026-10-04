@@ -51,8 +51,8 @@
             correct: 1
         },
         {
-            question: 'Was ist unser Lieblingstier?',
-            answers: ['der Pinguin', 'der Tux', 'die Katze', 'das Capybara'],
+            question: 'Tux is a?',
+            answers: ['Penguin', 'elephant', 'gnu', 'devil'],
             correct: 0
         },
         {
@@ -61,8 +61,8 @@
             correct: 1
         },
         {
-            question: 'Antwort auf alles?',
-            answers: ['23', '404', '42', '1337'],
+            question: "What's your address?",
+            answers: ['192.168.0.1', '10.0.0.1', '127.0.0.1', '8.8.8.8'],
             correct: 2
         }
     ];

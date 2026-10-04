@@ -2583,21 +2583,29 @@ html.rabbit-attack-active body {
     overflow: hidden;
     pointer-events: none;
     background:
-        linear-gradient(90deg, rgba(18,18,18,.52) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(18,18,18,.56) 1px, transparent 1px),
-        repeating-linear-gradient(
+        linear-gradient(
             90deg,
-            #f4f4f2 0 2px,
-            #bebebb 2px 3px,
-            #e3e3e0 3px 5px,
-            #a9a9a6 5px 6px
-        );
-    background-size: 10px 10px, 10px 10px, 6px 100%;
-    background-color: #d7d7d4;
+            rgba(248,248,244,.82) 0 62%,
+            transparent 62% 100%
+        ) 3px 2px / 31px 19px,
+        linear-gradient(
+            90deg,
+            transparent 0 18%,
+            rgba(224,224,220,.76) 18% 74%,
+            transparent 74% 100%
+        ) 11px 9px / 47px 27px,
+        linear-gradient(
+            90deg,
+            rgba(255,255,252,.68) 0 36%,
+            transparent 36% 53%,
+            rgba(190,190,187,.62) 53% 82%,
+            transparent 82% 100%
+        ) 0 5px / 67px 33px;
+    background-color: transparent;
     opacity: 1;
     transition: opacity .6s linear;
     contain: layout paint style;
-    animation: rabbit-grid-flicker 105ms steps(2, end) infinite;
+    animation: rabbit-grid-flicker 120ms steps(2, end) infinite;
 }
 
 .rabbit-attack-layer::after {
@@ -2606,20 +2614,28 @@ html.rabbit-attack-active body {
     inset: 0;
     z-index: 0;
     background:
-        repeating-linear-gradient(
+        linear-gradient(
             0deg,
-            rgba(255,255,255,.09) 0 1px,
-            rgba(0,0,0,.08) 1px 2px,
-            transparent 2px 4px
-        );
-    opacity: .68;
+            transparent 0 28%,
+            rgba(255,255,255,.16) 28% 36%,
+            transparent 36% 67%,
+            rgba(0,0,0,.10) 67% 72%,
+            transparent 72% 100%
+        ) 0 0 / 100% 37px,
+        linear-gradient(
+            90deg,
+            transparent 0 46%,
+            rgba(255,255,255,.11) 46% 58%,
+            transparent 58% 100%
+        ) 7px 13px / 83px 49px;
+    opacity: .76;
     pointer-events: none;
 }
 
 @keyframes rabbit-grid-flicker {
-    0%   { filter: brightness(.90) contrast(1.05); background-position: 0 0, 0 0, 0 0; }
-    50%  { filter: brightness(1.08) contrast(1.16); background-position: 1px 0, 0 1px, 1px 0; }
-    100% { filter: brightness(.96) contrast(1.10); background-position: 0 1px, 1px 0, 0 0; }
+    0%   { filter: brightness(.92) contrast(1.06); background-position: 3px 2px, 11px 9px, 0 5px; }
+    50%  { filter: brightness(1.08) contrast(1.13); background-position: 5px 1px, 9px 11px, 2px 4px; }
+    100% { filter: brightness(.97) contrast(1.09); background-position: 2px 3px, 12px 8px, 1px 6px; }
 }
 
 .rabbit-attack-layer.is-clearing {
@@ -2639,8 +2655,6 @@ html.rabbit-attack-active body {
     image-rendering: pixelated;
     opacity: 1;
     color: #e4282f;
-    will-change: transform;
-    animation: rabbit-virus-enter 220ms steps(5, end) both;
 }
 
 .rabbit-virus-icon.rabbit-black {
@@ -2666,17 +2680,6 @@ html.rabbit-attack-active body {
     mask:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16' shape-rendering='crispEdges'%3E%3Cg fill='black'%3E%3Crect x='5' y='6' width='12' height='6'/%3E%3Crect x='15' y='4' width='6' height='6'/%3E%3Crect x='18' y='1' width='2' height='4'/%3E%3Crect x='21' y='0' width='2' height='5'/%3E%3Crect x='2' y='7' width='4' height='4'/%3E%3Crect x='0' y='8' width='3' height='2'/%3E%3Crect x='7' y='11' width='3' height='3'/%3E%3Crect x='13' y='11' width='3' height='3'/%3E%3Crect x='5' y='13' width='6' height='2'/%3E%3Crect x='14' y='13' width='6' height='2'/%3E%3Crect x='20' y='6' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E")
         center / contain no-repeat;
-}
-
-@keyframes rabbit-virus-enter {
-    from {
-        opacity: .25;
-        transform: translate(calc(-50% + var(--rabbit-entry-x)), -50%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
 }
 
 .rabbit-system-alert {
@@ -2730,7 +2733,7 @@ html.rabbit-attack-active body {
 
 @media (max-width: 719px) {
     .rabbit-attack-layer {
-        background-size: 8px 8px, 8px 8px, 5px 100%;
+        background-size: 27px 17px, 41px 23px, 59px 29px;
     }
 
     .rabbit-system-alert {

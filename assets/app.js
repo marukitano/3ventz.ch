@@ -33,11 +33,11 @@
 
     const manualPages = {
         whoami: 'show your page-view number for the current calendar year',
-        sudo: 'open the private event administration',
-        theme: 'theme NAME — Aendert das Design der Website; Desktop: TAB/Pfeiltasten, Mobile: Tap/Swipe',
+        sudo: 'access to the Gibson backbone',
+        theme: 'theme NAME — change the website theme. With [TAB] you get the options',
         man: 'list available commands or show help with man COMMAND',
-        'hack the planet': 'prove your nerd credentials',
-        'attack': 'unleash the rabbit virus'
+        'hack the planet': 'prove your nerd credentials to get full access',
+        'attack': 'unleash the rabbit virus to the Gibson'
     };
 
     const quizQuestions = [

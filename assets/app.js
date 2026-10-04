@@ -13,7 +13,7 @@
     const currentYear = Number(state.year) || new Date().getFullYear();
     const root = document.documentElement;
 
-    const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari', 'edgerunner'];
+    const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari'];
     const commands = [
         'next',
         'prev',

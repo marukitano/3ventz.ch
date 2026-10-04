@@ -358,6 +358,41 @@ a { color: inherit; }
     vertical-align: baseline;
 }
 
+.terminal-output.is-ticker {
+    overflow: hidden;
+    scroll-behavior: auto;
+}
+
+.terminal-output.is-ticker .terminal-ticker-text {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    display: inline-block;
+    width: max-content;
+    white-space: nowrap;
+    animation: terminal-ticker-run 8s linear 1 both;
+}
+
+@keyframes terminal-ticker-run {
+    from {
+        left: 100%;
+        transform: translateX(0);
+    }
+    to {
+        left: 0;
+        transform: translateX(-100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .terminal-output.is-ticker .terminal-ticker-text {
+        position: static;
+        animation: none !important;
+        transform: none;
+    }
+}
+
+
 .nav-stack {
     display: flex;
     flex-direction: column;

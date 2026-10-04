@@ -422,6 +422,7 @@ $legalReady =
                 </div>
             </div>
             <div class="nav-stack">
+                <div class="theme-indicator nerd-indicator" id="nerd-indicator" hidden>echo $nerd=true</div>
                 <div class="theme-indicator" id="theme-indicator">echo $theme=hackers</div>
                 <nav class="year-nav" aria-label="Jahr wählen">
                     <a href="?year=<?= $year - 1 ?>">‹</a>
@@ -464,6 +465,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=hack-the-planet-2"></script>
+    <script src="/assets/app.js?v=hack-the-planet-3"></script>
 </body>
 </html>

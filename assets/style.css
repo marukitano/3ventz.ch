@@ -1541,31 +1541,30 @@ footer a:hover,
 }
 
 
-/* SEGA // Sonic-inspired calendar pass */
+/* SEGA // Green Hill platform pass */
 :root[data-theme="sega"] .calendar-grid {
     position: relative;
     padding: 4px;
-    border: 1px solid rgba(20,126,236,.18);
+    border: 1px solid rgba(116,77,33,.18);
     background:
-        linear-gradient(90deg, rgba(0,100,220,.025), transparent 20% 80%, rgba(0,100,220,.025)),
+        linear-gradient(90deg, rgba(0,100,220,.02), transparent 20% 80%, rgba(0,100,220,.02)),
         rgba(1,7,18,.18);
 }
 
 :root[data-theme="sega"] .month {
     position: relative;
     overflow: hidden;
-    border-width: 2px;
-    border-color: #0b6fd9 !important;
+    border: 2px solid #8b5a2b !important;
     background:
         linear-gradient(180deg, rgba(9,36,82,.96) 0%, rgba(4,18,48,.97) 54%, rgba(3,13,34,.98) 100%);
     box-shadow:
-        inset 0 0 0 1px rgba(117,199,255,.08),
-        inset 0 0 26px rgba(0,89,214,.10),
-        0 0 0 1px rgba(0,0,0,.38);
-    padding-bottom: 13px;
+        inset 0 0 0 1px rgba(117,199,255,.05),
+        inset 0 0 24px rgba(0,89,214,.06),
+        0 0 0 1px rgba(0,0,0,.28);
+    padding-bottom: 10px;
 }
 
-/* Green Hill grass + checkerboard terrain */
+/* Green Hill grass + checkerboard earth along the month base */
 :root[data-theme="sega"] .month::after {
     content: "";
     position: absolute;
@@ -1573,19 +1572,19 @@ footer a:hover,
     left: 0;
     right: 0;
     bottom: 0;
-    height: 9px;
+    height: 10px;
     background:
-        linear-gradient(#35e84d 0 3px, transparent 3px),
+        linear-gradient(#42ef4d 0 3px, #2cab33 3px 4px, transparent 4px),
         conic-gradient(
             from 45deg,
-            #a85a24 0 25%,
-            #e29a32 0 50%,
-            #a85a24 0 75%,
-            #e29a32 0
+            #8b5a2b 0 25%,
+            #b97633 0 50%,
+            #8b5a2b 0 75%,
+            #b97633 0
         );
     background-size: 100% 100%, 8px 8px;
-    opacity: .95;
-    box-shadow: 0 -1px 0 #8bff55;
+    box-shadow: 0 -1px 0 #7cff69;
+    opacity: .96;
 }
 
 :root[data-theme="sega"] .month > * {
@@ -1593,11 +1592,11 @@ footer a:hover,
     z-index: 1;
 }
 
-/* Gold ring around month number */
+/* Plain month heading: no rings, no red speed stripe */
 :root[data-theme="sega"] .month h2 {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
     min-height: 19px;
     color: #f8fbff !important;
     letter-spacing: .12em;
@@ -1607,38 +1606,21 @@ footer a:hover,
 }
 
 :root[data-theme="sega"] .month h2 span {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 21px;
-    height: 21px;
-    flex: 0 0 21px;
-    border: 3px solid #ffd928;
-    border-radius: 50%;
-    color: #fff7ae !important;
-    background: #07295d;
-    box-shadow:
-        inset 0 0 0 1px #fff3a0,
-        0 0 6px rgba(255,217,40,.28);
-    font-size: .62rem;
-    letter-spacing: 0;
+    display: inline;
+    width: auto;
+    height: auto;
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: 0;
+    color: #18b8ff !important;
+    background: transparent;
+    box-shadow: none;
+    font-size: inherit;
+    letter-spacing: inherit;
 }
 
-/* red/white speed stripe in every month header */
 :root[data-theme="sega"] .month h2::after {
-    content: "";
-    margin-left: auto;
-    width: 34px;
-    height: 5px;
-    background:
-        repeating-linear-gradient(
-            -45deg,
-            #ef2942 0 7px,
-            #ffffff 7px 12px
-        );
-    border-radius: 1px;
-    box-shadow: 0 0 0 1px rgba(255,255,255,.09);
-    opacity: .95;
+    content: none !important;
 }
 
 :root[data-theme="sega"] .weekdays {
@@ -1665,69 +1647,74 @@ footer a:hover,
     text-shadow: 0 0 2px rgba(17,121,255,.22);
 }
 
-/* little golden ring marker for occupied days without changing layout */
-:root[data-theme="sega"] .day:has(+ *) {
-    --sega-ring: #ffd928;
-}
-
-/* Sega event frames: fast, flat, red/white accented rather than generic neon */
+/* Events become Green Hill platforms:
+   grass on top, checkerboard earth underneath. */
 :root[data-theme="sega"] .event-span {
-    border-radius: 2px;
-    border: 2px solid #1598ff;
+    border: 2px solid #74471f !important;
+    border-radius: 1px !important;
     background:
         linear-gradient(
-            90deg,
-            rgba(0,102,221,.34),
-            rgba(22,174,255,.50) 56%,
-            rgba(255,217,40,.42)
-        );
-    box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.12),
-        0 0 6px rgba(14,125,244,.24);
-    animation: none;
-}
-
-:root[data-theme="sega"] .event-span::before {
-    background:
-        linear-gradient(
-            135deg,
-            transparent 0 70%,
-            rgba(239,41,66,.75) 70% 80%,
-            rgba(255,255,255,.80) 80% 88%,
-            rgba(239,41,66,.75) 88% 96%,
-            transparent 96%
+            180deg,
+            #61f45f 0 18%,
+            #30b53b 18% 28%,
+            transparent 28%
         ),
-        linear-gradient(
-            90deg,
-            rgba(20,145,255,.12),
-            rgba(255,217,40,.18)
-        );
+        conic-gradient(
+            from 45deg,
+            #8b5a2b 0 25%,
+            #c47a31 0 50%,
+            #8b5a2b 0 75%,
+            #c47a31 0
+        ) !important;
+    background-size: 100% 100%, 10px 10px !important;
+    box-shadow:
+        inset 0 1px 0 rgba(190,255,150,.35),
+        0 0 0 1px rgba(0,0,0,.22) !important;
+    animation: none !important;
+    filter: none !important;
+    overflow: hidden;
 }
 
+/* Remove old red/white and generic gradient overlays. */
+:root[data-theme="sega"] .event-span::before,
+:root[data-theme="sega"] .event-span[style*="--event-text-mask"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.10) 0%,
+            rgba(255,255,255,.02) 22%,
+            rgba(0,0,0,.06) 100%
+        ) !important;
+    opacity: .55;
+    -webkit-mask: none !important;
+    mask: none !important;
+    pointer-events: none;
+}
+
+/* Labels/icons sit clearly on the platform. */
 :root[data-theme="sega"] .event-span-short-text {
-    color: #ffffff;
+    display: block;
+    z-index: 4;
+    color: #fffef4 !important;
     text-shadow:
-        1px 1px 0 #075ebd,
-        0 0 3px rgba(0,0,0,.55);
+        1px 1px 0 #5e3716,
+        0 0 2px rgba(0,0,0,.45) !important;
+}
+
+:root[data-theme="sega"] .event-span-icon-overlay {
+    z-index: 4;
+    color: #fffef4;
+    filter: drop-shadow(1px 1px 0 #5e3716);
 }
 
 :root[data-theme="sega"] .event-tooltip-title {
-    color: #ffd928;
+    color: #ffe229;
 }
 
 :root[data-theme="sega"] .event-tooltip-meta {
     color: #18b8ff;
 }
 
-/* Sonic-like blue/green/yellow rhythm without turning the page into a cartoon */
-:root[data-theme="sega"] .month:nth-child(3n+2) {
-    border-color: #18a4ef !important;
-}
-
-:root[data-theme="sega"] .month:nth-child(3n) {
-    border-color: #2fc85b !important;
-}
-
-:root[data-theme="sega"] .month:nth-child(4n) {
-    border-color: #f0c51a !important;
-}

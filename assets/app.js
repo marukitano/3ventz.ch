@@ -10,37 +10,23 @@
     if (!form || !input || !output) return;
 
     const state = window.THREEVENTZ || {};
-    const currentYear = Number(state.year) || new Date().getFullYear();
     const root = document.documentElement;
 
     const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari'];
     const commands = [
-        'next',
-        'prev',
-        'year',
-        'today',
-        'events',
-        'admin',
-        'man',
-        'theme',
-        'clear',
         'whoami',
-        'sudo'
+        'sudo',
+        'theme',
+        'man'
     ];
 
-    const commandsWithArguments = new Set(['theme', 'year']);
+    const commandsWithArguments = new Set(['theme']);
 
     const manualPages = {
-        next: 'next — show the next calendar year',
-        prev: 'prev — show the previous calendar year',
-        year: 'year YYYY — jump to a specific year, e.g. year 2027',
-        today: 'today — return to the current year',
-        events: 'events — show how many events are loaded for this year',
-        admin: 'admin — open the private event administration',
-        theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
-        clear: 'clear — clear the CLI output',
         whoami: 'whoami — show your page-view number for the current calendar year',
-        sudo: 'sudo — nice try.'
+        sudo: 'sudo — open the private event administration',
+        theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
+        man: 'man — list available commands or show help with man COMMAND'
     };
 
     let commandIndex = -1;
@@ -212,11 +198,6 @@
         return true;
     };
 
-    const goYear = (year) => {
-        const y = Math.max(2000, Math.min(2100, Number(year)));
-        window.location.href = '?year=' + y;
-    };
-
     const inputSizer = document.createElement('span');
     inputSizer.setAttribute('aria-hidden', 'true');
     Object.assign(inputSizer.style, {
@@ -333,7 +314,7 @@
     };
 
     const openManual = () => {
-        suggestions = commands.filter((item) => item !== 'man');
+        suggestions = [...commands];
         suggestionIndex = 0;
         suggestionLead = '';
         suggestionMode = 'manual';
@@ -523,35 +504,8 @@
                 if (arg) showManual(arg);
                 else openManual();
                 break;
-            case '?':
-                openManual();
-                break;
-                break;
-            case 'next':
-                goYear(currentYear + 1);
-                break;
-            case 'prev':
-            case 'previous':
-                goYear(currentYear - 1);
-                break;
-            case 'year':
-                if (/^\d{4}$/.test(arg)) goYear(arg);
-                else say('usage: year 2027');
-                break;
-            case 'today':
-                goYear(new Date().getFullYear());
-                break;
-            case 'events':
-                say(String(state.eventCount || 0) + ' events loaded for ' + currentYear);
-                break;
-            case 'admin':
-                window.location.href = '/admin/';
-                break;
             case 'theme':
                 setTheme(arg);
-                break;
-            case 'clear':
-                output.textContent = '';
                 break;
             case 'whoami':
                 if (Number(state.pageViewNumber) > 0) {
@@ -561,7 +515,7 @@
                 }
                 break;
             case 'sudo':
-                say('nice try.');
+                window.location.href = '/admin/';
                 break;
             default:
                 say('command not found: ' + cmd + ' · try man');

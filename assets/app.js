@@ -312,49 +312,6 @@
         requestAnimationFrame(positionOutput);
     };
 
-    output.addEventListener('pointerdown', (event) => {
-        if (!touchUi || !suggestions.length || event.pointerType === 'mouse') return;
-
-        touchPointerId = event.pointerId;
-        touchStartX = event.clientX;
-        touchStartY = event.clientY;
-        suppressSuggestionTap = false;
-    });
-
-    output.addEventListener('pointerup', (event) => {
-        if (!touchUi || !suggestions.length || touchPointerId !== event.pointerId) return;
-
-        const dx = event.clientX - touchStartX;
-        const dy = event.clientY - touchStartY;
-        touchPointerId = null;
-
-        if (Math.abs(dx) < 42 || Math.abs(dx) <= Math.abs(dy) * 1.15) return;
-
-        event.preventDefault();
-        suppressSuggestionTap = true;
-
-        if (dx < 0) {
-            suggestionIndex = suggestionIndex < suggestions.length - 1
-                ? suggestionIndex + 1
-                : 0;
-            renderSuggestions(1);
-        } else {
-            suggestionIndex = suggestionIndex > 0
-                ? suggestionIndex - 1
-                : suggestions.length - 1;
-            renderSuggestions(-1);
-        }
-
-        window.setTimeout(() => {
-            suppressSuggestionTap = false;
-        }, 350);
-    });
-
-    output.addEventListener('pointercancel', () => {
-        touchPointerId = null;
-        suppressSuggestionTap = false;
-    });
-
     const acceptSuggestion = () => {
         if (!suggestions.length || suggestionIndex < 0) return false;
 

@@ -1777,29 +1777,3 @@ footer a:hover,
         0 0 0 1px rgba(92,57,0,.50),
         0 0 7px rgba(255,211,39,.16) !important;
 }
-
-
-/* SEGA // foreground grass layer */
-:root[data-theme="sega"] .month {
-    position: relative;
-    overflow: hidden;
-}
-
-/* Keep calendar content below the decorative ground strip. */
-:root[data-theme="sega"] .month > * {
-    position: relative;
-    z-index: 1;
-}
-
-:root[data-theme="sega"] .day,
-:root[data-theme="sega"] .week-row,
-:root[data-theme="sega"] .week-events {
-    position: relative;
-    z-index: 1;
-}
-
-/* Grass/earth sits in front of the day cells for a clean platform edge. */
-:root[data-theme="sega"] .month::after {
-    z-index: 20 !important;
-    pointer-events: none;
-}

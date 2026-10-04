@@ -254,7 +254,10 @@
                 suggestionIndex = selectedIndex;
 
                 if (suggestionMode === 'theme' && touchUi) {
+                    input.value = '';
+                    resizeInput();
                     setTheme(item);
+                    updateHint();
                     return;
                 }
 
@@ -292,7 +295,7 @@
 
         const rotated = getRotatedSuggestions();
         const visibleSuggestions = suggestionMode === 'theme'
-            ? rotated.slice(0, 4)
+            ? (touchUi ? rotated : rotated.slice(0, 4))
             : rotated;
 
         const list = buildSuggestionList(visibleSuggestions, 0);

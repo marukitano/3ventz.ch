@@ -1779,12 +1779,89 @@ footer a:hover,
 }
 
 
-/* SEGA // Green Hill sky calendar */
+/* SEGA // darker pixel sky calendar */
 :root[data-theme="sega"] .month {
     background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.26) 0 7%, transparent 8%),
-        radial-gradient(circle at 72% 15%, rgba(255,255,255,.20) 0 8%, transparent 9%),
-        linear-gradient(180deg, #75d2ff 0%, #56c2ff 48%, #3aaeff 100%) !important;
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0) 0 8px,
+            rgba(255,255,255,.035) 8px 9px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255,255,255,0) 0 8px,
+            rgba(255,255,255,.03) 8px 9px
+        ),
+        linear-gradient(
+            180deg,
+            #4ea6ff 0%,
+            #3f95ef 52%,
+            #2e78d6 100%
+        ) !important;
+}
+
+/* hard, dark Sonic-blue grid */
+:root[data-theme="sega"] .day {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.06) 0%,
+            rgba(255,255,255,.02) 45%,
+            rgba(0,0,0,.08) 100%
+        ) !important;
+    border-color: rgba(7,56,132,.95) !important;
+    color: #072f73 !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        inset 0 -1px 0 rgba(0,0,0,.14) !important;
+}
+
+:root[data-theme="sega"] .week-row .day:nth-child(6),
+:root[data-theme="sega"] .week-row .day:nth-child(7) {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.09) 0%,
+            rgba(255,255,255,.03) 45%,
+            rgba(0,0,0,.10) 100%
+        ) !important;
+}
+
+:root[data-theme="sega"] .number {
+    color: #062a66 !important;
+    text-shadow: none !important;
+    font-weight: 700;
+}
+
+:root[data-theme="sega"] .weekdays {
+    color: #0b469d !important;
+    text-shadow: none !important;
+}
+
+:root[data-theme="sega"] .month h2 {
+    color: #eaf6ff !important;
+    text-shadow:
+        1px 1px 0 #0051b8,
+        2px 2px 0 rgba(0,0,0,.15) !important;
+}
+
+:root[data-theme="sega"] .month h2 span {
+    color: #9ad7ff !important;
+}
+
+/* keep the existing golden-ring frame, just make it crisper */
+:root[data-theme="sega"] .month {
+    box-shadow:
+        inset 0 0 0 1px rgba(255,228,94,.24),
+        0 0 0 1px rgba(119,84,0,.25) !important;
+}
+
+/* event platforms stay crisp against the darker sky */
+:root[data-theme="sega"] .event-span {
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        0 1px 0 rgba(0,0,0,.18),
+        0 0 0 1px rgba(0,0,0,.22) !important;
 }
 
 /* Dark Sonic-blue grid over the bright sky. */

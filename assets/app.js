@@ -154,11 +154,24 @@
         suggestionLead = '';
         suggestionMode = 'default';
         suggestionPrompt = '';
-        output.classList.remove('is-ticker');
+        stopTicker();
         output.textContent = text;
         resetOutputScroll();
         updateHint();
         requestAnimationFrame(positionOutput);
+    };
+
+    let tickerAnimation = null;
+
+    const stopTicker = () => {
+        if (tickerAnimation) {
+            tickerAnimation.cancel();
+            tickerAnimation = null;
+        }
+
+        output.classList.remove('is-ticker');
+        output.style.height = '';
+        output.style.minHeight = '';
     };
 
     const sayTicker = (text) => {
@@ -168,18 +181,41 @@
         suggestionMode = 'default';
         suggestionPrompt = '';
         stopOutputScroll();
+        stopTicker();
         outputScrollX = 0;
         output.scrollLeft = 0;
         output.replaceChildren();
 
         const ticker = document.createElement('span');
-        ticker.className = 'terminal-ticker-text';
         ticker.textContent = text;
+        ticker.style.display = 'inline-block';
+        ticker.style.position = 'relative';
+        ticker.style.whiteSpace = 'nowrap';
 
         output.classList.add('is-ticker');
+        output.style.height = '1em';
+        output.style.minHeight = '1em';
         output.appendChild(ticker);
+
         updateHint();
-        requestAnimationFrame(positionOutput);
+        requestAnimationFrame(() => {
+            positionOutput();
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            const distance = output.clientWidth + ticker.getBoundingClientRect().width;
+            tickerAnimation = ticker.animate(
+                [
+                    { transform: 'translateX(' + output.clientWidth + 'px)' },
+                    { transform: 'translateX(-' + ticker.getBoundingClientRect().width + 'px)' }
+                ],
+                {
+                    duration: Math.max(8000, distance * 18),
+                    iterations: Infinity,
+                    easing: 'linear'
+                }
+            );
+        });
     };
 
     const clearSuggestions = () => {
@@ -188,7 +224,7 @@
         suggestionLead = '';
         suggestionMode = 'default';
         suggestionPrompt = '';
-        output.classList.remove('is-ticker');
+        stopTicker();
         output.textContent = '';
         resetOutputScroll();
         updateHint();

@@ -1281,6 +1281,7 @@
         const title = marker.dataset.eventTitle || '';
         const date = marker.dataset.eventDate || '';
         const category = marker.dataset.eventCategory || '';
+        const location = marker.dataset.eventLocation || '';
         const description = marker.dataset.eventDescription || '';
         const hasUrl = Boolean(marker.dataset.eventUrl);
         const eventColor = getComputedStyle(marker).getPropertyValue('--event-color').trim();
@@ -1295,7 +1296,7 @@
 
         const meta = document.createElement('div');
         meta.className = 'event-tooltip-meta';
-        meta.textContent = [date, category].filter(Boolean).join(' // ');
+        meta.textContent = [date, category, location].filter(Boolean).join(' // ');
         if (meta.textContent) eventTooltip.appendChild(meta);
 
         if (description) {

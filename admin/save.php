@@ -43,6 +43,12 @@ $endInput = trim((string)($_POST['end_date'] ?? ''));
 $start = normalize_admin_date($startInput);
 $end = normalize_admin_date($endInput);
 $category = trim((string)($_POST['category'] ?? ''));
+$location = trim((string)($_POST['location'] ?? ''));
+if (function_exists('mb_substr')) {
+    $location = mb_substr($location, 0, 255, 'UTF-8');
+} else {
+    $location = substr($location, 0, 255);
+}
 $allowedCategories = ['CCC', 'DEMO', 'RETRO', 'MAKER', 'MOVIE', 'LAN', 'MUSIC', 'CODING', 'HACKING'];
 if (!in_array($category, $allowedCategories, true)) {
     http_response_code(422);
@@ -98,6 +104,7 @@ $params = [
     'start_date' => $start,
     'end_date' => $end,
     'category' => $category !== '' ? $category : null,
+    'location' => $location !== '' ? $location : null,
     'url' => $url !== '' ? $url : null,
     'description' => $description !== '' ? $description : null,
     'color' => $color,
@@ -110,14 +117,14 @@ if ($id > 0) {
     $stmt = $pdo->prepare(
         'UPDATE events
          SET title=:title, start_date=:start_date, end_date=:end_date,
-             category=:category, url=:url, description=:description, color=:color, icon=:icon,
+             category=:category, location=:location, url=:url, description=:description, color=:color, icon=:icon,
              short_text=:short_text
          WHERE id=:id'
     );
 } else {
     $stmt = $pdo->prepare(
-        'INSERT INTO events (title,start_date,end_date,category,url,description,color,icon,short_text)
-         VALUES (:title,:start_date,:end_date,:category,:url,:description,:color,:icon,:short_text)'
+        'INSERT INTO events (title,start_date,end_date,category,location,url,description,color,icon,short_text)
+         VALUES (:title,:start_date,:end_date,:category,:location,:url,:description,:color,:icon,:short_text)'
     );
 }
 

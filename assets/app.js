@@ -12,6 +12,7 @@
 
     const state = window.THREEVENTZ || {};
     const root = document.documentElement;
+    const touchUi = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
 
     const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari'];
     const hackUnlockKey = '3ventz-hack-unlocked';
@@ -230,6 +231,11 @@
         updateHint();
     };
 
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchPointerId = null;
+    let suppressSuggestionTap = false;
+
     const buildSuggestionList = (items, selectedIndex = 0) => {
         const list = document.createElement('span');
         list.className = 'terminal-suggestion-list';
@@ -238,11 +244,20 @@
             const span = document.createElement('span');
             span.className = 'terminal-suggestion' + (index === selectedIndex ? ' selected' : '');
             span.textContent = item;
-            span.addEventListener('pointerdown', (event) => {
+            span.addEventListener('click', (event) => {
                 event.preventDefault();
+                if (suppressSuggestionTap) return;
+
                 const selectedIndex = suggestions.indexOf(item);
                 if (selectedIndex < 0) return;
+
                 suggestionIndex = selectedIndex;
+
+                if (suggestionMode === 'theme' && touchUi) {
+                    setTheme(item);
+                    return;
+                }
+
                 acceptSuggestion();
             });
             list.appendChild(span);
@@ -293,6 +308,49 @@
         updateHint();
         requestAnimationFrame(positionOutput);
     };
+
+    output.addEventListener('pointerdown', (event) => {
+        if (!touchUi || !suggestions.length || event.pointerType === 'mouse') return;
+
+        touchPointerId = event.pointerId;
+        touchStartX = event.clientX;
+        touchStartY = event.clientY;
+        suppressSuggestionTap = false;
+    });
+
+    output.addEventListener('pointerup', (event) => {
+        if (!touchUi || !suggestions.length || touchPointerId !== event.pointerId) return;
+
+        const dx = event.clientX - touchStartX;
+        const dy = event.clientY - touchStartY;
+        touchPointerId = null;
+
+        if (Math.abs(dx) < 42 || Math.abs(dx) <= Math.abs(dy) * 1.15) return;
+
+        event.preventDefault();
+        suppressSuggestionTap = true;
+
+        if (dx < 0) {
+            suggestionIndex = suggestionIndex < suggestions.length - 1
+                ? suggestionIndex + 1
+                : 0;
+            renderSuggestions(1);
+        } else {
+            suggestionIndex = suggestionIndex > 0
+                ? suggestionIndex - 1
+                : suggestions.length - 1;
+            renderSuggestions(-1);
+        }
+
+        window.setTimeout(() => {
+            suppressSuggestionTap = false;
+        }, 350);
+    });
+
+    output.addEventListener('pointercancel', () => {
+        touchPointerId = null;
+        suppressSuggestionTap = false;
+    });
 
     const acceptSuggestion = () => {
         if (!suggestions.length || suggestionIndex < 0) return false;
@@ -791,6 +849,8 @@
     });
 
     input.addEventListener('keydown', (event) => {
+        if (event.isComposing) return;
+
         if (suggestions.length) {
             if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
                 event.preventDefault();
@@ -888,12 +948,13 @@
     // This site has one text-entry surface: the CLI. Clicks may activate filters,
     // links, event markers, etc., but keyboard focus always returns to the prompt.
     document.addEventListener('click', () => {
-        window.requestAnimationFrame(focusTerminalInput);
+        if (!touchUi) window.requestAnimationFrame(focusTerminalInput);
     });
 
     // Fallback for browsers that leave focus on a clicked button/link:
     // printable keys and Enter are redirected to the CLI immediately.
     document.addEventListener('keydown', (event) => {
+        if (touchUi) return;
         if (event.target === input || event.defaultPrevented) return;
         if (event.ctrlKey || event.metaKey || event.altKey) return;
 
@@ -915,7 +976,9 @@
         input.dispatchEvent(new Event('input', { bubbles: true }));
     }, true);
 
-    window.addEventListener('pageshow', focusTerminalInput);
+    window.addEventListener('pageshow', () => {
+        if (!touchUi) focusTerminalInput();
+    });
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -936,7 +999,15 @@
                 else openManual();
                 break;
             case 'theme':
-                setTheme(arg);
+                if (touchUi && !arg) {
+                    suggestions = [...themes];
+                    suggestionIndex = 0;
+                    suggestionLead = 'theme ';
+                    suggestionMode = 'theme';
+                    renderSuggestions();
+                } else {
+                    setTheme(arg);
+                }
                 break;
             case 'hack':
                 if (arg.toLowerCase() === 'the planet') startHackQuiz();
@@ -970,7 +1041,12 @@
         resizeInput();
         updateHint();
         if (cursor) cursor.style.display = 'inline';
-        input.focus();
+
+        if (touchUi && suggestions.length) {
+            input.blur();
+        } else {
+            input.focus();
+        }
     });
 
     const categoryFilterButtons = [...document.querySelectorAll('[data-category-filter]')];
@@ -1052,7 +1128,7 @@
             button.setAttribute('aria-pressed', active ? 'true' : 'false');
             saveCategoryFilters();
             applyCategoryFilters();
-            focusTerminalInput();
+            if (!touchUi) focusTerminalInput();
         });
     });
 

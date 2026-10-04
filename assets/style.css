@@ -645,12 +645,12 @@ a { color: inherit; }
     width: max-content;
     max-width: min(340px, calc(100vw - 20px));
     padding: 10px 12px 9px;
-    border: 1px solid var(--cyan);
+    border: 1px solid var(--event-tooltip-color, var(--cyan));
     background: color-mix(in srgb, var(--panel) 96%, black);
     color: var(--text);
     box-shadow:
         0 0 0 1px rgba(0,0,0,.7),
-        0 0 18px color-mix(in srgb, var(--cyan) 22%, transparent);
+        0 0 18px color-mix(in srgb, var(--event-tooltip-color, var(--cyan)) 30%, transparent);
     pointer-events: none;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     line-height: 1.35;

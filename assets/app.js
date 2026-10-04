@@ -24,7 +24,7 @@
         'theme',
         'man',
         'hack the planet',
-        ...(isHackUnlocked() ? ['attack rabbit'] : [])
+        ...(isHackUnlocked() ? ['attack'] : [])
     ];
 
     let commands = getCommands();
@@ -36,7 +36,7 @@
         theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
         man: 'man — list available commands or show help with man COMMAND',
         'hack the planet': 'hack the planet — prove your nerd credentials',
-        'attack rabbit': 'attack rabbit — unleash the rabbit virus'
+        'attack': 'attack — unleash the rabbit virus'
     };
 
     const quizQuestions = [
@@ -407,7 +407,7 @@
         refreshCommands();
         updateNerdIndicator();
         quizIndex = -1;
-        say('ACCESS GRANTED // PLANET HACKED // rabbit attack unlocked');
+        say('ACCESS GRANTED // PLANET HACKED // attack unlocked');
     };
 
     let rabbitAttackTimer = null;
@@ -606,8 +606,8 @@
             return;
         }
 
-        if (name === 'attack rabbit' && !isHackUnlocked()) {
-            say('no manual entry for attack rabbit');
+        if (name === 'attack' && !isHackUnlocked()) {
+            say('no manual entry for attack');
             return;
         }
 
@@ -818,8 +818,13 @@
                 else say('usage: hack the planet');
                 break;
             case 'attack':
-                if (arg.toLowerCase() === 'rabbit') startRabbitAttack();
-                else say('usage: attack rabbit');
+                if (!isHackUnlocked()) {
+                    say('permission denied // run: hack the planet');
+                } else if (arg) {
+                    say('usage: attack');
+                } else {
+                    startRabbitAttack();
+                }
                 break;
             case 'whoami':
                 if (Number(state.pageViewNumber) > 0) {

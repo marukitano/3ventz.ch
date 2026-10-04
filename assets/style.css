@@ -12,14 +12,14 @@
 
 :root {
     color-scheme: dark;
-    --bg: #030817;
-    --panel: #07142b;
-    --line: #1558a8;
-    --text: #f4fbff;
-    --muted: #6f91b8;
-    --cyan: #18b8ff;
-    --green: #ffe229;
-    --pink: #ffffff;
+    --bg: #020504;
+    --panel: #06100b;
+    --line: #163b27;
+    --text: #d8ffe7;
+    --muted: #557b63;
+    --cyan: #39ff14;
+    --green: #00ff8c;
+    --pink: #ff2ad4;
 }
 
 

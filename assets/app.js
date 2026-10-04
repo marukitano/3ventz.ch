@@ -36,7 +36,7 @@
         theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
         man: 'man — list available commands or show help with man COMMAND',
         'hack the planet': 'hack the planet — prove your nerd credentials',
-        'attack rabbit': 'attack rabbit — unleash the rabbit virus (hackers theme only)'
+        'attack rabbit': 'attack rabbit — unleash the rabbit virus'
     };
 
     const quizQuestions = [
@@ -487,12 +487,25 @@
                 stopRabbitAttack();
 
                 const year = Number(state.year) || new Date().getFullYear();
-                const count = Number(state.eventCount) || 0;
-                say('ALL DATA ACQUIRED // ' + count + ' EVENTS // EXPORTING CALENDAR...');
+                const activeCategories = categoryFilterButtons
+                    .filter((button) => button.classList.contains('is-active'))
+                    .map((button) => button.dataset.categoryFilter || '')
+                    .filter(Boolean);
 
-                // This is a real iCalendar export. The response is served as a .ics file.
+                const params = new URLSearchParams();
+                params.set('year', String(year));
+                params.set('filtered', '1');
+                params.set('categories', activeCategories.join(','));
+
+                say(
+                    'ALL DATA ACQUIRED // EXPORTING '
+                    + (activeCategories.length ? activeCategories.join('+') : '0 VISIBLE EVENTS')
+                    + '...'
+                );
+
+                // Real iCalendar export of exactly the categories currently visible.
                 window.setTimeout(() => {
-                    window.location.href = '/export.php?year=' + encodeURIComponent(year);
+                    window.location.href = '/export.php?' + params.toString();
                 }, 700);
             }, 80);
         }, 2300);
@@ -501,11 +514,6 @@
     const startRabbitAttack = () => {
         if (!isHackUnlocked()) {
             say('permission denied // run: hack the planet');
-            return;
-        }
-
-        if (root.dataset.theme !== 'hackers') {
-            say('attack rabbit: hackers theme only');
             return;
         }
 

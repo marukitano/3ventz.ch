@@ -154,8 +154,30 @@
         suggestionLead = '';
         suggestionMode = 'default';
         suggestionPrompt = '';
+        output.classList.remove('is-ticker');
         output.textContent = text;
         resetOutputScroll();
+        updateHint();
+        requestAnimationFrame(positionOutput);
+    };
+
+    const sayTicker = (text) => {
+        suggestions = [];
+        suggestionIndex = -1;
+        suggestionLead = '';
+        suggestionMode = 'default';
+        suggestionPrompt = '';
+        stopOutputScroll();
+        outputScrollX = 0;
+        output.scrollLeft = 0;
+        output.replaceChildren();
+
+        const ticker = document.createElement('span');
+        ticker.className = 'terminal-ticker-text';
+        ticker.textContent = text;
+
+        output.classList.add('is-ticker');
+        output.appendChild(ticker);
         updateHint();
         requestAnimationFrame(positionOutput);
     };
@@ -166,6 +188,7 @@
         suggestionLead = '';
         suggestionMode = 'default';
         suggestionPrompt = '';
+        output.classList.remove('is-ticker');
         output.textContent = '';
         resetOutputScroll();
         updateHint();
@@ -497,12 +520,21 @@
                 params.set('filtered', '1');
                 params.set('categories', activeCategories.join(','));
 
-                say('ATTACK SUCCESSFUL // ALL DATA COLLECTED');
+                const successMessage =
+                    "ATTACK SUCCESSFUL // WE'RE IN THE GIBSON // GARBAGE FILE ACQUIRED // EXPORTING... // ACID BURN IS IMPRESSED";
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                if (reducedMotion) {
+                    say(successMessage);
+                } else {
+                    sayTicker(successMessage);
+                }
 
                 // Real iCalendar export of exactly the categories currently visible.
+                // Give the 90s-style ticker one complete pass before downloading.
                 window.setTimeout(() => {
                     window.location.href = '/export.php?' + params.toString();
-                }, 1300);
+                }, reducedMotion ? 1800 : 8200);
             }, 80);
         }, 2300);
     };

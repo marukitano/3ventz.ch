@@ -494,7 +494,7 @@
         suggestionIndex = 0;
         suggestionLead = '';
         suggestionMode = 'quiz';
-        suggestionPrompt = touchUi ? question.question : question.question + ' //';
+        suggestionPrompt = question.question;
         renderSuggestions();
     };
 

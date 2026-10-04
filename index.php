@@ -388,7 +388,7 @@ $legalReady =
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=rabbit-fix-6">
+    <link rel="stylesheet" href="/assets/style.css?v=mobile-cli-1">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
@@ -401,6 +401,10 @@ $legalReady =
                             id="terminal-input"
                             type="text"
                             spellcheck="false"
+                            autocorrect="off"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            enterkeyhint="go"
                             aria-label="3ventz command line"
                             placeholder=""
                             autofocus
@@ -465,6 +469,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=quiz-3"></script>
+    <script src="/assets/app.js?v=mobile-cli-1"></script>
 </body>
 </html>

@@ -12,27 +12,28 @@
 
 :root {
     color-scheme: dark;
-    --bg: #04070a;
-    --panel: #071016;
-    --line: #12303a;
-    --text: #d9fbff;
-    --muted: #61808a;
-    --cyan: #00f5ff;
-    --green: #59ff8b;
-    --pink: #ff3df2;
+    --bg: #030817;
+    --panel: #07142b;
+    --line: #1558a8;
+    --text: #f4fbff;
+    --muted: #6f91b8;
+    --cyan: #18b8ff;
+    --green: #ffe229;
+    --pink: #ffffff;
 }
 
 
 /* CLI-selectable color themes */
+:root[data-theme="sega"],
 :root[data-theme="default"] {
-    --bg: #04070a;
-    --panel: #071016;
-    --line: #12303a;
-    --text: #d9fbff;
-    --muted: #61808a;
-    --cyan: #00f5ff;
-    --green: #59ff8b;
-    --pink: #ff3df2;
+    --bg: #030817;
+    --panel: #07142b;
+    --line: #1558a8;
+    --text: #f4fbff;
+    --muted: #6f91b8;
+    --cyan: #18b8ff;
+    --green: #ffe229;
+    --pink: #ffffff;
 }
 
 :root[data-theme="c64"] {
@@ -1396,4 +1397,145 @@ footer a:hover,
 /* Same for icons */
 :root[data-theme="hackers"] .event-span-icon-overlay {
     z-index: 20 !important;
+}
+
+
+/* SEGA // 90s arcade default theme */
+:root[data-theme="sega"] body,
+:root[data-theme="default"] body {
+    background:
+        radial-gradient(circle at 50% -15%, rgba(19,126,255,.20) 0, transparent 42%),
+        linear-gradient(rgba(32,133,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(32,133,255,.028) 1px, transparent 1px),
+        linear-gradient(180deg, #020611 0%, #06122a 48%, #020713 100%);
+    background-size: auto, 18px 18px, 18px 18px, auto;
+}
+
+:root[data-theme="sega"] .topbar,
+:root[data-theme="default"] .topbar {
+    border-bottom-color: rgba(35,145,255,.72);
+    box-shadow:
+        0 1px 0 rgba(255,255,255,.08),
+        0 10px 34px rgba(0,83,210,.08);
+}
+
+:root[data-theme="sega"] .brand-prefix,
+:root[data-theme="default"] .brand-prefix,
+:root[data-theme="sega"] #terminal-input,
+:root[data-theme="default"] #terminal-input,
+:root[data-theme="sega"] .cursor,
+:root[data-theme="default"] .cursor {
+    color: #f7fbff;
+    text-shadow:
+        2px 0 0 #087ce8,
+        -2px 0 0 #087ce8,
+        0 0 5px rgba(19,137,255,.55);
+}
+
+:root[data-theme="sega"] .terminal-hint,
+:root[data-theme="default"] .terminal-hint {
+    color: #6b8cac;
+}
+
+:root[data-theme="sega"] .theme-indicator,
+:root[data-theme="default"] .theme-indicator {
+    color: #18b8ff;
+    text-shadow:
+        0 0 3px rgba(24,184,255,.85),
+        0 0 10px rgba(24,184,255,.28);
+}
+
+:root[data-theme="sega"] .year-nav strong,
+:root[data-theme="default"] .year-nav strong {
+    color: #ffe229;
+    text-shadow: 0 0 7px rgba(255,226,41,.32);
+}
+
+:root[data-theme="sega"] .year-nav a,
+:root[data-theme="default"] .year-nav a {
+    color: #f4fbff;
+    text-shadow: 0 0 5px rgba(24,184,255,.35);
+}
+
+:root[data-theme="sega"] .category-filter,
+:root[data-theme="default"] .category-filter {
+    color: #f4fbff;
+    text-shadow: 0 0 4px rgba(24,184,255,.24);
+}
+
+:root[data-theme="sega"] .category-filter::before,
+:root[data-theme="default"] .category-filter::before {
+    color: #18b8ff;
+}
+
+:root[data-theme="sega"] .category-filter:nth-child(3n+2),
+:root[data-theme="default"] .category-filter:nth-child(3n+2) {
+    color: #18b8ff;
+}
+
+:root[data-theme="sega"] .category-filter:nth-child(3n),
+:root[data-theme="default"] .category-filter:nth-child(3n) {
+    color: #ffe229;
+}
+
+:root[data-theme="sega"] .category-filter:not(.is-active),
+:root[data-theme="default"] .category-filter:not(.is-active) {
+    color: #506b86;
+    text-shadow: none;
+}
+
+:root[data-theme="sega"] .month,
+:root[data-theme="default"] .month {
+    background:
+        linear-gradient(180deg, rgba(7,21,45,.96), rgba(2,9,22,.97));
+    border-color: #1558a8;
+    box-shadow:
+        inset 0 0 0 1px rgba(67,169,255,.035),
+        inset 0 0 26px rgba(13,112,223,.035);
+}
+
+:root[data-theme="sega"] .month:nth-child(4n+1),
+:root[data-theme="default"] .month:nth-child(4n+1) { border-color: #167ad8; }
+:root[data-theme="sega"] .month:nth-child(4n+2),
+:root[data-theme="default"] .month:nth-child(4n+2) { border-color: #209dff; }
+:root[data-theme="sega"] .month:nth-child(4n+3),
+:root[data-theme="default"] .month:nth-child(4n+3) { border-color: #3dbfff; }
+:root[data-theme="sega"] .month:nth-child(4n+4),
+:root[data-theme="default"] .month:nth-child(4n+4) { border-color: #f0c91c; }
+
+:root[data-theme="sega"] .month h2,
+:root[data-theme="default"] .month h2 {
+    color: #f7fbff;
+    text-shadow:
+        1px 0 0 #087ce8,
+        0 0 4px rgba(24,184,255,.25);
+}
+
+:root[data-theme="sega"] .month h2 span,
+:root[data-theme="default"] .month h2 span {
+    color: #18b8ff;
+}
+
+:root[data-theme="sega"] .month:nth-child(4n+4) h2 span,
+:root[data-theme="default"] .month:nth-child(4n+4) h2 span {
+    color: #ffe229;
+}
+
+:root[data-theme="sega"] .day,
+:root[data-theme="default"] .day {
+    border-color: rgba(31,91,145,.36);
+    color: #8ca8c2;
+}
+
+:root[data-theme="sega"] footer,
+:root[data-theme="default"] footer {
+    color: #6f91b8;
+}
+
+:root[data-theme="sega"] .event-tooltip,
+:root[data-theme="default"] .event-tooltip {
+    border-color: #18b8ff;
+    box-shadow:
+        0 0 0 1px rgba(0,0,0,.75),
+        0 0 18px rgba(24,184,255,.14);
 }

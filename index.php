@@ -388,7 +388,7 @@ $legalReady =
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=hackers-tape-4">
+    <link rel="stylesheet" href="/assets/style.css?v=sega-1">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
@@ -422,7 +422,7 @@ $legalReady =
                 </div>
             </div>
             <div class="nav-stack">
-                <div class="theme-indicator" id="theme-indicator">THEME // DEFAULT</div>
+                <div class="theme-indicator" id="theme-indicator">echo $theme=sega</div>
                 <nav class="year-nav" aria-label="Jahr wählen">
                     <a href="?year=<?= $year - 1 ?>">‹</a>
                     <strong><?= $year ?></strong>
@@ -464,6 +464,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js"></script>
+    <script src="/assets/app.js?v=sega-1"></script>
 </body>
 </html>

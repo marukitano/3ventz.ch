@@ -2582,110 +2582,55 @@ html.rabbit-attack-active body {
     z-index: 9998;
     overflow: hidden;
     pointer-events: none;
-    background:
-        /* broad vertical fragments with large transparent gaps */
-        linear-gradient(
-            90deg,
-            rgba(248,248,244,.34) 0 24%,
-            transparent 24% 54%,
-            rgba(220,220,216,.24) 54% 66%,
-            transparent 66% 100%
-        ) 7px 3px / 67px 41px,
-        linear-gradient(
-            90deg,
-            transparent 0 17%,
-            rgba(242,242,238,.28) 17% 31%,
-            transparent 31% 68%,
-            rgba(196,196,192,.20) 68% 77%,
-            transparent 77% 100%
-        ) 19px 11px / 101px 59px,
-        linear-gradient(
-            90deg,
-            rgba(255,255,252,.20) 0 13%,
-            transparent 13% 46%,
-            rgba(208,208,204,.18) 46% 58%,
-            transparent 58% 100%
-        ) 2px 17px / 149px 83px,
-
-        /* broad horizontal fragments with large transparent gaps */
-        linear-gradient(
-            0deg,
-            rgba(246,246,242,.28) 0 18%,
-            transparent 18% 49%,
-            rgba(214,214,210,.20) 49% 61%,
-            transparent 61% 100%
-        ) 11px 5px / 79px 53px,
-        linear-gradient(
-            0deg,
-            transparent 0 22%,
-            rgba(252,252,248,.24) 22% 34%,
-            transparent 34% 72%,
-            rgba(190,190,186,.16) 72% 80%,
-            transparent 80% 100%
-        ) 23px 13px / 127px 89px,
-        linear-gradient(
-            0deg,
-            rgba(230,230,226,.16) 0 9%,
-            transparent 9% 44%,
-            rgba(255,255,252,.18) 44% 52%,
-            transparent 52% 100%
-        ) 5px 2px / 173px 113px;
-    background-color: transparent;
-    opacity: 1;
-    transition: opacity .6s linear;
+    background: transparent;
     contain: layout paint style;
-    animation: rabbit-grid-flicker 140ms steps(2, end) infinite;
-}
-
-.rabbit-attack-layer::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            transparent 0 15px,
-            rgba(255,255,255,.045) 15px 17px,
-            transparent 17px 37px,
-            rgba(0,0,0,.028) 37px 38px,
-            transparent 38px 61px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            transparent 0 19px,
-            rgba(255,255,255,.040) 19px 21px,
-            transparent 21px 47px,
-            rgba(0,0,0,.024) 47px 48px,
-            transparent 48px 79px
-        );
-    opacity: .42;
-    pointer-events: none;
-}
-
-@keyframes rabbit-grid-flicker {
-    0% {
-        filter: brightness(.96) contrast(1.04);
-        background-position:
-            7px 3px, 19px 11px, 2px 17px,
-            11px 5px, 23px 13px, 5px 2px;
-    }
-    50% {
-        filter: brightness(1.04) contrast(1.09);
-        background-position:
-            10px 2px, 16px 14px, 5px 15px,
-            14px 7px, 20px 11px, 8px 4px;
-    }
-    100% {
-        filter: brightness(.98) contrast(1.06);
-        background-position:
-            6px 5px, 21px 9px, 1px 19px,
-            9px 4px, 25px 15px, 4px 1px;
-    }
 }
 
 .rabbit-attack-layer.is-clearing {
-    opacity: 0;
+    visibility: hidden;
+}
+
+.rabbit-glitch-field {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.rabbit-glitch-block {
+    position: absolute;
+    display: block;
+    background:
+        repeating-conic-gradient(
+            #e6e6df 0 25%,
+            transparent 0 50%
+        ) 0 0 / 4px 4px;
+    image-rendering: pixelated;
+    animation: rabbit-block-jitter 140ms steps(2, end) infinite;
+}
+
+.rabbit-glitch-block.glitch-1 {
+    background:
+        repeating-conic-gradient(
+            #c8c8c1 0 25%,
+            transparent 0 50%
+        ) 1px 0 / 6px 6px;
+}
+
+.rabbit-glitch-block.glitch-2 {
+    background:
+        repeating-linear-gradient(
+            0deg,
+            #f2f2ec 0 2px,
+            transparent 2px 5px
+        );
+}
+
+@keyframes rabbit-block-jitter {
+    0%   { transform: translate(0, 0); background-position: 0 0; }
+    50%  { transform: translate(1px, 0); background-position: 2px 1px; }
+    100% { transform: translate(0, 1px); background-position: 1px 2px; }
 }
 
 .rabbit-attack-field {
@@ -2794,10 +2739,8 @@ html.rabbit-attack-active body {
 }
 
 @media (max-width: 719px) {
-    .rabbit-attack-layer {
-        background-size:
-            59px 37px, 89px 53px, 127px 71px,
-            71px 47px, 109px 73px, 149px 97px;
+    .rabbit-glitch-block {
+        background-size: 4px 4px;
     }
 
     .rabbit-system-alert {

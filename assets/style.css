@@ -1109,3 +1109,164 @@ footer a:hover,
         0 10%
     );
 }
+
+
+/* HACKERS // tape correction v2 */
+:root[data-theme="hackers"] .event-span,
+:root[data-theme="hackers"] .event-span:hover,
+:root[data-theme="hackers"] .event-span:focus {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background:
+        linear-gradient(
+            180deg,
+            #eaff38 0%,
+            #d5ff21 18%,
+            #bfff16 54%,
+            #a9ed12 100%
+        ) !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+    opacity: .94;
+    overflow: hidden;
+
+    /* straight top/bottom, clearly torn left/right edges */
+    clip-path: polygon(
+        9px 0,
+        calc(100% - 9px) 0,
+
+        100% 7%,
+        calc(100% - 5px) 15%,
+        100% 24%,
+        calc(100% - 8px) 33%,
+        100% 43%,
+        calc(100% - 4px) 53%,
+        100% 63%,
+        calc(100% - 7px) 73%,
+        100% 83%,
+        calc(100% - 5px) 92%,
+
+        calc(100% - 9px) 100%,
+        9px 100%,
+
+        0 92%,
+        6px 83%,
+        0 73%,
+        8px 63%,
+        0 53%,
+        5px 43%,
+        0 33%,
+        7px 24%,
+        0 15%,
+        5px 7%
+    ) !important;
+}
+
+/* Tape surface: dull UV plastic/fabric, not a neon button. */
+:root[data-theme="hackers"] .event-span::before,
+:root[data-theme="hackers"] .event-span[style*="--event-text-mask"]::before {
+    content: "" !important;
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.18) 0%,
+            rgba(255,255,255,.04) 24%,
+            rgba(30,45,0,.05) 58%,
+            rgba(10,20,0,.10) 100%
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255,255,255,.045) 0 1px,
+            transparent 1px 5px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(35,55,0,.035) 0 1px,
+            transparent 1px 3px
+        ) !important;
+    opacity: .72 !important;
+    mix-blend-mode: multiply;
+    -webkit-mask: none !important;
+    mask: none !important;
+    pointer-events: none;
+}
+
+/* One handwritten marker label only. */
+:root[data-theme="hackers"] .event-span-short-text {
+    display: block !important;
+    position: absolute;
+    z-index: 6;
+    right: 10px;
+    top: 50%;
+    max-width: calc(100% - 26px);
+    overflow: hidden;
+    transform: translateY(-51%) rotate(-1.4deg);
+    color: #10160a !important;
+    font-family: "Permanent Marker", "Marker Felt", "Comic Sans MS", cursive !important;
+    font-size: clamp(.56rem, .68vw, .78rem) !important;
+    font-weight: 400;
+    line-height: .9;
+    letter-spacing: -.015em;
+    white-space: nowrap;
+    text-align: right;
+    text-shadow: none !important;
+    opacity: .95;
+    pointer-events: none;
+}
+
+/* Old cut-out label is disabled in this theme. */
+:root[data-theme="hackers"] .event-span[style*="--event-text-mask"]::before {
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+}
+
+/* Date numbers should look like they were written over the tape, not glow above it. */
+:root[data-theme="hackers"] .week-row:has(.event-span) .number {
+    text-shadow: none;
+}
+
+/* Icons become black marker-like prints on the tape. */
+:root[data-theme="hackers"] .event-span-icon-overlay {
+    color: #11160a !important;
+    opacity: .82 !important;
+    filter: none !important;
+}
+
+:root[data-theme="hackers"] .event-span-icon-overlay img {
+    filter: brightness(0) saturate(100%) !important;
+    opacity: .82;
+}
+
+/* Alternate hand-torn edge pattern so multiple strips do not look cloned. */
+:root[data-theme="hackers"] .week-row:nth-child(even) .event-span {
+    clip-path: polygon(
+        8px 0,
+        calc(100% - 10px) 0,
+
+        100% 8%,
+        calc(100% - 7px) 18%,
+        100% 29%,
+        calc(100% - 4px) 39%,
+        100% 51%,
+        calc(100% - 8px) 62%,
+        100% 74%,
+        calc(100% - 5px) 86%,
+        100% 93%,
+
+        calc(100% - 8px) 100%,
+        10px 100%,
+
+        0 91%,
+        7px 81%,
+        0 70%,
+        4px 59%,
+        0 47%,
+        8px 36%,
+        0 25%,
+        5px 14%,
+        0 7%
+    ) !important;
+}

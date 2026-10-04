@@ -53,7 +53,7 @@
         },
         {
             question: 'Tux is a?',
-            answers: ['Penguin', 'elephant', 'gnu', 'devil'],
+            answers: ['penguin', 'elephant', 'gnu', 'devil'],
             correct: 0
         },
         {
@@ -226,6 +226,7 @@
         suggestionMode = 'default';
         suggestionPrompt = '';
         stopTicker();
+        output.classList.remove('is-quiz');
         output.textContent = '';
         resetOutputScroll();
         updateHint();
@@ -275,7 +276,7 @@
             });
             list.appendChild(span);
 
-            if (index < items.length - 1) {
+            if (index < items.length - 1 && !(touchUi && suggestionMode === 'quiz')) {
                 list.appendChild(document.createTextNode(' · '));
             }
         });
@@ -316,6 +317,13 @@
 
         if (suggestionMode === 'manual') {
             list.classList.add('manual-list');
+        }
+
+        if (suggestionMode === 'quiz') {
+            list.classList.add('quiz-list');
+            output.classList.add('is-quiz');
+        } else {
+            output.classList.remove('is-quiz');
         }
 
         if (direction < 0) list.classList.add('snap-prev');

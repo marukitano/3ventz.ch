@@ -1847,3 +1847,25 @@ footer a:hover,
         0 0 0 1px rgba(0,0,0,.22) !important;
 }
 
+
+
+/* SEGA // flat day cells */
+:root[data-theme="sega"] .day {
+    background: rgba(255,255,255,.055) !important;
+    border-color: #083f93 !important;
+    color: #05285f !important;
+    box-shadow: none !important;
+}
+
+:root[data-theme="sega"] .week-row .day:nth-child(6),
+:root[data-theme="sega"] .week-row .day:nth-child(7) {
+    background: rgba(255,255,255,.075) !important;
+}
+
+/* Keep all day-cell visuals hard/pixel-flat. */
+:root[data-theme="sega"] .day::before,
+:root[data-theme="sega"] .day::after {
+    background: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+}

@@ -1926,10 +1926,9 @@ footer a:hover,
 }
 
 :root[data-theme="sega"] .month {
-    border: 2px solid #f4fbff !important;
+    border: 2px solid #083f93 !important;
     border-image: none !important;
     box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.16),
-        0 0 0 1px rgba(4,42,100,.38),
-        0 0 5px rgba(255,255,255,.10) !important;
+        inset 0 0 0 1px rgba(255,255,255,.05),
+        0 0 0 1px rgba(2,32,82,.36) !important;
 }

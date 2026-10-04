@@ -13,27 +13,67 @@
     const root = document.documentElement;
 
     const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari'];
-    const commands = [
+    const hackUnlockKey = '3ventz-hack-unlocked';
+    const matrixConfigKey = '3ventz-matrix-config';
+
+    const isHackUnlocked = () => localStorage.getItem(hackUnlockKey) === '1';
+
+    const getCommands = () => [
         'whoami',
         'sudo',
         'theme',
-        'man'
+        'man',
+        'hack the planet',
+        ...(isHackUnlocked() ? ['matrix'] : [])
     ];
 
+    let commands = getCommands();
     const commandsWithArguments = new Set(['theme']);
 
     const manualPages = {
         whoami: 'whoami — show your page-view number for the current calendar year',
         sudo: 'sudo — open the private event administration',
         theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
-        man: 'man — list available commands or show help with man COMMAND'
+        man: 'man — list available commands or show help with man COMMAND',
+        'hack the planet': 'hack the planet — prove your nerd credentials',
+        matrix: 'matrix — configure the unlocked moving background (hackers theme only)'
     };
+
+    const quizQuestions = [
+        {
+            question: 'SSH port?',
+            answers: ['21', '22', '23', '443'],
+            correct: 1
+        },
+        {
+            question: '0x2A decimal?',
+            answers: ['32', '42', '64', '255'],
+            correct: 1
+        },
+        {
+            question: 'RFC 1149 transports IP over...?',
+            answers: ['ham radio', 'carrier pigeons', 'fax', 'sneakernet'],
+            correct: 1
+        },
+        {
+            question: 'Vim: save + quit?',
+            answers: [':q!', ':wq', ':w', ':e'],
+            correct: 1
+        },
+        {
+            question: 'The Answer to Life, the Universe and Everything?',
+            answers: ['23', '404', '42', '1337'],
+            correct: 2
+        }
+    ];
 
     let commandIndex = -1;
     let suggestions = [];
     let suggestionIndex = -1;
     let suggestionLead = '';
     let suggestionMode = 'default';
+    let suggestionPrompt = '';
+    let quizIndex = -1;
     let outputScrollX = 0;
     let outputScrollDirection = 0;
     let outputScrollFrame = null;
@@ -113,6 +153,7 @@
         suggestionIndex = -1;
         suggestionLead = '';
         suggestionMode = 'default';
+        suggestionPrompt = '';
         output.textContent = text;
         resetOutputScroll();
         updateHint();
@@ -124,6 +165,7 @@
         suggestionIndex = -1;
         suggestionLead = '';
         suggestionMode = 'default';
+        suggestionPrompt = '';
         output.textContent = '';
         resetOutputScroll();
         updateHint();
@@ -160,6 +202,13 @@
 
         output.replaceChildren();
 
+        if (suggestionPrompt) {
+            const prompt = document.createElement('span');
+            prompt.className = 'terminal-suggestion-prompt';
+            prompt.textContent = suggestionPrompt + ' ';
+            output.appendChild(prompt);
+        }
+
         const rotated = getRotatedSuggestions();
         const visibleSuggestions = suggestionMode === 'theme'
             ? rotated.slice(0, 4)
@@ -183,6 +232,28 @@
         if (!suggestions.length || suggestionIndex < 0) return false;
 
         const selected = suggestions[suggestionIndex];
+
+        if (suggestionMode === 'quiz') {
+            handleQuizAnswer(selected);
+            return true;
+        }
+
+        if (suggestionMode === 'matrix-menu') {
+            handleMatrixMenuSelection(selected);
+            return true;
+        }
+
+        if (suggestionMode === 'matrix-speed') {
+            updateMatrixConfig({ speed: selected });
+            openMatrixConfig();
+            return true;
+        }
+
+        if (suggestionMode === 'matrix-density') {
+            updateMatrixConfig({ density: selected });
+            openMatrixConfig();
+            return true;
+        }
 
         if (suggestionMode === 'manual') {
             clearSuggestions();
@@ -297,11 +368,272 @@
         clearSuggestions();
     };
 
+    const refreshCommands = () => {
+        commands = getCommands();
+        commandIndex = -1;
+    };
+
+    const startHackQuiz = () => {
+        quizIndex = 0;
+        showHackQuestion();
+    };
+
+    const showHackQuestion = () => {
+        const question = quizQuestions[quizIndex];
+        if (!question) return;
+
+        suggestions = [...question.answers];
+        suggestionIndex = 0;
+        suggestionLead = '';
+        suggestionMode = 'quiz';
+        suggestionPrompt = 'Q' + (quizIndex + 1) + '/' + quizQuestions.length + ' ' + question.question + ' //';
+        renderSuggestions();
+    };
+
+    const handleQuizAnswer = (selected) => {
+        const question = quizQuestions[quizIndex];
+        if (!question) return;
+
+        if (selected !== question.answers[question.correct]) {
+            quizIndex = -1;
+            say('ACCESS DENIED // wrong answer // try: hack the planet');
+            return;
+        }
+
+        quizIndex += 1;
+
+        if (quizIndex < quizQuestions.length) {
+            showHackQuestion();
+            return;
+        }
+
+        localStorage.setItem(hackUnlockKey, '1');
+        refreshCommands();
+        quizIndex = -1;
+        renderMatrixBackground();
+        say('ACCESS GRANTED // PLANET HACKED // matrix unlocked');
+    };
+
+    const defaultMatrixConfig = {
+        chars: '01<>#',
+        speed: 'normal',
+        density: 'normal',
+        enabled: true
+    };
+
+    const getMatrixConfig = () => {
+        try {
+            return {
+                ...defaultMatrixConfig,
+                ...JSON.parse(localStorage.getItem(matrixConfigKey) || '{}')
+            };
+        } catch {
+            return { ...defaultMatrixConfig };
+        }
+    };
+
+    const saveMatrixConfig = (config) => {
+        localStorage.setItem(matrixConfigKey, JSON.stringify(config));
+    };
+
+    const updateMatrixConfig = (changes) => {
+        const config = { ...getMatrixConfig(), ...changes };
+        saveMatrixConfig(config);
+        renderMatrixBackground();
+        return config;
+    };
+
+    const renderMatrixBackground = () => {
+        let layer = document.getElementById('hack-rain');
+
+        if (!isHackUnlocked()) {
+            if (layer) layer.remove();
+            return;
+        }
+
+        const config = getMatrixConfig();
+
+        if (!layer) {
+            layer = document.createElement('div');
+            layer.id = 'hack-rain';
+            layer.className = 'hack-rain';
+            layer.setAttribute('aria-hidden', 'true');
+            document.body.prepend(layer);
+        }
+
+        layer.classList.toggle('is-enabled', Boolean(config.enabled));
+
+        const mobile = window.innerWidth < 720;
+        const counts = mobile
+            ? { low: 4, normal: 6, high: 8 }
+            : { low: 7, normal: 11, high: 16 };
+        const count = counts[config.density] || counts.normal;
+        const symbols = Array.from(String(config.chars || defaultMatrixConfig.chars)).slice(0, 16);
+        const safeSymbols = symbols.length ? symbols : Array.from(defaultMatrixConfig.chars);
+        const signature = [
+            safeSymbols.join(''),
+            config.speed,
+            config.density,
+            config.enabled ? '1' : '0',
+            mobile ? 'm' : 'd'
+        ].join('|');
+
+        if (layer.dataset.signature === signature) return;
+        layer.dataset.signature = signature;
+        layer.replaceChildren();
+
+        const baseDuration = {
+            slow: 28,
+            normal: 20,
+            fast: 13
+        }[config.speed] || 20;
+
+        for (let column = 0; column < count; column += 1) {
+            const rain = document.createElement('span');
+            rain.className = 'hack-rain-column';
+
+            const rows = [];
+            for (let row = 0; row < 72; row += 1) {
+                rows.push(safeSymbols[(row * 5 + column * 3) % safeSymbols.length]);
+            }
+
+            rain.textContent = rows.join('\n');
+            rain.style.left = ((column + .5) * 100 / count) + '%';
+            rain.style.setProperty('--rain-duration', (baseDuration + (column % 4) * 1.7) + 's');
+            rain.style.setProperty('--rain-delay', '-' + ((column * 2.3) % baseDuration) + 's');
+            layer.appendChild(rain);
+        }
+    };
+
+    const openMatrixConfig = () => {
+        if (!isHackUnlocked()) {
+            say('permission denied // run: hack the planet');
+            return;
+        }
+
+        if (root.dataset.theme !== 'hackers') {
+            say('matrix: hackers theme only');
+            return;
+        }
+
+        const config = getMatrixConfig();
+        suggestions = ['chars', 'speed', 'density', config.enabled ? 'turn off' : 'turn on', 'done'];
+        suggestionIndex = 0;
+        suggestionLead = '';
+        suggestionMode = 'matrix-menu';
+        suggestionPrompt = 'matrix [' + (config.enabled ? 'on' : 'off') + '] '
+            + config.chars + ' / ' + config.speed + ' / ' + config.density + ' //';
+        renderSuggestions();
+    };
+
+    const handleMatrixMenuSelection = (selected) => {
+        if (selected === 'chars') {
+            clearSuggestions();
+            input.value = 'matrix chars ';
+            resizeInput();
+            input.focus();
+            return;
+        }
+
+        if (selected === 'speed') {
+            suggestions = ['slow', 'normal', 'fast'];
+            suggestionIndex = 0;
+            suggestionLead = '';
+            suggestionMode = 'matrix-speed';
+            suggestionPrompt = 'speed //';
+            renderSuggestions();
+            return;
+        }
+
+        if (selected === 'density') {
+            suggestions = ['low', 'normal', 'high'];
+            suggestionIndex = 0;
+            suggestionLead = '';
+            suggestionMode = 'matrix-density';
+            suggestionPrompt = 'density //';
+            renderSuggestions();
+            return;
+        }
+
+        if (selected === 'turn off' || selected === 'turn on') {
+            updateMatrixConfig({ enabled: selected === 'turn on' });
+            openMatrixConfig();
+            return;
+        }
+
+        say('matrix config saved');
+    };
+
+    const handleMatrixCommand = (arg) => {
+        if (!isHackUnlocked()) {
+            say('permission denied // run: hack the planet');
+            return;
+        }
+
+        if (root.dataset.theme !== 'hackers') {
+            say('matrix: hackers theme only');
+            return;
+        }
+
+        const value = (arg || '').trim();
+
+        if (!value) {
+            openMatrixConfig();
+            return;
+        }
+
+        if (value === 'on' || value === 'off') {
+            updateMatrixConfig({ enabled: value === 'on' });
+            say('matrix ' + value);
+            return;
+        }
+
+        if (value.startsWith('chars ')) {
+            const chars = Array.from(value.slice(6).trim()).slice(0, 16).join('');
+            if (!chars) {
+                say('usage: matrix chars 01<>#');
+                return;
+            }
+            updateMatrixConfig({ chars });
+            say('matrix chars=' + chars);
+            return;
+        }
+
+        if (value.startsWith('speed ')) {
+            const speed = value.slice(6).trim().toLowerCase();
+            if (!['slow', 'normal', 'fast'].includes(speed)) {
+                say('speed: slow · normal · fast');
+                return;
+            }
+            updateMatrixConfig({ speed });
+            say('matrix speed=' + speed);
+            return;
+        }
+
+        if (value.startsWith('density ')) {
+            const density = value.slice(8).trim().toLowerCase();
+            if (!['low', 'normal', 'high'].includes(density)) {
+                say('density: low · normal · high');
+                return;
+            }
+            updateMatrixConfig({ density });
+            say('matrix density=' + density);
+            return;
+        }
+
+        say('matrix: chars · speed · density · on · off');
+    };
+
     const showManual = (command) => {
         const name = (command || '').trim().toLowerCase();
 
         if (!name) {
             openManual();
+            return;
+        }
+
+        if (name === 'matrix' && !isHackUnlocked()) {
+            say('no manual entry for matrix');
             return;
         }
 
@@ -507,6 +839,13 @@
             case 'theme':
                 setTheme(arg);
                 break;
+            case 'hack':
+                if (arg.toLowerCase() === 'the planet') startHackQuiz();
+                else say('usage: hack the planet');
+                break;
+            case 'matrix':
+                handleMatrixCommand(arg);
+                break;
             case 'whoami':
                 if (Number(state.pageViewNumber) > 0) {
                     say('visitor #' + state.pageViewNumber + ' // ' + state.visitYear);
@@ -687,6 +1026,8 @@
     restoreCategoryFilters();
     applyCategoryFilters();
     applySavedAppearance();
+    refreshCommands();
+    renderMatrixBackground();
     resizeInput();
     updateHint();
 
@@ -697,7 +1038,10 @@
         });
     }
 
-    window.addEventListener('resize', positionOutput);
+    window.addEventListener('resize', () => {
+        positionOutput();
+        renderMatrixBackground();
+    });
 
     requestAnimationFrame(() => {
         positionOutput();

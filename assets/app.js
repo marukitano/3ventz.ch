@@ -15,7 +15,6 @@
 
     const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari'];
     const hackUnlockKey = '3ventz-hack-unlocked';
-    const matrixConfigKey = '3ventz-matrix-config';
 
     const isHackUnlocked = () => localStorage.getItem(hackUnlockKey) === '1';
 
@@ -25,7 +24,7 @@
         'theme',
         'man',
         'hack the planet',
-        ...(isHackUnlocked() ? ['matrix'] : [])
+        ...(isHackUnlocked() ? ['attack rabbit'] : [])
     ];
 
     let commands = getCommands();
@@ -37,7 +36,7 @@
         theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
         man: 'man — list available commands or show help with man COMMAND',
         'hack the planet': 'hack the planet — prove your nerd credentials',
-        matrix: 'matrix — configure the unlocked moving background (hackers theme only)'
+        'attack rabbit': 'attack rabbit — unleash the rabbit virus (hackers theme only)'
     };
 
     const quizQuestions = [
@@ -246,23 +245,6 @@
             return true;
         }
 
-        if (suggestionMode === 'matrix-menu') {
-            handleMatrixMenuSelection(selected);
-            return true;
-        }
-
-        if (suggestionMode === 'matrix-speed') {
-            updateMatrixConfig({ speed: selected });
-            openMatrixConfig();
-            return true;
-        }
-
-        if (suggestionMode === 'matrix-density') {
-            updateMatrixConfig({ density: selected });
-            openMatrixConfig();
-            return true;
-        }
-
         if (suggestionMode === 'manual') {
             clearSuggestions();
             input.value = '';
@@ -425,218 +407,119 @@
         refreshCommands();
         updateNerdIndicator();
         quizIndex = -1;
-        renderMatrixBackground();
-        say('ACCESS GRANTED // PLANET HACKED // matrix unlocked');
+        say('ACCESS GRANTED // PLANET HACKED // rabbit attack unlocked');
     };
 
-    const defaultMatrixConfig = {
-        chars: '01<>#',
-        speed: 'normal',
-        density: 'normal',
-        enabled: true
-    };
+    let rabbitAttackTimer = null;
+    let rabbitAttackFinishTimer = null;
 
-    const getMatrixConfig = () => {
-        try {
-            return {
-                ...defaultMatrixConfig,
-                ...JSON.parse(localStorage.getItem(matrixConfigKey) || '{}')
-            };
-        } catch {
-            return { ...defaultMatrixConfig };
+    const stopRabbitAttack = () => {
+        if (rabbitAttackTimer !== null) {
+            window.clearInterval(rabbitAttackTimer);
+            rabbitAttackTimer = null;
         }
+
+        if (rabbitAttackFinishTimer !== null) {
+            window.clearTimeout(rabbitAttackFinishTimer);
+            rabbitAttackFinishTimer = null;
+        }
+
+        document.getElementById('rabbit-attack-layer')?.remove();
+        document.documentElement.classList.remove('rabbit-attack-active');
     };
 
-    const saveMatrixConfig = (config) => {
-        localStorage.setItem(matrixConfigKey, JSON.stringify(config));
+    const makeRabbitIcon = (index) => {
+        const rabbit = document.createElement('span');
+        rabbit.className = 'rabbit-virus-icon';
+        rabbit.style.setProperty('--rabbit-rotate', ((index % 7) - 3) * .45 + 'deg');
+        rabbit.setAttribute('aria-hidden', 'true');
+        return rabbit;
     };
 
-    const updateMatrixConfig = (changes) => {
-        const config = { ...getMatrixConfig(), ...changes };
-        saveMatrixConfig(config);
-        renderMatrixBackground();
-        return config;
-    };
-
-    const renderMatrixBackground = () => {
-        let layer = document.getElementById('hack-rain');
-
+    const startRabbitAttack = () => {
         if (!isHackUnlocked()) {
-            if (layer) layer.remove();
+            say('permission denied // run: hack the planet');
             return;
         }
 
-        const config = getMatrixConfig();
-
-        if (!layer) {
-            layer = document.createElement('div');
-            layer.id = 'hack-rain';
-            layer.className = 'hack-rain';
-            layer.setAttribute('aria-hidden', 'true');
-            document.body.prepend(layer);
+        if (root.dataset.theme !== 'hackers') {
+            say('attack rabbit: hackers theme only');
+            return;
         }
 
-        layer.classList.toggle('is-enabled', Boolean(config.enabled));
+        stopRabbitAttack();
+        clearSuggestions();
+        say('RABBIT VIRUS DEPLOYED');
+
+        const layer = document.createElement('div');
+        layer.id = 'rabbit-attack-layer';
+        layer.className = 'rabbit-attack-layer';
+        layer.setAttribute('aria-hidden', 'true');
+
+        const field = document.createElement('div');
+        field.className = 'rabbit-attack-field';
+        layer.appendChild(field);
+        document.body.appendChild(layer);
+        document.documentElement.classList.add('rabbit-attack-active');
 
         const mobile = window.innerWidth < 720;
-        const counts = mobile
-            ? { low: 4, normal: 6, high: 8 }
-            : { low: 7, normal: 11, high: 16 };
-        const count = counts[config.density] || counts.normal;
-        const symbols = Array.from(String(config.chars || defaultMatrixConfig.chars)).slice(0, 16);
-        const safeSymbols = symbols.length ? symbols : Array.from(defaultMatrixConfig.chars);
-        const signature = [
-            safeSymbols.join(''),
-            config.speed,
-            config.density,
-            config.enabled ? '1' : '0',
-            mobile ? 'm' : 'd'
-        ].join('|');
+        const iconSize = mobile ? 34 : 40;
+        const cols = Math.max(5, Math.floor(window.innerWidth / iconSize));
+        const rows = Math.max(7, Math.floor(window.innerHeight / iconSize));
+        const maxByGrid = cols * rows;
+        const target = Math.min(maxByGrid, mobile ? 56 : 120);
 
-        if (layer.dataset.signature === signature) return;
-        layer.dataset.signature = signature;
-        layer.replaceChildren();
-
-        const baseDuration = {
-            slow: 28,
-            normal: 20,
-            fast: 13
-        }[config.speed] || 20;
-
-        for (let column = 0; column < count; column += 1) {
-            const rain = document.createElement('span');
-            rain.className = 'hack-rain-column';
-
-            const rows = [];
-            for (let row = 0; row < 72; row += 1) {
-                rows.push(safeSymbols[(row * 5 + column * 3) % safeSymbols.length]);
+        const slots = [];
+        for (let row = 0; row < rows; row += 1) {
+            for (let col = 0; col < cols; col += 1) {
+                slots.push({ row, col });
             }
-
-            rain.textContent = rows.join('\n');
-            rain.style.left = ((column + .5) * 100 / count) + '%';
-            rain.style.setProperty('--rain-duration', (baseDuration + (column % 4) * 1.7) + 's');
-            rain.style.setProperty('--rain-delay', '-' + ((column * 2.3) % baseDuration) + 's');
-            layer.appendChild(rain);
-        }
-    };
-
-    const openMatrixConfig = () => {
-        if (!isHackUnlocked()) {
-            say('permission denied // run: hack the planet');
-            return;
         }
 
-        if (root.dataset.theme !== 'hackers') {
-            say('matrix: hackers theme only');
-            return;
+        // Deterministic-looking shuffle without any continuous animation work.
+        for (let i = slots.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [slots[i], slots[j]] = [slots[j], slots[i]];
         }
 
-        const config = getMatrixConfig();
-        suggestions = ['chars', 'speed', 'density', config.enabled ? 'turn off' : 'turn on', 'done'];
-        suggestionIndex = 0;
-        suggestionLead = '';
-        suggestionMode = 'matrix-menu';
-        suggestionPrompt = 'matrix [' + (config.enabled ? 'on' : 'off') + '] '
-            + config.chars + ' / ' + config.speed + ' / ' + config.density + ' //';
-        renderSuggestions();
-    };
+        let created = 0;
+        const interval = Math.max(75, Math.floor(14500 / target));
 
-    const handleMatrixMenuSelection = (selected) => {
-        if (selected === 'chars') {
-            clearSuggestions();
-            input.value = 'matrix chars ';
-            resizeInput();
-            input.focus();
-            return;
-        }
-
-        if (selected === 'speed') {
-            suggestions = ['slow', 'normal', 'fast'];
-            suggestionIndex = 0;
-            suggestionLead = '';
-            suggestionMode = 'matrix-speed';
-            suggestionPrompt = 'speed //';
-            renderSuggestions();
-            return;
-        }
-
-        if (selected === 'density') {
-            suggestions = ['low', 'normal', 'high'];
-            suggestionIndex = 0;
-            suggestionLead = '';
-            suggestionMode = 'matrix-density';
-            suggestionPrompt = 'density //';
-            renderSuggestions();
-            return;
-        }
-
-        if (selected === 'turn off' || selected === 'turn on') {
-            updateMatrixConfig({ enabled: selected === 'turn on' });
-            openMatrixConfig();
-            return;
-        }
-
-        say('matrix config saved');
-    };
-
-    const handleMatrixCommand = (arg) => {
-        if (!isHackUnlocked()) {
-            say('permission denied // run: hack the planet');
-            return;
-        }
-
-        if (root.dataset.theme !== 'hackers') {
-            say('matrix: hackers theme only');
-            return;
-        }
-
-        const value = (arg || '').trim();
-
-        if (!value) {
-            openMatrixConfig();
-            return;
-        }
-
-        if (value === 'on' || value === 'off') {
-            updateMatrixConfig({ enabled: value === 'on' });
-            say('matrix ' + value);
-            return;
-        }
-
-        if (value.startsWith('chars ')) {
-            const chars = Array.from(value.slice(6).trim()).slice(0, 16).join('');
-            if (!chars) {
-                say('usage: matrix chars 01<>#');
+        rabbitAttackTimer = window.setInterval(() => {
+            if (created >= target || created >= slots.length) {
+                window.clearInterval(rabbitAttackTimer);
+                rabbitAttackTimer = null;
                 return;
             }
-            updateMatrixConfig({ chars });
-            say('matrix chars=' + chars);
-            return;
-        }
 
-        if (value.startsWith('speed ')) {
-            const speed = value.slice(6).trim().toLowerCase();
-            if (!['slow', 'normal', 'fast'].includes(speed)) {
-                say('speed: slow · normal · fast');
-                return;
+            const slot = slots[created];
+            const rabbit = makeRabbitIcon(created);
+            rabbit.style.left = ((slot.col + .5) * 100 / cols) + '%';
+            rabbit.style.top = ((slot.row + .5) * 100 / rows) + '%';
+            field.appendChild(rabbit);
+            created += 1;
+        }, interval);
+
+        rabbitAttackFinishTimer = window.setTimeout(() => {
+            if (rabbitAttackTimer !== null) {
+                window.clearInterval(rabbitAttackTimer);
+                rabbitAttackTimer = null;
             }
-            updateMatrixConfig({ speed });
-            say('matrix speed=' + speed);
-            return;
-        }
 
-        if (value.startsWith('density ')) {
-            const density = value.slice(8).trim().toLowerCase();
-            if (!['low', 'normal', 'high'].includes(density)) {
-                say('density: low · normal · high');
-                return;
-            }
-            updateMatrixConfig({ density });
-            say('matrix density=' + density);
-            return;
-        }
+            const alert = document.createElement('div');
+            alert.className = 'rabbit-system-alert';
+            alert.innerHTML = '<strong>SYSTEM ALERT</strong><span>RABBIT IN THE ADMINISTRATION SYSTEM</span><b>SEND A FLU-SHOT</b>';
+            layer.appendChild(alert);
 
-        say('matrix: chars · speed · density · on · off');
+            rabbitAttackFinishTimer = window.setTimeout(() => {
+                layer.classList.add('is-clearing');
+
+                rabbitAttackFinishTimer = window.setTimeout(() => {
+                    stopRabbitAttack();
+                    say('FLU-SHOT COMPLETE // SYSTEM RESTORED');
+                }, 650);
+            }, 2300);
+        }, 15000);
     };
 
     const showManual = (command) => {
@@ -647,8 +530,8 @@
             return;
         }
 
-        if (name === 'matrix' && !isHackUnlocked()) {
-            say('no manual entry for matrix');
+        if (name === 'attack rabbit' && !isHackUnlocked()) {
+            say('no manual entry for attack rabbit');
             return;
         }
 
@@ -858,8 +741,9 @@
                 if (arg.toLowerCase() === 'the planet') startHackQuiz();
                 else say('usage: hack the planet');
                 break;
-            case 'matrix':
-                handleMatrixCommand(arg);
+            case 'attack':
+                if (arg.toLowerCase() === 'rabbit') startRabbitAttack();
+                else say('usage: attack rabbit');
                 break;
             case 'whoami':
                 if (Number(state.pageViewNumber) > 0) {
@@ -1043,7 +927,6 @@
     applySavedAppearance();
     refreshCommands();
     updateNerdIndicator();
-    renderMatrixBackground();
     resizeInput();
     updateHint();
 
@@ -1054,10 +937,7 @@
         });
     }
 
-    window.addEventListener('resize', () => {
-        positionOutput();
-        renderMatrixBackground();
-    });
+    window.addEventListener('resize', positionOutput);
 
     requestAnimationFrame(() => {
         positionOutput();

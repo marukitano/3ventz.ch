@@ -2603,34 +2603,60 @@ html.rabbit-attack-active body {
     display: block;
     background:
         repeating-conic-gradient(
-            #e6e6df 0 37.5%,
+            #e6e6df 0 12.5%,
             transparent 0 50%
         ) 0 0 / 4px 4px;
     image-rendering: pixelated;
-    animation: rabbit-block-jitter 140ms steps(2, end) infinite;
+    animation: rabbit-block-jitter 155ms steps(2, end) infinite;
 }
 
 .rabbit-glitch-block.glitch-1 {
     background:
         repeating-conic-gradient(
-            #c8c8c1 0 33%,
+            #d4d4cd 0 12.5%,
             transparent 0 50%
-        ) 1px 0 / 6px 6px;
+        ) 1px 1px / 6px 6px;
 }
 
 .rabbit-glitch-block.glitch-2 {
     background:
         repeating-linear-gradient(
             0deg,
-            #f2f2ec 0 3px,
-            transparent 3px 6px
+            #efefe9 0 2px,
+            transparent 2px 7px
         );
 }
 
+.rabbit-glitch-block.glitch-3 {
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #cfcfc8 0 2px,
+            transparent 2px 8px
+        );
+}
+
+.rabbit-glitch-block.glitch-4 {
+    background:
+        repeating-conic-gradient(
+            #f2f2ec 0 12.5%,
+            transparent 0 25%
+        ) 0 0 / 8px 8px;
+}
+
 @keyframes rabbit-block-jitter {
-    0%   { transform: translate(0, 0); background-position: 0 0; }
-    50%  { transform: translate(1px, 0); background-position: 2px 1px; }
-    100% { transform: translate(0, 1px); background-position: 1px 2px; }
+    0% {
+        transform: translate(0, 0);
+        background-position: 0 0;
+    }
+    50% {
+        transform: translate(var(--glitch-shift-x, 1px), var(--glitch-shift-y, 0));
+        background-position: 2px 1px;
+    }
+    100% {
+        transform: translate(0, 1px);
+        background-position: 1px 2px;
+    }
 }
 
 .rabbit-attack-field {

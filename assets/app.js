@@ -428,21 +428,39 @@
         document.documentElement.classList.remove('rabbit-attack-active');
     };
 
-    const makeRabbitIcon = (row, col, cellWidth, cellHeight) => {
+    const makeRabbitIcon = (row, col, cellWidth, cellHeight, totalCols) => {
         const rabbit = document.createElement('span');
+        const runnerIsRed = row % 2 === 0;
         const movesLeft = row % 2 === 1;
-        const left = (col + .5) * cellWidth;
+
+        // Every second row is offset by half a cell, matching the staggered film layout.
+        const stagger = row % 2 === 1 ? .5 : 0;
+        let left = (col + .5 + stagger) * cellWidth;
+        const fieldWidth = totalCols * cellWidth;
+
+        if (left > fieldWidth - cellWidth * .2) {
+            left -= fieldWidth;
+        }
+
         const top = (row + .5) * cellHeight;
-        const size = Math.max(50, Math.floor((Math.min(cellWidth * .84, cellHeight * .90)) / 25) * 25);
+
+        // Roughly twice the previous visual size while keeping integer-pixel scaling.
+        const size = Math.max(
+            100,
+            Math.floor(Math.min(cellWidth * 1.75, cellHeight * 1.9) / 25) * 25
+        );
 
         rabbit.className = 'rabbit-virus-icon rabbit-runner '
-            + (row % 2 === 0 ? 'rabbit-red' : 'rabbit-black')
+            + (runnerIsRed ? 'rabbit-red' : 'rabbit-black')
             + (movesLeft ? ' rabbit-facing-left' : '');
+
         rabbit.style.left = left + 'px';
         rabbit.style.top = top + 'px';
         rabbit.style.width = size + 'px';
         rabbit.style.height = size + 'px';
-        rabbit.dataset.trailClass = row % 2 === 0 ? 'rabbit-black' : 'rabbit-red';
+
+        // Film behaviour: red runner leaves black rabbits; black runner leaves red rabbits.
+        rabbit.dataset.trailClass = runnerIsRed ? 'rabbit-black' : 'rabbit-red';
         rabbit.setAttribute('aria-hidden', 'true');
         return rabbit;
     };
@@ -501,8 +519,8 @@
          * Cell sizes stay deliberately coarse so the effect remains cheap on phones.
          */
         const mobile = window.innerWidth < 720;
-        const targetCellWidth = mobile ? 92 : 116;
-        const targetCellHeight = mobile ? 76 : 88;
+        const targetCellWidth = mobile ? 138 : 174;
+        const targetCellHeight = mobile ? 114 : 132;
         const cols = Math.max(6, Math.ceil(window.innerWidth / targetCellWidth));
         const rows = Math.max(8, Math.ceil(window.innerHeight / targetCellHeight));
         const cellWidth = window.innerWidth / cols;
@@ -536,7 +554,7 @@
                 ? positionInRow
                 : cols - 1 - positionInRow;
 
-            activeRabbit = makeRabbitIcon(row, col, cellWidth, cellHeight);
+            activeRabbit = makeRabbitIcon(row, col, cellWidth, cellHeight, cols);
             field.appendChild(activeRabbit);
             created += 1;
         }, interval);

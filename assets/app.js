@@ -34,7 +34,7 @@
     const manualPages = {
         whoami: 'whoami — show your page-view number for the current calendar year',
         sudo: 'sudo — open the private event administration',
-        theme: 'theme NAME — Aendert das Design der Website, navigiere mit TAB und Pfeiltasten durch die designs',
+        theme: 'theme NAME — Aendert das Design der Website; Desktop: TAB/Pfeiltasten, Mobile: Tap/Swipe',
         man: 'man — list available commands or show help with man COMMAND',
         'hack the planet': 'hack the planet — prove your nerd credentials',
         'attack': 'attack — unleash the rabbit virus'
@@ -424,12 +424,6 @@
     };
 
     const resizeInput = () => {
-        if (touchUi) {
-            input.style.width = '';
-            requestAnimationFrame(positionOutput);
-            return;
-        }
-
         const styles = getComputedStyle(input);
 
         inputSizer.style.fontFamily = styles.fontFamily;
@@ -438,8 +432,13 @@
         inputSizer.style.fontStyle = styles.fontStyle;
         inputSizer.style.letterSpacing = styles.letterSpacing;
         inputSizer.style.textTransform = styles.textTransform;
+        inputSizer.textContent = input.value || ' ';
 
-        inputSizer.textContent = input.value;
+        if (touchUi) {
+            input.style.width = '';
+            requestAnimationFrame(positionOutput);
+            return;
+        }
 
         const width = input.value
             ? Math.ceil(inputSizer.getBoundingClientRect().width) + 1
@@ -790,6 +789,19 @@
         const cmd = (parts[0] || '').toLowerCase();
         const hasSpace = /\s/.test(trimmed);
 
+        // Mobile has no Tab key: tapping just behind "theme" performs both
+        // desktop Tab steps and opens the theme picker immediately.
+        if (touchUi && trimmed.toLowerCase() === 'theme') {
+            input.value = 'theme ';
+            suggestions = [...themes];
+            suggestionIndex = 0;
+            suggestionLead = 'theme ';
+            suggestionMode = 'theme';
+            resizeInput();
+            renderSuggestions();
+            return;
+        }
+
         // Argument completion for commands that already have their trailing space.
         if (hasSpace && cmd === 'theme') {
             const prefix = (parts[1] || '').toLowerCase();
@@ -863,7 +875,74 @@
         if (cursor) cursor.style.display = 'inline';
     });
 
+    let inputTouchStartX = 0;
+    let inputTouchStartY = 0;
+
+    input.addEventListener('pointerdown', (event) => {
+        if (!touchUi || event.pointerType === 'mouse') return;
+        inputTouchStartX = event.clientX;
+        inputTouchStartY = event.clientY;
+    });
+
+    input.addEventListener('pointerup', (event) => {
+        if (!touchUi || event.pointerType === 'mouse' || !input.value) return;
+
+        const dx = event.clientX - inputTouchStartX;
+        const dy = event.clientY - inputTouchStartY;
+        if (Math.hypot(dx, dy) > 12) return;
+
+        const rect = input.getBoundingClientRect();
+        const textWidth = Math.ceil(inputSizer.getBoundingClientRect().width);
+        const tapX = event.clientX - rect.left + input.scrollLeft;
+
+        // Inside the rendered word = ordinary caret placement.
+        // A little space to its right = the touch equivalent of Tab.
+        if (tapX <= textWidth + 8) return;
+
+        complete();
+
+        window.requestAnimationFrame(() => {
+            const end = input.value.length;
+            input.setSelectionRange(end, end);
+
+            if (!suggestions.length) {
+                input.focus({ preventScroll: true });
+            }
+        });
+    });
+
+    let touchEnterLocked = false;
+
+    const runTouchEnter = () => {
+        if (touchEnterLocked) return;
+        touchEnterLocked = true;
+
+        window.setTimeout(() => {
+            touchEnterLocked = false;
+        }, 80);
+
+        if (suggestions.length) {
+            acceptSuggestion();
+        } else {
+            form.requestSubmit();
+        }
+    };
+
+    input.addEventListener('beforeinput', (event) => {
+        if (!touchUi) return;
+        if (event.inputType !== 'insertLineBreak' && event.inputType !== 'insertParagraph') return;
+
+        event.preventDefault();
+        runTouchEnter();
+    });
+
     input.addEventListener('keydown', (event) => {
+        if (touchUi && (event.key === 'Enter' || event.keyCode === 13)) {
+            event.preventDefault();
+            runTouchEnter();
+            return;
+        }
+
         if (event.isComposing) return;
 
         if (suggestions.length) {

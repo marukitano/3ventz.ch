@@ -1777,3 +1777,56 @@ footer a:hover,
         0 0 0 1px rgba(92,57,0,.50),
         0 0 7px rgba(255,211,39,.16) !important;
 }
+
+
+/* SEGA // Green Hill sky calendar */
+:root[data-theme="sega"] .month {
+    background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.26) 0 7%, transparent 8%),
+        radial-gradient(circle at 72% 15%, rgba(255,255,255,.20) 0 8%, transparent 9%),
+        linear-gradient(180deg, #75d2ff 0%, #56c2ff 48%, #3aaeff 100%) !important;
+}
+
+/* Dark Sonic-blue grid over the bright sky. */
+:root[data-theme="sega"] .day {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.11), rgba(5,66,160,.05)) !important;
+    border-color: rgba(5,65,158,.72) !important;
+    color: #073b84 !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.035);
+}
+
+:root[data-theme="sega"] .week-row .day:nth-child(6),
+:root[data-theme="sega"] .week-row .day:nth-child(7) {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(5,66,160,.09)) !important;
+}
+
+/* Calendar labels/readability on sky blue. */
+:root[data-theme="sega"] .number {
+    color: #073b84 !important;
+    text-shadow: none !important;
+}
+
+:root[data-theme="sega"] .weekdays {
+    color: #06469d !important;
+    text-shadow: none !important;
+}
+
+:root[data-theme="sega"] .month h2 {
+    color: #074da8 !important;
+    text-shadow:
+        0 1px 0 rgba(255,255,255,.42) !important;
+}
+
+:root[data-theme="sega"] .month h2 span {
+    color: #003f98 !important;
+}
+
+/* Keep event platforms visually in front of the sky. */
+:root[data-theme="sega"] .event-span {
+    box-shadow:
+        inset 0 1px 0 rgba(190,255,150,.35),
+        0 1px 0 rgba(3,52,119,.35),
+        0 0 0 1px rgba(0,0,0,.20) !important;
+}

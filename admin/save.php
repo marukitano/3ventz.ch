@@ -10,10 +10,38 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 csrf_check();
 
+function normalize_admin_date(string $value): ?string
+{
+    $value = trim($value);
+    if ($value === '') {
+        return null;
+    }
+
+    if (preg_match('/^\d{2}\.\d{2}\.\d{4}$/', $value)) {
+        $date = DateTimeImmutable::createFromFormat('!d.m.Y', $value);
+        if ($date && $date->format('d.m.Y') === $value) {
+            return $date->format('Y-m-d');
+        }
+        return null;
+    }
+
+    // Backward-compatible fallback for older/native date submissions.
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        if ($date && $date->format('Y-m-d') === $value) {
+            return $value;
+        }
+    }
+
+    return null;
+}
+
 $id = (int)($_POST['id'] ?? 0);
 $title = trim((string)($_POST['title'] ?? ''));
-$start = (string)($_POST['start_date'] ?? '');
-$end = trim((string)($_POST['end_date'] ?? ''));
+$startInput = trim((string)($_POST['start_date'] ?? ''));
+$endInput = trim((string)($_POST['end_date'] ?? ''));
+$start = normalize_admin_date($startInput);
+$end = normalize_admin_date($endInput);
 $category = trim((string)($_POST['category'] ?? ''));
 $allowedCategories = ['CCC', 'DEMO', 'RETRO', 'MAKER', 'MOVIE', 'LAN', 'MUSIC', 'CODING', 'HACKING'];
 if (!in_array($category, $allowedCategories, true)) {
@@ -35,12 +63,17 @@ if (!in_array($icon, $allowedIcons, true)) {
     $icon = 'terminal';
 }
 
-if ($title === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $start)) {
+if ($title === '' || $startInput === '' || $start === null) {
     http_response_code(422);
-    exit('Titel und Startdatum sind Pflichtfelder.');
+    exit('Titel und ein gültiges Startdatum im Format TT.MM.JJJJ sind Pflichtfelder.');
 }
 
-if ($end !== '' && $end < $start) {
+if ($endInput !== '' && $end === null) {
+    http_response_code(422);
+    exit('Enddatum bitte im Format TT.MM.JJJJ eingeben.');
+}
+
+if ($end !== null && $end < $start) {
     http_response_code(422);
     exit('Enddatum darf nicht vor dem Startdatum liegen.');
 }
@@ -63,7 +96,7 @@ if (!preg_match('/^#[0-9a-fA-F]{6}$/', $color)) {
 $params = [
     'title' => $title,
     'start_date' => $start,
-    'end_date' => $end !== '' ? $end : null,
+    'end_date' => $end,
     'category' => $category !== '' ? $category : null,
     'url' => $url !== '' ? $url : null,
     'description' => $description !== '' ? $description : null,

@@ -1171,10 +1171,10 @@ footer a:hover,
     background:
         linear-gradient(
             180deg,
-            #eaff38 0%,
-            #d5ff21 18%,
-            #bfff16 54%,
-            #a9ed12 100%
+            color-mix(in srgb, var(--event-color) 82%, white) 0%,
+            color-mix(in srgb, var(--event-color) 94%, white) 22%,
+            var(--event-color) 58%,
+            color-mix(in srgb, var(--event-color) 82%, black) 100%
         ) !important;
     box-shadow: none !important;
     filter: none !important;
@@ -1371,10 +1371,10 @@ footer a:hover,
         ),
         linear-gradient(
             180deg,
-            #eaff38 0%,
-            #d5ff21 18%,
-            #bfff16 54%,
-            #a9ed12 100%
+            color-mix(in srgb, var(--event-color) 82%, white) 0%,
+            color-mix(in srgb, var(--event-color) 94%, white) 22%,
+            var(--event-color) 58%,
+            color-mix(in srgb, var(--event-color) 82%, black) 100%
         ) !important;
     clip-path: polygon(
         9px 0,

@@ -27,10 +27,15 @@ if (!$demoMode) {
         ]
     );
 
-    // Lightweight schema migration for installations that predate event short text.
+    // Lightweight schema migrations for installations that predate newer event fields.
     $shortTextColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'short_text'")->fetch();
     if (!$shortTextColumn) {
         $pdo->exec("ALTER TABLE events ADD COLUMN short_text VARCHAR(64) NULL AFTER icon");
+    }
+
+    $locationColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'location'")->fetch();
+    if (!$locationColumn) {
+        $pdo->exec("ALTER TABLE events ADD COLUMN location VARCHAR(255) NULL AFTER category");
     }
 }
 
@@ -41,6 +46,60 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 function h(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+}
+
+
+function site_base_url(): string
+{
+    global $config;
+
+    $configured = trim((string)($config['site']['base_url'] ?? ''));
+    if ($configured !== '') {
+        return rtrim($configured, '/');
+    }
+
+    return 'https://3ventz.ch';
+}
+
+function event_slug(array $event): string
+{
+    $title = trim((string)($event['title'] ?? 'event'));
+    $year = '';
+
+    if (!empty($event['start_date'])) {
+        $year = substr((string)$event['start_date'], 0, 4);
+    }
+
+    $source = trim($title . ' ' . $year);
+
+    if (function_exists('iconv')) {
+        $ascii = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $source);
+        if ($ascii !== false) {
+            $source = $ascii;
+        }
+    }
+
+    $slug = strtolower($source);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug) ?? '';
+    $slug = trim($slug, '-');
+
+    return $slug !== '' ? $slug : 'event';
+}
+
+function event_path(array $event): string
+{
+    $id = (int)($event['id'] ?? 0);
+    return '/event/' . $id . '/' . event_slug($event);
+}
+
+function event_url(array $event): string
+{
+    return site_base_url() . event_path($event);
+}
+
+function xml_h(string $value): string
+{
+    return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
 }
 
 function admin_required(): void

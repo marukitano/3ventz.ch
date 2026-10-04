@@ -2959,3 +2959,35 @@ html.rabbit-attack-active body {
         text-overflow: clip !important;
     }
 }
+
+
+/* Mobile quiz: fixed 2x2 answer grid below the question. */
+@media (pointer: coarse) {
+    .terminal-output.is-quiz .terminal-suggestion-prompt {
+        display: block;
+        width: 100%;
+        margin-bottom: .25em;
+        white-space: normal;
+    }
+
+    .terminal-suggestion-list.quiz-list {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .22em .5em;
+        width: 100% !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow: visible !important;
+    }
+
+    .terminal-suggestion-list.quiz-list .terminal-suggestion {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        padding: .28em .35em;
+        overflow-wrap: anywhere;
+        word-break: normal;
+        text-align: left;
+    }
+}

@@ -465,6 +465,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=flu-shot-hold-1"></script>
+    <script src="/assets/app.js?v=quiz-2"></script>
 </body>
 </html>

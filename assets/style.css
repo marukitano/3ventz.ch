@@ -2701,6 +2701,8 @@ html.rabbit-attack-active body {
     image-rendering: pixelated;
     opacity: 1;
     color: #e4282f;
+    transition: none !important;
+    animation: none !important;
 }
 
 .rabbit-virus-icon.rabbit-black {
@@ -2712,20 +2714,30 @@ html.rabbit-attack-active body {
 }
 
 /*
- * Side-view pixel rabbit. It is a mask, so the same sprite can be rendered
- * in the alternating red/black rows from the film-inspired sequence.
+ * Rabbit sprite drawn by maru. The PNG is used as an alpha mask so the exact
+ * same pixels can be rendered red or black without maintaining two files.
  */
 .rabbit-virus-icon::before {
     content: "";
     position: absolute;
     inset: 0;
     background: currentColor;
-    -webkit-mask:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16' shape-rendering='crispEdges'%3E%3Cg fill='black'%3E%3Crect x='5' y='6' width='12' height='6'/%3E%3Crect x='15' y='4' width='6' height='6'/%3E%3Crect x='18' y='1' width='2' height='4'/%3E%3Crect x='21' y='0' width='2' height='5'/%3E%3Crect x='2' y='7' width='4' height='4'/%3E%3Crect x='0' y='8' width='3' height='2'/%3E%3Crect x='7' y='11' width='3' height='3'/%3E%3Crect x='13' y='11' width='3' height='3'/%3E%3Crect x='5' y='13' width='6' height='2'/%3E%3Crect x='14' y='13' width='6' height='2'/%3E%3Crect x='20' y='6' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E")
-        center / contain no-repeat;
-    mask:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16' shape-rendering='crispEdges'%3E%3Cg fill='black'%3E%3Crect x='5' y='6' width='12' height='6'/%3E%3Crect x='15' y='4' width='6' height='6'/%3E%3Crect x='18' y='1' width='2' height='4'/%3E%3Crect x='21' y='0' width='2' height='5'/%3E%3Crect x='2' y='7' width='4' height='4'/%3E%3Crect x='0' y='8' width='3' height='2'/%3E%3Crect x='7' y='11' width='3' height='3'/%3E%3Crect x='13' y='11' width='3' height='3'/%3E%3Crect x='5' y='13' width='6' height='2'/%3E%3Crect x='14' y='13' width='6' height='2'/%3E%3Crect x='20' y='6' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E")
-        center / contain no-repeat;
+    -webkit-mask-image: url("/assets/rabbit.png");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url("/assets/rabbit.png");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+.rabbit-virus-icon.rabbit-facing-left {
+    transform: translate(-50%, -50%) scaleX(-1);
+}
+
+.rabbit-virus-icon.rabbit-runner {
+    z-index: 2;
 }
 
 .rabbit-system-alert {

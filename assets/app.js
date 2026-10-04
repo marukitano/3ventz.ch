@@ -13,7 +13,7 @@
     const currentYear = Number(state.year) || new Date().getFullYear();
     const root = document.documentElement;
 
-    const themes = ['default', 'c64', 'amiga', 'atari', 'edgerunner', 'hackers'];
+    const themes = ['sega', 'c64', 'amiga', 'atari', 'edgerunner', 'hackers'];
     const commands = [
         'next',
         'prev',
@@ -282,9 +282,11 @@
     };
 
     const applySavedAppearance = () => {
-        const savedTheme = localStorage.getItem('3ventz-theme') || 'default';
-        const theme = themes.includes(savedTheme) ? savedTheme : 'default';
+        const savedTheme = localStorage.getItem('3ventz-theme') || 'sega';
+        const migratedTheme = savedTheme === 'default' ? 'sega' : savedTheme;
+        const theme = themes.includes(migratedTheme) ? migratedTheme : 'sega';
         root.dataset.theme = theme;
+        localStorage.setItem('3ventz-theme', theme);
         updateThemeIndicator(theme);
     };
 

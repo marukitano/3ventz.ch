@@ -2912,3 +2912,35 @@ html.rabbit-attack-active body {
         display: block;
     }
 }
+
+
+/* Mobile header: give the CLI the full viewport width.
+   Status/year navigation moves onto its own row below it. */
+@media (pointer: coarse) {
+    .topbar {
+        flex-wrap: wrap;
+        overflow: visible;
+        gap: 6px;
+    }
+
+    .identity {
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+        overflow: visible;
+    }
+
+    .nav-stack {
+        flex: 0 0 100%;
+        width: 100%;
+        min-width: 0;
+        align-items: flex-end;
+    }
+
+    .brand-terminal,
+    .terminal-output,
+    .terminal-suggestion-list {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

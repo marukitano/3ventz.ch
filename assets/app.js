@@ -428,20 +428,13 @@
         document.documentElement.classList.remove('rabbit-attack-active');
     };
 
-    const makeRabbitIcon = (row, col, cols, cellWidth) => {
+    const makeRabbitIcon = (row, col, cellWidth) => {
         const rabbit = document.createElement('span');
         const fromLeft = row % 2 === 0;
         const left = (col + .5) * cellWidth;
 
         rabbit.className = 'rabbit-virus-icon ' + (fromLeft ? 'rabbit-red' : 'rabbit-black');
         rabbit.style.left = left + 'px';
-        rabbit.style.setProperty(
-            '--rabbit-entry-x',
-            (fromLeft
-                ? -(left + cellWidth)
-                : (window.innerWidth - left + cellWidth)
-            ) + 'px'
-        );
         rabbit.setAttribute('aria-hidden', 'true');
         return rabbit;
     };
@@ -494,8 +487,8 @@
          * Cell sizes stay deliberately coarse so the effect remains cheap on phones.
          */
         const mobile = window.innerWidth < 720;
-        const targetCellWidth = mobile ? 46 : 58;
-        const targetCellHeight = mobile ? 38 : 44;
+        const targetCellWidth = mobile ? 92 : 116;
+        const targetCellHeight = mobile ? 76 : 88;
         const cols = Math.max(6, Math.ceil(window.innerWidth / targetCellWidth));
         const rows = Math.max(8, Math.ceil(window.innerHeight / targetCellHeight));
         const cellWidth = window.innerWidth / cols;
@@ -523,10 +516,10 @@
                 ? positionInRow
                 : cols - 1 - positionInRow;
 
-            const rabbit = makeRabbitIcon(row, col, cols, cellWidth);
+            const rabbit = makeRabbitIcon(row, col, cellWidth);
             rabbit.style.top = ((row + .5) * cellHeight) + 'px';
-            rabbit.style.width = Math.max(30, cellWidth * .78) + 'px';
-            rabbit.style.height = Math.max(24, cellHeight * .72) + 'px';
+            rabbit.style.width = Math.max(58, cellWidth * .84) + 'px';
+            rabbit.style.height = Math.max(48, cellHeight * .80) + 'px';
             field.appendChild(rabbit);
             created += 1;
         }, interval);

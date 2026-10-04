@@ -529,16 +529,37 @@
         const glitchField = document.createElement('div');
         glitchField.className = 'rabbit-glitch-field';
 
-        // Static 90s-style raster blocks: solid pixels plus real holes, no alpha blending.
-        for (let i = 0; i < 34; i += 1) {
-            const block = document.createElement('span');
-            const vertical = i % 3 === 0;
+        /*
+         * Messy 90s framebuffer damage: every attack gets a fresh scatter of
+         * rastered fragments. The blocks themselves stay binary — solid pixels
+         * and real holes — so there is no alpha-blended "modern" transparency.
+         */
+        const mobileGlitch = window.innerWidth < 720;
+        const glitchCount = mobileGlitch ? 34 : 52;
 
-            block.className = 'rabbit-glitch-block glitch-' + (i % 3);
-            block.style.left = ((i * 37 + 3) % 96) + '%';
-            block.style.top = ((i * 29 + 2) % 94) + '%';
-            block.style.width = (vertical ? 7 + ((i * 7) % 11) : 23 + ((i * 11) % 35)) + 'vw';
-            block.style.height = (vertical ? 24 + ((i * 13) % 42) : 7 + ((i * 9) % 15)) + 'vh';
+        for (let i = 0; i < glitchCount; i += 1) {
+            const block = document.createElement('span');
+            const shape = Math.floor(Math.random() * 5);
+            const tall = shape === 2 || (shape === 4 && Math.random() < .5);
+
+            const width = tall
+                ? 4 + Math.random() * 10
+                : 8 + Math.random() * 24;
+            const height = tall
+                ? 14 + Math.random() * 34
+                : 4 + Math.random() * 13;
+
+            // Allow a little overflow so fragments can enter from every edge.
+            const left = -4 + Math.random() * 100;
+            const top = -3 + Math.random() * 99;
+
+            block.className = 'rabbit-glitch-block glitch-' + shape;
+            block.style.left = left.toFixed(2) + '%';
+            block.style.top = top.toFixed(2) + '%';
+            block.style.width = width.toFixed(2) + 'vw';
+            block.style.height = height.toFixed(2) + 'vh';
+            block.style.setProperty('--glitch-shift-x', (Math.floor(Math.random() * 7) - 3) + 'px');
+            block.style.setProperty('--glitch-shift-y', (Math.floor(Math.random() * 7) - 3) + 'px');
 
             glitchField.appendChild(block);
         }

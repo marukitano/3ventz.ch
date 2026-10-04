@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=VT323&display=swap');
+
 @font-face {
     font-family: 'Terminus';
     src: url('https://cdn.jsdelivr.net/gh/haabe/retro-fonts@main/terminus/Terminus.woff2') format('woff2'),
@@ -7,7 +9,6 @@
     font-display: swap;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 :root {
     color-scheme: dark;
@@ -551,6 +552,10 @@ a { color: inherit; }
     mask-composite: exclude;
 }
 
+.event-span-short-text {
+    display: none;
+}
+
 .event-span-icon-overlay {
     position: absolute;
     z-index: 2;
@@ -977,4 +982,130 @@ footer a {
 footer a:hover,
 .legal-back:hover {
     text-decoration: underline;
+}
+
+
+/* HACKERS // UV gaffer tape event markers */
+:root[data-theme="hackers"] .event-span {
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--event-color) 88%, #f8ff6a) 0%,
+            color-mix(in srgb, var(--event-color) 78%, #dfff4d) 48%,
+            color-mix(in srgb, var(--event-color) 84%, #8dff58) 100%
+        );
+    clip-path: polygon(
+        4px 0,
+        calc(100% - 4px) 0,
+        100% 10%,
+        calc(100% - 3px) 20%,
+        100% 31%,
+        calc(100% - 4px) 42%,
+        100% 54%,
+        calc(100% - 3px) 66%,
+        100% 78%,
+        calc(100% - 4px) 89%,
+        calc(100% - 4px) 100%,
+        4px 100%,
+        0 89%,
+        3px 78%,
+        0 66%,
+        4px 54%,
+        0 42%,
+        3px 31%,
+        0 20%,
+        4px 10%
+    );
+    box-shadow:
+        0 0 3px color-mix(in srgb, var(--event-color) 48%, transparent),
+        0 0 8px color-mix(in srgb, var(--event-color) 20%, transparent);
+    animation: none;
+    filter: saturate(1.18) brightness(1.02);
+}
+
+/* woven/plastic tape texture; straight top/bottom, torn ends */
+:root[data-theme="hackers"] .event-span::before,
+:root[data-theme="hackers"] .event-span[style*="--event-text-mask"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.16), transparent 24%, rgba(0,0,0,.06) 72%, rgba(255,255,255,.08)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.035) 0 1px, transparent 1px 3px);
+    opacity: .72;
+    -webkit-mask-image: none;
+    mask-image: none;
+    mix-blend-mode: overlay;
+}
+
+/* marker-pen writing on the tape */
+:root[data-theme="hackers"] .event-span-short-text {
+    position: absolute;
+    z-index: 4;
+    right: 7px;
+    top: 50%;
+    display: block;
+    max-width: calc(100% - 19px);
+    overflow: hidden;
+    transform: translateY(-52%) rotate(-1.1deg);
+    color: rgba(3, 8, 8, .90);
+    font-family: "Permanent Marker", "Marker Felt", "Comic Sans MS", cursive;
+    font-size: clamp(.48rem, .62vw, .72rem);
+    line-height: 1;
+    letter-spacing: .01em;
+    white-space: nowrap;
+    text-align: right;
+    text-shadow:
+        .35px .35px 0 rgba(0,0,0,.28),
+        -.25px .15px 0 rgba(0,0,0,.15);
+    opacity: .96;
+    pointer-events: none;
+}
+
+/* existing icons should look printed/stuck onto the same tape */
+:root[data-theme="hackers"] .event-span-icon-overlay {
+    z-index: 4;
+    right: 7px;
+    color: rgba(3,8,8,.88);
+    filter: none;
+    opacity: .90;
+}
+
+:root[data-theme="hackers"] .event-span-icon-overlay img {
+    filter: brightness(0) saturate(100%);
+    opacity: .84;
+}
+
+:root[data-theme="hackers"] .event-span:focus-visible {
+    outline: 1px dashed rgba(245,255,220,.85);
+    outline-offset: 2px;
+}
+
+/* tiny variations make separate pieces feel hand-torn, not UI-generated */
+:root[data-theme="hackers"] .week-row:nth-child(2n) .event-span {
+    clip-path: polygon(
+        3px 0,
+        calc(100% - 5px) 0,
+        100% 12%,
+        calc(100% - 4px) 24%,
+        100% 37%,
+        calc(100% - 2px) 50%,
+        100% 63%,
+        calc(100% - 5px) 77%,
+        100% 89%,
+        calc(100% - 3px) 100%,
+        5px 100%,
+        0 88%,
+        4px 74%,
+        0 61%,
+        3px 48%,
+        0 35%,
+        5px 22%,
+        0 10%
+    );
 }

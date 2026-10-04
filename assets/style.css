@@ -2944,3 +2944,18 @@ html.rabbit-attack-active body {
         max-width: 100% !important;
     }
 }
+
+
+/* Mobile choices are tap-only now; wrap instead of horizontal scrolling. */
+@media (pointer: coarse) {
+    .terminal-output {
+        overflow-x: visible !important;
+    }
+
+    .terminal-suggestion-list,
+    .terminal-suggestion-list.manual-list {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+}

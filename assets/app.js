@@ -519,7 +519,7 @@
         refreshCommands();
         updateNerdIndicator();
         quizIndex = -1;
-        say('ACCESS GRANTED // PLANET HACKED // attack unlocked');
+        say('ACCESS // PLANET HACKED // attack UNLOCKED');
     };
 
     let rabbitAttackTimer = null;

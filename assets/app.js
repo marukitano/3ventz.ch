@@ -447,7 +447,10 @@
         // Roughly twice the previous visual size while keeping integer-pixel scaling.
         const size = Math.max(
             100,
-            Math.floor(Math.min(cellWidth * 1.75, cellHeight * 1.9) / 25) * 25
+            Math.min(
+                200,
+                Math.floor(Math.min(cellWidth * 1.45, cellHeight * .88) / 25) * 25
+            )
         );
 
         rabbit.className = 'rabbit-virus-icon rabbit-runner '
@@ -482,8 +485,16 @@
 
             rabbitAttackFinishTimer = window.setTimeout(() => {
                 stopRabbitAttack();
-                say('FLU-SHOT COMPLETE // SYSTEM RESTORED');
-            }, 650);
+
+                const year = Number(state.year) || new Date().getFullYear();
+                const count = Number(state.eventCount) || 0;
+                say('ALL DATA ACQUIRED // ' + count + ' EVENTS // EXPORTING CALENDAR...');
+
+                // This is a real iCalendar export. The response is served as a .ics file.
+                window.setTimeout(() => {
+                    window.location.href = '/export.php?year=' + encodeURIComponent(year);
+                }, 700);
+            }, 80);
         }, 2300);
     };
 
@@ -507,8 +518,26 @@
         layer.className = 'rabbit-attack-layer';
         layer.setAttribute('aria-hidden', 'true');
 
+        const glitchField = document.createElement('div');
+        glitchField.className = 'rabbit-glitch-field';
+
+        // Static 90s-style raster blocks: solid pixels plus real holes, no alpha blending.
+        for (let i = 0; i < 22; i += 1) {
+            const block = document.createElement('span');
+            const vertical = i % 3 === 0;
+
+            block.className = 'rabbit-glitch-block glitch-' + (i % 3);
+            block.style.left = ((i * 37 + 5) % 94) + '%';
+            block.style.top = ((i * 29 + 3) % 91) + '%';
+            block.style.width = (vertical ? 5 + ((i * 7) % 8) : 17 + ((i * 11) % 28)) + 'vw';
+            block.style.height = (vertical ? 18 + ((i * 13) % 33) : 5 + ((i * 9) % 11)) + 'vh';
+
+            glitchField.appendChild(block);
+        }
+
         const field = document.createElement('div');
         field.className = 'rabbit-attack-field';
+        layer.appendChild(glitchField);
         layer.appendChild(field);
         document.body.appendChild(layer);
         document.documentElement.classList.add('rabbit-attack-active');
@@ -520,9 +549,9 @@
          */
         const mobile = window.innerWidth < 720;
         const targetCellWidth = mobile ? 138 : 174;
-        const targetCellHeight = mobile ? 114 : 132;
-        const cols = Math.max(6, Math.ceil(window.innerWidth / targetCellWidth));
-        const rows = Math.max(8, Math.ceil(window.innerHeight / targetCellHeight));
+        const targetCellHeight = mobile ? 165 : 205;
+        const cols = Math.max(mobile ? 4 : 6, Math.ceil(window.innerWidth / targetCellWidth));
+        const rows = Math.max(4, Math.ceil(window.innerHeight / targetCellHeight));
         const cellWidth = window.innerWidth / cols;
         const cellHeight = window.innerHeight / rows;
         const total = cols * rows;

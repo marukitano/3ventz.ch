@@ -388,7 +388,7 @@ $legalReady =
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=mobile-cli-7">
+    <link rel="stylesheet" href="/assets/style.css?v=mobile-cli-8">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
@@ -468,6 +468,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=mobile-cli-6"></script>
+    <script src="/assets/app.js?v=mobile-cli-8"></script>
 </body>
 </html>

@@ -388,7 +388,7 @@ $legalReady =
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=mobile-cli-1">
+    <link rel="stylesheet" href="/assets/style.css?v=mobile-cli-2">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
@@ -407,7 +407,6 @@ $legalReady =
                             enterkeyhint="go"
                             aria-label="3ventz command line"
                             placeholder=""
-                            autofocus
                         >
                         <span class="cursor" id="terminal-cursor">_</span>
                         <span class="terminal-hint" id="terminal-hint">try: man</span>
@@ -469,6 +468,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=mobile-cli-1"></script>
+    <script src="/assets/app.js?v=mobile-cli-2"></script>
 </body>
 </html>

@@ -392,10 +392,9 @@
         const formRect = form.getBoundingClientRect();
 
         if (touchUi) {
-            const inputRect = input.getBoundingClientRect();
-            output.style.left = '0px';
-            output.style.width = formRect.width + 'px';
-            output.style.top = Math.max(0, inputRect.bottom - formRect.top + 3) + 'px';
+            output.style.left = '';
+            output.style.top = '';
+            output.style.width = '';
             return;
         }
 

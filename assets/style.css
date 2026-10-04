@@ -1270,3 +1270,14 @@ footer a:hover,
         0 7%
     ) !important;
 }
+
+
+/* HACKERS // single-day label inset */
+:root[data-theme="hackers"] .event-span[style*="--span-end:"]:not([style*="--span-end: 3"]) .event-span-short-text {
+    right: 12px;
+}
+
+/* One-day event strips need a little more breathing room at the torn right edge. */
+:root[data-theme="hackers"] .event-span-short-text {
+    right: 11px;
+}

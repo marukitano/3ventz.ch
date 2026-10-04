@@ -428,12 +428,38 @@
         document.documentElement.classList.remove('rabbit-attack-active');
     };
 
-    const makeRabbitIcon = (index) => {
+    const makeRabbitIcon = (row, col, cols, cellWidth) => {
         const rabbit = document.createElement('span');
-        rabbit.className = 'rabbit-virus-icon';
-        rabbit.style.setProperty('--rabbit-rotate', ((index % 7) - 3) * .45 + 'deg');
+        const fromLeft = row % 2 === 0;
+        const left = (col + .5) * cellWidth;
+
+        rabbit.className = 'rabbit-virus-icon ' + (fromLeft ? 'rabbit-red' : 'rabbit-black');
+        rabbit.style.left = left + 'px';
+        rabbit.style.setProperty(
+            '--rabbit-entry-x',
+            (fromLeft
+                ? -(left + cellWidth)
+                : (window.innerWidth - left + cellWidth)
+            ) + 'px'
+        );
         rabbit.setAttribute('aria-hidden', 'true');
         return rabbit;
+    };
+
+    const showRabbitAlert = (layer) => {
+        const alert = document.createElement('div');
+        alert.className = 'rabbit-system-alert';
+        alert.innerHTML = '<strong>RABBIT VIRUS DETECTED</strong><span>RABBIT IN THE ADMINISTRATION SYSTEM</span><b>FLU SHOT</b>';
+        layer.appendChild(alert);
+
+        rabbitAttackFinishTimer = window.setTimeout(() => {
+            layer.classList.add('is-clearing');
+
+            rabbitAttackFinishTimer = window.setTimeout(() => {
+                stopRabbitAttack();
+                say('FLU-SHOT COMPLETE // SYSTEM RESTORED');
+            }, 650);
+        }, 2300);
     };
 
     const startRabbitAttack = () => {
@@ -462,65 +488,50 @@
         document.body.appendChild(layer);
         document.documentElement.classList.add('rabbit-attack-active');
 
+        /*
+         * Film-style fill: one complete row at a time.
+         * Red rows enter left -> right, black rows right -> left.
+         * Cell sizes stay deliberately coarse so the effect remains cheap on phones.
+         */
         const mobile = window.innerWidth < 720;
-        const iconSize = mobile ? 34 : 40;
-        const cols = Math.max(5, Math.floor(window.innerWidth / iconSize));
-        const rows = Math.max(7, Math.floor(window.innerHeight / iconSize));
-        const maxByGrid = cols * rows;
-        const target = Math.min(maxByGrid, mobile ? 56 : 120);
-
-        const slots = [];
-        for (let row = 0; row < rows; row += 1) {
-            for (let col = 0; col < cols; col += 1) {
-                slots.push({ row, col });
-            }
-        }
-
-        // Deterministic-looking shuffle without any continuous animation work.
-        for (let i = slots.length - 1; i > 0; i -= 1) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [slots[i], slots[j]] = [slots[j], slots[i]];
-        }
+        const targetCellWidth = mobile ? 46 : 58;
+        const targetCellHeight = mobile ? 38 : 44;
+        const cols = Math.max(6, Math.ceil(window.innerWidth / targetCellWidth));
+        const rows = Math.max(8, Math.ceil(window.innerHeight / targetCellHeight));
+        const cellWidth = window.innerWidth / cols;
+        const cellHeight = window.innerHeight / rows;
+        const total = cols * rows;
+        const fillDuration = 14750;
+        const interval = Math.max(24, Math.floor(fillDuration / total));
 
         let created = 0;
-        const interval = Math.max(75, Math.floor(14500 / target));
 
         rabbitAttackTimer = window.setInterval(() => {
-            if (created >= target || created >= slots.length) {
+            if (created >= total) {
                 window.clearInterval(rabbitAttackTimer);
                 rabbitAttackTimer = null;
+
+                rabbitAttackFinishTimer = window.setTimeout(() => {
+                    showRabbitAlert(layer);
+                }, 180);
                 return;
             }
 
-            const slot = slots[created];
-            const rabbit = makeRabbitIcon(created);
-            rabbit.style.left = ((slot.col + .5) * 100 / cols) + '%';
-            rabbit.style.top = ((slot.row + .5) * 100 / rows) + '%';
+            const row = Math.floor(created / cols);
+            const positionInRow = created % cols;
+            const col = row % 2 === 0
+                ? positionInRow
+                : cols - 1 - positionInRow;
+
+            const rabbit = makeRabbitIcon(row, col, cols, cellWidth);
+            rabbit.style.top = ((row + .5) * cellHeight) + 'px';
+            rabbit.style.width = Math.max(30, cellWidth * .78) + 'px';
+            rabbit.style.height = Math.max(24, cellHeight * .72) + 'px';
             field.appendChild(rabbit);
             created += 1;
         }, interval);
-
-        rabbitAttackFinishTimer = window.setTimeout(() => {
-            if (rabbitAttackTimer !== null) {
-                window.clearInterval(rabbitAttackTimer);
-                rabbitAttackTimer = null;
-            }
-
-            const alert = document.createElement('div');
-            alert.className = 'rabbit-system-alert';
-            alert.innerHTML = '<strong>SYSTEM ALERT</strong><span>RABBIT IN THE ADMINISTRATION SYSTEM</span><b>SEND A FLU-SHOT</b>';
-            layer.appendChild(alert);
-
-            rabbitAttackFinishTimer = window.setTimeout(() => {
-                layer.classList.add('is-clearing');
-
-                rabbitAttackFinishTimer = window.setTimeout(() => {
-                    stopRabbitAttack();
-                    say('FLU-SHOT COMPLETE // SYSTEM RESTORED');
-                }, 650);
-            }, 2300);
-        }, 15000);
     };
+
 
     const showManual = (command) => {
         const name = (command || '').trim().toLowerCase();

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /config.local.php
+
+Sitemap: https://3ventz.ch/sitemap.xml

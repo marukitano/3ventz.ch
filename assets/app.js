@@ -534,7 +534,7 @@
 
         if (selected !== question.answers[question.correct]) {
             quizIndex = -1;
-            say('ACCESS DENIED // wrong answer // try: hack the planet');
+            say('ACCESS SENIED // wrong answer // nice try :D');
             return;
         }
 

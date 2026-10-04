@@ -210,7 +210,7 @@
                     { transform: 'translateX(-' + ticker.getBoundingClientRect().width + 'px)' }
                 ],
                 {
-                    duration: Math.max(8000, distance * 18),
+                    duration: Math.max(4200, distance * 9),
                     iterations: Infinity,
                     easing: 'linear'
                 }

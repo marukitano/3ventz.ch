@@ -388,7 +388,7 @@ $legalReady =
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=themes-clean-1">
+    <link rel="stylesheet" href="/assets/style.css?v=hack-the-planet-1">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
@@ -464,6 +464,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=cli-clean-1"></script>
+    <script src="/assets/app.js?v=hack-the-planet-1"></script>
 </body>
 </html>

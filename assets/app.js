@@ -531,7 +531,8 @@
                 }
 
                 // Real iCalendar export of exactly the categories currently visible.
-                // Give the 90s-style ticker one complete pass before downloading.
+                // The download starts after one pass; the ticker itself keeps looping
+                // until the user types something or presses Enter.
                 window.setTimeout(() => {
                     window.location.href = '/export.php?' + params.toString();
                 }, reducedMotion ? 1800 : 8200);
@@ -841,6 +842,48 @@
 
     input.addEventListener('blur', stopOutputScroll);
 
+    const focusTerminalInput = () => {
+        if (document.activeElement === input) return;
+
+        try {
+            input.focus({ preventScroll: true });
+        } catch {
+            input.focus();
+        }
+    };
+
+    // This site has one text-entry surface: the CLI. Clicks may activate filters,
+    // links, event markers, etc., but keyboard focus always returns to the prompt.
+    document.addEventListener('click', () => {
+        window.requestAnimationFrame(focusTerminalInput);
+    });
+
+    // Fallback for browsers that leave focus on a clicked button/link:
+    // printable keys and Enter are redirected to the CLI immediately.
+    document.addEventListener('keydown', (event) => {
+        if (event.target === input || event.defaultPrevented) return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            focusTerminalInput();
+            form.requestSubmit();
+            return;
+        }
+
+        if (event.key.length !== 1) return;
+
+        event.preventDefault();
+        focusTerminalInput();
+
+        const start = input.selectionStart ?? input.value.length;
+        const end = input.selectionEnd ?? input.value.length;
+        input.setRangeText(event.key, start, end, 'end');
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }, true);
+
+    window.addEventListener('pageshow', focusTerminalInput);
+
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
@@ -976,6 +1019,7 @@
             button.setAttribute('aria-pressed', active ? 'true' : 'false');
             saveCategoryFilters();
             applyCategoryFilters();
+            focusTerminalInput();
         });
     });
 

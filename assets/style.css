@@ -951,8 +951,12 @@ button, .button {
 
 
 .terminal-output.is-manual-page {
-    white-space: normal;
-    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100%;
+    white-space: normal !important;
+    overflow-x: visible !important;
     overflow-y: visible;
     line-height: .95;
 }
@@ -961,10 +965,14 @@ button, .button {
 .terminal-manual-description {
     display: block;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal !important;
 }
 
 .terminal-manual-description {
     margin-top: .24em;
+    overflow-wrap: anywhere;
 }
 
 

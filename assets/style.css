@@ -2633,3 +2633,10 @@ body > .shell {
         display: none !important;
     }
 }
+
+
+/* HACK THE PLANET // touch-friendly terminal choices */
+.terminal-suggestion {
+    cursor: pointer;
+    touch-action: manipulation;
+}

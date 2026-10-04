@@ -9,6 +9,10 @@ return [
     ],
     'admin_password_hash' => 'CHANGE_ME',
 
+    'site' => [
+        'base_url' => 'https://3ventz.ch',
+    ],
+
     // Keep real contact details in config.local.php only.
     'legal' => [
         'name' => 'YOUR FULL LEGAL NAME',

@@ -388,7 +388,7 @@ $legalReady =
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=rabbit-export-1">
+    <link rel="stylesheet" href="/assets/style.css?v=rabbit-glitch-2">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">
@@ -465,6 +465,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=rabbit-export-2"></script>
+    <script src="/assets/app.js?v=rabbit-glitch-2"></script>
 </body>
 </html>

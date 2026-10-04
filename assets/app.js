@@ -494,13 +494,10 @@
 
         // Every second row is offset by half a cell, matching the staggered film layout.
         const stagger = row % 2 === 1 ? .5 : 0;
-        let left = (col + .5 + stagger) * cellWidth;
-        const fieldWidth = totalCols * cellWidth;
+        const left = (col + .5 + stagger) * cellWidth;
 
-        if (left > fieldWidth - cellWidth * .2) {
-            left -= fieldWidth;
-        }
-
+        // Deliberately allow the staggered reverse row to begin on the right edge.
+        // The attack field clips the half-visible sprite, just like a framebuffer edge.
         const top = (row + .5) * cellHeight;
 
         // Roughly twice the previous visual size while keeping integer-pixel scaling.
@@ -623,8 +620,8 @@
             block.style.top = top.toFixed(2) + '%';
             block.style.width = width.toFixed(2) + 'vw';
             block.style.height = height.toFixed(2) + 'vh';
-            block.style.setProperty('--glitch-shift-x', (Math.floor(Math.random() * 7) - 3) + 'px');
-            block.style.setProperty('--glitch-shift-y', (Math.floor(Math.random() * 7) - 3) + 'px');
+            block.style.setProperty('--glitch-shift-x', (Math.floor(Math.random() * 3) - 1) + 'px');
+            block.style.setProperty('--glitch-shift-y', (Math.floor(Math.random() * 3) - 1) + 'px');
 
             glitchField.appendChild(block);
         }

@@ -37,6 +37,16 @@ $iconOptions = [
     'pebble_microphone' => 'Pebble Microphone',
     'pebble_radio' => 'Pebble Radio',
 ];
+
+function admin_date_display(?string $date): string
+{
+    if (!$date) {
+        return '';
+    }
+
+    $parsed = DateTimeImmutable::createFromFormat('!Y-m-d', $date);
+    return $parsed ? $parsed->format('d.m.Y') : $date;
+}
 ?>
 <!doctype html>
 <html lang="de" class="admin-page-root">
@@ -77,11 +87,15 @@ $iconOptions = [
                 </label>
                 <label>
                     Start
-                    <input type="date" name="start_date" required value="<?= h($edit['start_date'] ?? '') ?>">
+                    <input type="text" inputmode="numeric" name="start_date" required
+                           placeholder="TT.MM.JJJJ" pattern="\d{2}\.\d{2}\.\d{4}"
+                           value="<?= h(admin_date_display($edit['start_date'] ?? null)) ?>">
                 </label>
                 <label>
                     Ende
-                    <input type="date" name="end_date" value="<?= h($edit['end_date'] ?? '') ?>">
+                    <input type="text" inputmode="numeric" name="end_date"
+                           placeholder="TT.MM.JJJJ" pattern="\d{2}\.\d{2}\.\d{4}"
+                           value="<?= h(admin_date_display($edit['end_date'] ?? null)) ?>">
                 </label>
                 <label>
                     URL
@@ -129,7 +143,7 @@ $iconOptions = [
                 <tbody>
                 <?php foreach ($events as $event): ?>
                     <tr>
-                        <td><?= h($event['start_date']) ?><?= $event['end_date'] ? ' → ' . h($event['end_date']) : '' ?></td>
+                        <td><?= h(admin_date_display($event['start_date'])) ?><?= $event['end_date'] ? ' → ' . h(admin_date_display($event['end_date'])) : '' ?></td>
                         <td>
                             <strong><?= h($event['title']) ?></strong>
                             <?php if ($event['category']): ?><br><small><?= h($event['category']) ?></small><?php endif; ?>

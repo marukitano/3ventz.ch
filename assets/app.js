@@ -303,12 +303,16 @@
             output.appendChild(prompt);
         }
 
-        const rotated = getRotatedSuggestions();
+        const fixedTouchQuiz = touchUi && suggestionMode === 'quiz';
+        const rotated = fixedTouchQuiz ? suggestions : getRotatedSuggestions();
         const visibleSuggestions = suggestionMode === 'theme'
             ? (touchUi ? rotated : rotated.slice(0, 4))
             : rotated;
 
-        const list = buildSuggestionList(visibleSuggestions, 0);
+        const list = buildSuggestionList(
+            visibleSuggestions,
+            fixedTouchQuiz ? suggestionIndex : 0
+        );
 
         if (suggestionMode === 'manual') {
             list.classList.add('manual-list');

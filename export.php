@@ -156,11 +156,7 @@ foreach ($events as $event) {
 $calendar[] = 'END:VCALENDAR';
 
 header('Content-Type: text/calendar; charset=utf-8');
-$filenameSuffix = $filterRequested && $selectedCategories
-    ? '-' . strtolower(implode('-', $selectedCategories))
-    : ($filterRequested ? '-empty' : '');
-
-header('Content-Disposition: attachment; filename="3ventz-' . $year . $filenameSuffix . '.ics"');
+header('Content-Disposition: attachment; filename="3ventz_' . $year . '.ics"');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 header('Pragma: no-cache');
 

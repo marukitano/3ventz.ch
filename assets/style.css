@@ -2571,16 +2571,55 @@ footer a:hover,
 
 
 /* HACK THE PLANET // rabbit virus attack */
+html.rabbit-attack-active,
+html.rabbit-attack-active body {
+    overflow: hidden;
+}
+
 .rabbit-attack-layer {
     position: fixed;
     inset: 0;
     z-index: 9998;
     overflow: hidden;
     pointer-events: none;
-    background: rgba(1, 5, 4, .10);
+    background:
+        linear-gradient(90deg, rgba(18,18,18,.52) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(18,18,18,.56) 1px, transparent 1px),
+        repeating-linear-gradient(
+            90deg,
+            #f4f4f2 0 2px,
+            #bebebb 2px 3px,
+            #e3e3e0 3px 5px,
+            #a9a9a6 5px 6px
+        );
+    background-size: 10px 10px, 10px 10px, 6px 100%;
+    background-color: #d7d7d4;
     opacity: 1;
     transition: opacity .6s linear;
     contain: layout paint style;
+    animation: rabbit-grid-flicker 105ms steps(2, end) infinite;
+}
+
+.rabbit-attack-layer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.09) 0 1px,
+            rgba(0,0,0,.08) 1px 2px,
+            transparent 2px 4px
+        );
+    opacity: .68;
+    pointer-events: none;
+}
+
+@keyframes rabbit-grid-flicker {
+    0%   { filter: brightness(.90) contrast(1.05); background-position: 0 0, 0 0, 0 0; }
+    50%  { filter: brightness(1.08) contrast(1.16); background-position: 1px 0, 0 1px, 1px 0; }
+    100% { filter: brightness(.96) contrast(1.10); background-position: 0 1px, 1px 0, 0 0; }
 }
 
 .rabbit-attack-layer.is-clearing {
@@ -2590,35 +2629,54 @@ footer a:hover,
 .rabbit-attack-field {
     position: absolute;
     inset: 0;
+    z-index: 1;
 }
 
 .rabbit-virus-icon {
     position: absolute;
-    width: 34px;
-    height: 34px;
-    transform: translate(-50%, -50%) rotate(var(--rabbit-rotate, 0deg)) scale(1);
+    transform: translate(-50%, -50%);
     transform-origin: 50% 50%;
     image-rendering: pixelated;
-    opacity: .96;
-    filter:
-        drop-shadow(0 0 2px rgba(130,255,170,.85))
-        drop-shadow(0 0 5px rgba(50,255,125,.28));
-    animation: rabbit-virus-pop 110ms steps(2, end) both;
+    opacity: 1;
+    color: #e4282f;
+    will-change: transform;
+    animation: rabbit-virus-enter 220ms steps(5, end) both;
 }
 
-/* Tiny original pixel rabbit, drawn as hard-edged SVG blocks and reused by every icon. */
+.rabbit-virus-icon.rabbit-black {
+    color: #080808;
+}
+
+.rabbit-virus-icon.rabbit-red {
+    color: #e1262f;
+}
+
+/*
+ * Side-view pixel rabbit. It is a mask, so the same sprite can be rendered
+ * in the alternating red/black rows from the film-inspired sequence.
+ */
 .rabbit-virus-icon::before {
     content: "";
     position: absolute;
     inset: 0;
-    background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cg fill='%23baffcf'%3E%3Crect x='4' y='0' width='2' height='5'/%3E%3Crect x='10' y='0' width='2' height='5'/%3E%3Crect x='3' y='4' width='10' height='8'/%3E%3Crect x='1' y='6' width='2' height='4'/%3E%3Crect x='13' y='6' width='2' height='4'/%3E%3Crect x='5' y='12' width='2' height='3'/%3E%3Crect x='9' y='12' width='2' height='3'/%3E%3Crect x='3' y='14' width='4' height='2'/%3E%3Crect x='9' y='14' width='4' height='2'/%3E%3C/g%3E%3Cg fill='%23020504'%3E%3Crect x='5' y='7' width='2' height='2'/%3E%3Crect x='9' y='7' width='2' height='2'/%3E%3Crect x='7' y='10' width='2' height='1'/%3E%3C/g%3E%3C/svg%3E")
+    background: currentColor;
+    -webkit-mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16' shape-rendering='crispEdges'%3E%3Cg fill='black'%3E%3Crect x='5' y='6' width='12' height='6'/%3E%3Crect x='15' y='4' width='6' height='6'/%3E%3Crect x='18' y='1' width='2' height='4'/%3E%3Crect x='21' y='0' width='2' height='5'/%3E%3Crect x='2' y='7' width='4' height='4'/%3E%3Crect x='0' y='8' width='3' height='2'/%3E%3Crect x='7' y='11' width='3' height='3'/%3E%3Crect x='13' y='11' width='3' height='3'/%3E%3Crect x='5' y='13' width='6' height='2'/%3E%3Crect x='14' y='13' width='6' height='2'/%3E%3Crect x='20' y='6' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E")
+        center / contain no-repeat;
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 16' shape-rendering='crispEdges'%3E%3Cg fill='black'%3E%3Crect x='5' y='6' width='12' height='6'/%3E%3Crect x='15' y='4' width='6' height='6'/%3E%3Crect x='18' y='1' width='2' height='4'/%3E%3Crect x='21' y='0' width='2' height='5'/%3E%3Crect x='2' y='7' width='4' height='4'/%3E%3Crect x='0' y='8' width='3' height='2'/%3E%3Crect x='7' y='11' width='3' height='3'/%3E%3Crect x='13' y='11' width='3' height='3'/%3E%3Crect x='5' y='13' width='6' height='2'/%3E%3Crect x='14' y='13' width='6' height='2'/%3E%3Crect x='20' y='6' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E")
         center / contain no-repeat;
 }
 
-@keyframes rabbit-virus-pop {
-    from { opacity: 0; transform: translate(-50%, -50%) rotate(var(--rabbit-rotate, 0deg)) scale(.35); }
-    to   { opacity: .96; transform: translate(-50%, -50%) rotate(var(--rabbit-rotate, 0deg)) scale(1); }
+@keyframes rabbit-virus-enter {
+    from {
+        opacity: .25;
+        transform: translate(calc(-50% + var(--rabbit-entry-x)), -50%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .rabbit-system-alert {
@@ -2626,54 +2684,67 @@ footer a:hover,
     z-index: 10000;
     left: 50%;
     top: 50%;
-    width: min(520px, calc(100vw - 32px));
+    width: min(540px, calc(100vw - 28px));
     transform: translate(-50%, -50%);
     display: grid;
-    gap: 8px;
-    padding: 18px 22px;
-    border: 2px solid #ff473d;
-    background: #050706;
-    color: #ff5a4f;
+    gap: 7px;
+    padding: 16px 20px 15px;
+    border: 3px solid #e1262f;
+    outline: 2px solid #f3f3ef;
+    outline-offset: -7px;
+    background: #090909;
+    color: #f3f3ef;
     font-family: "Terminus", "Fixed", monospace;
     text-align: center;
-    letter-spacing: .06em;
+    letter-spacing: .055em;
     box-shadow:
-        0 0 0 2px #200704,
-        0 0 28px rgba(255,58,45,.42);
-    animation: rabbit-alert-in 160ms steps(2, end) both;
+        0 0 0 3px #090909,
+        0 0 22px rgba(225,38,47,.58);
+    animation: rabbit-alert-in 150ms steps(2, end) both;
 }
 
 .rabbit-system-alert strong {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    color: #ff2f25;
+    color: #ff343e;
+    font-size: clamp(1.25rem, 3vw, 1.9rem);
 }
 
 .rabbit-system-alert span {
-    color: #ffd4ce;
-    font-size: clamp(.82rem, 1.7vw, 1.05rem);
+    color: #f2f2ef;
+    font-size: clamp(.76rem, 1.55vw, 1rem);
 }
 
 .rabbit-system-alert b {
-    color: #ffcf45;
-    font-size: clamp(1rem, 2vw, 1.3rem);
+    display: inline-block;
+    justify-self: center;
+    margin-top: 2px;
+    padding: 3px 12px 2px;
+    background: #e1262f;
+    color: #fff;
+    font-size: clamp(.9rem, 2vw, 1.2rem);
 }
 
 @keyframes rabbit-alert-in {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(.92); }
+    from { opacity: 0; transform: translate(-50%, -50%) scale(.94); }
     to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-@media (min-width: 720px) {
-    .rabbit-virus-icon {
-        width: 40px;
-        height: 40px;
+@media (max-width: 719px) {
+    .rabbit-attack-layer {
+        background-size: 8px 8px, 8px 8px, 5px 100%;
+    }
+
+    .rabbit-system-alert {
+        gap: 5px;
+        padding: 13px 14px 12px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .rabbit-attack-layer,
     .rabbit-virus-icon,
     .rabbit-system-alert {
-        animation: none !important;
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
     }
 }
 

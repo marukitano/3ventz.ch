@@ -174,11 +174,11 @@
         output.classList.add('is-manual-page');
         output.replaceChildren();
 
-        const heading = document.createElement('span');
+        const heading = document.createElement('div');
         heading.className = 'terminal-manual-command';
         heading.textContent = command;
 
-        const body = document.createElement('span');
+        const body = document.createElement('div');
         body.className = 'terminal-manual-description';
         body.textContent = description;
 

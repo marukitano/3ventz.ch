@@ -1404,10 +1404,10 @@ footer a:hover,
 :root[data-theme="sega"] body,
 :root[data-theme="default"] body {
     background:
-        radial-gradient(circle at 50% -15%, rgba(19,126,255,.20) 0, transparent 42%),
-        linear-gradient(rgba(32,133,255,.028) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(32,133,255,.028) 1px, transparent 1px),
-        linear-gradient(180deg, #020611 0%, #06122a 48%, #020713 100%);
+        radial-gradient(circle at 50% -15%, rgba(36,148,255,.25) 0, transparent 44%),
+        linear-gradient(rgba(55,156,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(55,156,255,.04) 1px, transparent 1px),
+        linear-gradient(180deg, #071126 0%, #0b2146 48%, #07152e 100%);
     background-size: auto, 18px 18px, 18px 18px, auto;
 }
 
@@ -1779,41 +1779,38 @@ footer a:hover,
 }
 
 
-/* SEGA // darker pixel sky calendar */
+/* SEGA // darker checkerboard pixel sky calendar */
 :root[data-theme="sega"] .month {
     background:
-        repeating-linear-gradient(
-            0deg,
-            rgba(255,255,255,0) 0 8px,
-            rgba(255,255,255,.035) 8px 9px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(255,255,255,0) 0 8px,
-            rgba(255,255,255,.03) 8px 9px
+        conic-gradient(
+            from 45deg,
+            rgba(0,47,133,.34) 0 25%,
+            rgba(76,157,232,.12) 0 50%,
+            rgba(0,47,133,.34) 0 75%,
+            rgba(76,157,232,.12) 0
         ),
         linear-gradient(
             180deg,
-            #4ea6ff 0%,
-            #3f95ef 52%,
-            #2e78d6 100%
+            #2e82ce 0%,
+            #2673bd 52%,
+            #1c5fa7 100%
         ) !important;
+    background-size: 18px 18px, 100% 100% !important;
 }
 
-/* hard, dark Sonic-blue grid */
+/* Hard Sonic-blue day grid over the stronger checkerboard. */
 :root[data-theme="sega"] .day {
     background:
         linear-gradient(
             180deg,
-            rgba(255,255,255,.06) 0%,
-            rgba(255,255,255,.02) 45%,
-            rgba(0,0,0,.08) 100%
+            rgba(255,255,255,.025) 0%,
+            rgba(0,37,101,.12) 100%
         ) !important;
-    border-color: rgba(7,56,132,.95) !important;
-    color: #072f73 !important;
+    border-color: rgba(2,42,116,.94) !important;
+    color: #05285f !important;
     box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        inset 0 -1px 0 rgba(0,0,0,.14) !important;
+        inset 0 1px 0 rgba(255,255,255,.045),
+        inset 0 -1px 0 rgba(0,0,0,.17) !important;
 }
 
 :root[data-theme="sega"] .week-row .day:nth-child(6),
@@ -1821,42 +1818,34 @@ footer a:hover,
     background:
         linear-gradient(
             180deg,
-            rgba(255,255,255,.09) 0%,
-            rgba(255,255,255,.03) 45%,
-            rgba(0,0,0,.10) 100%
+            rgba(255,255,255,.045) 0%,
+            rgba(0,35,98,.16) 100%
         ) !important;
 }
 
 :root[data-theme="sega"] .number {
-    color: #062a66 !important;
+    color: #042456 !important;
     text-shadow: none !important;
     font-weight: 700;
 }
 
 :root[data-theme="sega"] .weekdays {
-    color: #0b469d !important;
+    color: #063a86 !important;
     text-shadow: none !important;
 }
 
 :root[data-theme="sega"] .month h2 {
     color: #eaf6ff !important;
     text-shadow:
-        1px 1px 0 #0051b8,
-        2px 2px 0 rgba(0,0,0,.15) !important;
+        1px 1px 0 #004cae,
+        2px 2px 0 rgba(0,0,0,.16) !important;
 }
 
 :root[data-theme="sega"] .month h2 span {
-    color: #9ad7ff !important;
+    color: #a8dcff !important;
 }
 
-/* keep the existing golden-ring frame, just make it crisper */
-:root[data-theme="sega"] .month {
-    box-shadow:
-        inset 0 0 0 1px rgba(255,228,94,.24),
-        0 0 0 1px rgba(119,84,0,.25) !important;
-}
-
-/* event platforms stay crisp against the darker sky */
+/* Keep Green Hill event platforms crisp against the darker pixel sky. */
 :root[data-theme="sega"] .event-span {
     box-shadow:
         inset 0 1px 0 rgba(255,255,255,.12),
@@ -1864,46 +1853,3 @@ footer a:hover,
         0 0 0 1px rgba(0,0,0,.22) !important;
 }
 
-/* Dark Sonic-blue grid over the bright sky. */
-:root[data-theme="sega"] .day {
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.11), rgba(5,66,160,.05)) !important;
-    border-color: rgba(5,65,158,.72) !important;
-    color: #073b84 !important;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.035);
-}
-
-:root[data-theme="sega"] .week-row .day:nth-child(6),
-:root[data-theme="sega"] .week-row .day:nth-child(7) {
-    background:
-        linear-gradient(180deg, rgba(255,255,255,.16), rgba(5,66,160,.09)) !important;
-}
-
-/* Calendar labels/readability on sky blue. */
-:root[data-theme="sega"] .number {
-    color: #073b84 !important;
-    text-shadow: none !important;
-}
-
-:root[data-theme="sega"] .weekdays {
-    color: #06469d !important;
-    text-shadow: none !important;
-}
-
-:root[data-theme="sega"] .month h2 {
-    color: #074da8 !important;
-    text-shadow:
-        0 1px 0 rgba(255,255,255,.42) !important;
-}
-
-:root[data-theme="sega"] .month h2 span {
-    color: #003f98 !important;
-}
-
-/* Keep event platforms visually in front of the sky. */
-:root[data-theme="sega"] .event-span {
-    box-shadow:
-        inset 0 1px 0 rgba(190,255,150,.35),
-        0 1px 0 rgba(3,52,119,.35),
-        0 0 0 1px rgba(0,0,0,.20) !important;
-}

@@ -530,15 +530,15 @@
         glitchField.className = 'rabbit-glitch-field';
 
         // Static 90s-style raster blocks: solid pixels plus real holes, no alpha blending.
-        for (let i = 0; i < 22; i += 1) {
+        for (let i = 0; i < 34; i += 1) {
             const block = document.createElement('span');
             const vertical = i % 3 === 0;
 
             block.className = 'rabbit-glitch-block glitch-' + (i % 3);
-            block.style.left = ((i * 37 + 5) % 94) + '%';
-            block.style.top = ((i * 29 + 3) % 91) + '%';
-            block.style.width = (vertical ? 5 + ((i * 7) % 8) : 17 + ((i * 11) % 28)) + 'vw';
-            block.style.height = (vertical ? 18 + ((i * 13) % 33) : 5 + ((i * 9) % 11)) + 'vh';
+            block.style.left = ((i * 37 + 3) % 96) + '%';
+            block.style.top = ((i * 29 + 2) % 94) + '%';
+            block.style.width = (vertical ? 7 + ((i * 7) % 11) : 23 + ((i * 11) % 35)) + 'vw';
+            block.style.height = (vertical ? 24 + ((i * 13) % 42) : 7 + ((i * 9) % 15)) + 'vh';
 
             glitchField.appendChild(block);
         }

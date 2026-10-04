@@ -32,12 +32,12 @@
     const commandsWithArguments = new Set(['theme']);
 
     const manualPages = {
-        whoami: 'whoami — show your page-view number for the current calendar year',
-        sudo: 'sudo — open the private event administration',
+        whoami: 'show your page-view number for the current calendar year',
+        sudo: 'open the private event administration',
         theme: 'theme NAME — Aendert das Design der Website; Desktop: TAB/Pfeiltasten, Mobile: Tap/Swipe',
-        man: 'man — list available commands or show help with man COMMAND',
-        'hack the planet': 'hack the planet — prove your nerd credentials',
-        'attack': 'attack — unleash the rabbit virus'
+        man: 'list available commands or show help with man COMMAND',
+        'hack the planet': 'prove your nerd credentials',
+        'attack': 'unleash the rabbit virus'
     };
 
     const quizQuestions = [
@@ -156,7 +156,33 @@
         suggestionMode = 'default';
         suggestionPrompt = '';
         stopTicker();
+        output.classList.remove('is-quiz', 'is-manual-page');
         output.textContent = text;
+        resetOutputScroll();
+        updateHint();
+        requestAnimationFrame(positionOutput);
+    };
+
+    const sayManual = (command, description) => {
+        suggestions = [];
+        suggestionIndex = -1;
+        suggestionLead = '';
+        suggestionMode = 'default';
+        suggestionPrompt = '';
+        stopTicker();
+        output.classList.remove('is-quiz');
+        output.classList.add('is-manual-page');
+        output.replaceChildren();
+
+        const heading = document.createElement('span');
+        heading.className = 'terminal-manual-command';
+        heading.textContent = command;
+
+        const body = document.createElement('span');
+        body.className = 'terminal-manual-description';
+        body.textContent = description;
+
+        output.append(heading, body);
         resetOutputScroll();
         updateHint();
         requestAnimationFrame(positionOutput);
@@ -226,7 +252,7 @@
         suggestionMode = 'default';
         suggestionPrompt = '';
         stopTicker();
-        output.classList.remove('is-quiz');
+        output.classList.remove('is-quiz', 'is-manual-page');
         output.textContent = '';
         resetOutputScroll();
         updateHint();
@@ -276,7 +302,10 @@
             });
             list.appendChild(span);
 
-            if (index < items.length - 1 && !(touchUi && suggestionMode === 'quiz')) {
+            if (
+                index < items.length - 1
+                && !(touchUi && (suggestionMode === 'quiz' || suggestionMode === 'manual'))
+            ) {
                 list.appendChild(document.createTextNode(' · '));
             }
         });
@@ -295,6 +324,7 @@
             return;
         }
 
+        output.classList.remove('is-manual-page');
         output.replaceChildren();
 
         if (suggestionPrompt) {
@@ -748,7 +778,7 @@
         }
 
         if (manualPages[name]) {
-            say(manualPages[name]);
+            sayManual(name, manualPages[name]);
             return;
         }
 

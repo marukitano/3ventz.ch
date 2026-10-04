@@ -2839,3 +2839,44 @@ html.rabbit-attack-active body {
         touch-action: pan-y;
     }
 }
+
+
+/* Mobile CLI: use a real, stable native text input instead of the desktop fake caret. */
+@media (pointer: coarse) {
+    .brand-command-wrap {
+        position: relative;
+        flex: 1 1 100%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding-right: 0;
+    }
+
+    #terminal-input,
+    #terminal-input:not(:placeholder-shown) {
+        box-sizing: border-box;
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 8ch;
+        padding: .06em 0 .1em;
+        caret-color: currentColor;
+        touch-action: manipulation;
+        -webkit-user-select: text;
+        user-select: text;
+    }
+
+    .brand-command-wrap > .cursor {
+        visibility: hidden;
+        pointer-events: none;
+        width: 0;
+        overflow: hidden;
+    }
+
+    .brand-command-wrap > .terminal-hint {
+        position: absolute;
+        left: 0;
+        top: .06em;
+        margin-left: 0;
+        pointer-events: none;
+    }
+}

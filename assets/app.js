@@ -1334,15 +1334,28 @@
         marker.addEventListener('blur', hideEventTooltip);
 
         marker.addEventListener('click', (event) => {
-            if (!touchUi) return;
+            const officialUrl = marker.dataset.eventUrl || '';
 
-            const hasUrl = Boolean(marker.dataset.eventUrl);
+            if (!touchUi) {
+                if (officialUrl) {
+                    event.preventDefault();
+                    window.open(officialUrl, '_blank', 'noopener');
+                }
+                return;
+            }
+
             const isSecondTap = activeTouchEventMarker === marker && !eventTooltip.hidden;
 
-            if (!isSecondTap || !hasUrl) {
+            if (!isSecondTap) {
                 event.preventDefault();
                 activeTouchEventMarker = marker;
                 showEventTooltip(marker);
+                return;
+            }
+
+            if (officialUrl) {
+                event.preventDefault();
+                window.open(officialUrl, '_blank', 'noopener');
             }
         });
     });

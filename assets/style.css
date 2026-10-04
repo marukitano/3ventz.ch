@@ -1572,7 +1572,7 @@ footer a:hover,
     left: 0;
     right: 0;
     bottom: 0;
-    height: 10px;
+    height: 8px;
     background:
         linear-gradient(#42ef4d 0 3px, #2cab33 3px 4px, transparent 4px),
         conic-gradient(

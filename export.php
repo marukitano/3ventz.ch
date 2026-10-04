@@ -6,6 +6,26 @@ require __DIR__ . '/lib/bootstrap.php';
 $year = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT) ?: (int)date('Y');
 $year = max(2000, min(2100, $year));
 
+$filterRequested = (string)($_GET['filtered'] ?? '') === '1';
+$allowedCategories = ['CCC', 'DEMO', 'RETRO', 'MAKER', 'MOVIE', 'LAN', 'MUSIC', 'CODING', 'HACKING'];
+$selectedCategories = [];
+
+if ($filterRequested) {
+    $rawCategories = trim((string)($_GET['categories'] ?? ''));
+
+    if ($rawCategories !== '') {
+        $requestedCategories = array_map(
+            static fn(string $category): string => strtoupper(trim($category)),
+            explode(',', $rawCategories)
+        );
+
+        $selectedCategories = array_values(array_unique(array_intersect(
+            $requestedCategories,
+            $allowedCategories
+        )));
+    }
+}
+
 if ($demoMode) {
     $events = [
         [
@@ -40,6 +60,21 @@ if ($demoMode) {
         'year_end' => sprintf('%04d-12-31', $year),
     ]);
     $events = $stmt->fetchAll();
+}
+
+if ($filterRequested) {
+    if ($selectedCategories === []) {
+        $events = [];
+    } else {
+        $events = array_values(array_filter(
+            $events,
+            static fn(array $event): bool => in_array(
+                strtoupper(trim((string)($event['category'] ?? ''))),
+                $selectedCategories,
+                true
+            )
+        ));
+    }
 }
 
 function ics_escape(string $value): string
@@ -79,7 +114,7 @@ $calendar = [
     'PRODID:-//3VENTZ//Event Export//DE',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    'X-WR-CALNAME:' . ics_escape('3VENTZ ' . $year),
+    'X-WR-CALNAME:' . ics_escape('3VENTZ ' . $year . ($filterRequested && $selectedCategories ? ' // ' . implode('+', $selectedCategories) : '')),
 ];
 
 $stamp = gmdate('Ymd\\THis\\Z');
@@ -121,7 +156,11 @@ foreach ($events as $event) {
 $calendar[] = 'END:VCALENDAR';
 
 header('Content-Type: text/calendar; charset=utf-8');
-header('Content-Disposition: attachment; filename="3ventz-' . $year . '.ics"');
+$filenameSuffix = $filterRequested && $selectedCategories
+    ? '-' . strtolower(implode('-', $selectedCategories))
+    : ($filterRequested ? '-empty' : '');
+
+header('Content-Disposition: attachment; filename="3ventz-' . $year . $filenameSuffix . '.ics"');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 header('Pragma: no-cache');
 

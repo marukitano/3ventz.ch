@@ -332,7 +332,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                     ?>
                         <?php if ($hasEventUrl): ?>
                             <a class="event-span"
-                               href="<?= h($event['url']) ?>"
+                               href="<?= h(isset($event['id']) ? event_path($event) : (string)$event['url']) ?>"
                                target="_blank"
                                rel="noopener noreferrer"
                                style="<?= $style ?>"

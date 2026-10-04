@@ -13,7 +13,7 @@
     const currentYear = Number(state.year) || new Date().getFullYear();
     const root = document.documentElement;
 
-    const themes = ['sega', 'c64', 'amiga', 'atari', 'edgerunner', 'hackers'];
+    const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari', 'edgerunner'];
     const commands = [
         'next',
         'prev',
@@ -282,11 +282,23 @@
     };
 
     const applySavedAppearance = () => {
-        const savedTheme = localStorage.getItem('3ventz-theme') || 'sega';
-        const migratedTheme = savedTheme === 'default' ? 'sega' : savedTheme;
-        const theme = themes.includes(migratedTheme) ? migratedTheme : 'sega';
+        const themeKey = '3ventz-theme';
+        const migrationKey = '3ventz-theme-default-hackers-v1';
+        let savedTheme = localStorage.getItem(themeKey);
+
+        // SEGA used to be the site default. Migrate that old default once,
+        // then respect whatever theme the visitor explicitly chooses later.
+        if (!localStorage.getItem(migrationKey)) {
+            if (!savedTheme || savedTheme === 'default' || savedTheme === 'sega') {
+                savedTheme = 'hackers';
+                localStorage.setItem(themeKey, savedTheme);
+            }
+            localStorage.setItem(migrationKey, '1');
+        }
+
+        const theme = themes.includes(savedTheme || '') ? savedTheme : 'hackers';
         root.dataset.theme = theme;
-        localStorage.setItem('3ventz-theme', theme);
+        localStorage.setItem(themeKey, theme);
         updateThemeIndicator(theme);
     };
 

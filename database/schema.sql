@@ -4,6 +4,7 @@ CREATE TABLE events (
     start_date DATE NOT NULL,
     end_date DATE NULL,
     category VARCHAR(80) NULL,
+    location VARCHAR(255) NULL,
     url VARCHAR(500) NULL,
     description TEXT NULL,
     color VARCHAR(20) NOT NULL DEFAULT '#00f5ff',

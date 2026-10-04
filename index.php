@@ -341,6 +341,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                data-segment-end-day="<?= (int)$segment['end']->format('j') ?>"
                                data-event-date="<?= h($eventDateLabel) ?>"
                                data-event-category="<?= h($event['category'] ?? '') ?>"
+                               data-event-location="<?= h($event['location'] ?? '') ?>"
                                data-event-description="<?= h($event['description'] ?? '') ?>"
                                data-event-url="<?= h($event['url']) ?>"
                                aria-label="<?= h($event['title']) ?>">
@@ -358,6 +359,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                data-segment-end-day="<?= (int)$segment['end']->format('j') ?>"
                                   data-event-date="<?= h($eventDateLabel) ?>"
                                   data-event-category="<?= h($event['category'] ?? '') ?>"
+                                  data-event-location="<?= h($event['location'] ?? '') ?>"
                                   data-event-description="<?= h($event['description'] ?? '') ?>"
                                   aria-label="<?= h($event['title']) ?>"
                                   tabindex="0">
@@ -381,14 +383,72 @@ $legalReady =
     !empty($legal['name']) &&
     !empty($legal['address']) &&
     !empty($legal['email']);
+
+$baseUrl = site_base_url();
+$currentYear = (int)date('Y');
+$canonicalUrl = $year === $currentYear
+    ? $baseUrl . '/'
+    : $baseUrl . '/?year=' . $year;
+$pageTitle = '3ventz // Hacker-, Maker- & Tech-Events ' . $year;
+$pageDescription = 'Jahreskalender ' . $year . ' für Hacker-, Maker-, Retro-, LAN-, Coding-, Demo- und weitere Tech-Events in der Schweiz und Umgebung.';
+
+$itemList = [];
+if (!$demoMode) {
+    foreach ($events as $position => $event) {
+        $itemList[] = [
+            '@type' => 'ListItem',
+            'position' => $position + 1,
+            'url' => event_url($event),
+            'name' => (string)$event['title'],
+        ];
+    }
+}
+
+$indexSchema = [
+    '@context' => 'https://schema.org',
+    '@graph' => [
+        [
+            '@type' => 'WebSite',
+            '@id' => $baseUrl . '/#website',
+            'url' => $baseUrl . '/',
+            'name' => '3ventz',
+            'description' => 'Yearly calendar for hacker, maker and technology events.',
+            'inLanguage' => 'de-CH',
+        ],
+        [
+            '@type' => 'ItemList',
+            '@id' => $canonicalUrl . '#events',
+            'name' => '3ventz Events ' . $year,
+            'url' => $canonicalUrl,
+            'numberOfItems' => count($itemList),
+            'itemListElement' => $itemList,
+        ],
+    ],
+];
 ?>
 <!doctype html>
 <html lang="de" data-theme="hackers">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=event-display-12">
+    <title><?= h($pageTitle) ?></title>
+    <meta name="description" content="<?= h($pageDescription) ?>">
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+    <link rel="canonical" href="<?= h($canonicalUrl) ?>">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_CH">
+    <meta property="og:site_name" content="3ventz">
+    <meta property="og:title" content="<?= h($pageTitle) ?>">
+    <meta property="og:description" content="<?= h($pageDescription) ?>">
+    <meta property="og:url" content="<?= h($canonicalUrl) ?>">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<?= h($pageTitle) ?>">
+    <meta name="twitter:description" content="<?= h($pageDescription) ?>">
+
+    <link rel="stylesheet" href="/assets/style.css?v=seo-event-1">
+    <script type="application/ld+json"><?= json_encode($indexSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">

@@ -910,9 +910,16 @@
 
         const tapX = event.clientX - rect.left + input.scrollLeft;
 
-        // Only the visible glyphs count. Trailing spaces created by completion
-        // are intentionally excluded, so a second tap after "theme" opens choices.
+        // Only the visible glyphs count. A tap behind unfinished text completes it.
+        // If the command is already complete, the next tap acts like Enter.
         if (tapX <= visibleTextWidth + 2) return;
+
+        const completedCommand = input.value.trim().toLowerCase();
+
+        if (commands.includes(completedCommand)) {
+            runTouchEnter();
+            return;
+        }
 
         complete();
 

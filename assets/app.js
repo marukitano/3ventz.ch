@@ -246,10 +246,20 @@
             span.textContent = item;
             span.addEventListener('click', (event) => {
                 event.preventDefault();
-                if (suppressSuggestionTap) return;
 
                 const selectedIndex = suggestions.indexOf(item);
                 if (selectedIndex < 0) return;
+
+                if (suggestionMode === 'quiz' && touchUi) {
+                    if (selectedIndex !== suggestionIndex) {
+                        suggestionIndex = selectedIndex;
+                        renderSuggestions();
+                        return;
+                    }
+
+                    acceptSuggestion();
+                    return;
+                }
 
                 suggestionIndex = selectedIndex;
 

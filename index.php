@@ -468,6 +468,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=mobile-cli-2"></script>
+    <script src="/assets/app.js?v=mobile-cli-3"></script>
 </body>
 </html>

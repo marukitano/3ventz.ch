@@ -179,6 +179,13 @@
             const span = document.createElement('span');
             span.className = 'terminal-suggestion' + (index === selectedIndex ? ' selected' : '');
             span.textContent = item;
+            span.addEventListener('pointerdown', (event) => {
+                event.preventDefault();
+                const selectedIndex = suggestions.indexOf(item);
+                if (selectedIndex < 0) return;
+                suggestionIndex = selectedIndex;
+                acceptSuggestion();
+            });
             list.appendChild(span);
 
             if (index < items.length - 1) {

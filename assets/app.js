@@ -428,15 +428,29 @@
         document.documentElement.classList.remove('rabbit-attack-active');
     };
 
-    const makeRabbitIcon = (row, col, cellWidth) => {
+    const makeRabbitIcon = (row, col, cellWidth, cellHeight) => {
         const rabbit = document.createElement('span');
-        const fromLeft = row % 2 === 0;
+        const movesLeft = row % 2 === 1;
         const left = (col + .5) * cellWidth;
+        const top = (row + .5) * cellHeight;
+        const size = Math.max(50, Math.floor((Math.min(cellWidth * .84, cellHeight * .90)) / 25) * 25);
 
-        rabbit.className = 'rabbit-virus-icon ' + (fromLeft ? 'rabbit-red' : 'rabbit-black');
+        rabbit.className = 'rabbit-virus-icon rabbit-runner '
+            + (row % 2 === 0 ? 'rabbit-red' : 'rabbit-black')
+            + (movesLeft ? ' rabbit-facing-left' : '');
         rabbit.style.left = left + 'px';
+        rabbit.style.top = top + 'px';
+        rabbit.style.width = size + 'px';
+        rabbit.style.height = size + 'px';
+        rabbit.dataset.trailClass = row % 2 === 0 ? 'rabbit-black' : 'rabbit-red';
         rabbit.setAttribute('aria-hidden', 'true');
         return rabbit;
+    };
+
+    const freezeRabbitTrail = (rabbit) => {
+        if (!rabbit) return;
+        rabbit.classList.remove('rabbit-runner', 'rabbit-red', 'rabbit-black');
+        rabbit.classList.add(rabbit.dataset.trailClass || 'rabbit-black');
     };
 
     const showRabbitAlert = (layer) => {
@@ -498,9 +512,13 @@
         const interval = Math.max(24, Math.floor(fillDuration / total));
 
         let created = 0;
+        let activeRabbit = null;
 
         rabbitAttackTimer = window.setInterval(() => {
             if (created >= total) {
+                freezeRabbitTrail(activeRabbit);
+                activeRabbit = null;
+
                 window.clearInterval(rabbitAttackTimer);
                 rabbitAttackTimer = null;
 
@@ -510,17 +528,16 @@
                 return;
             }
 
+            freezeRabbitTrail(activeRabbit);
+
             const row = Math.floor(created / cols);
             const positionInRow = created % cols;
             const col = row % 2 === 0
                 ? positionInRow
                 : cols - 1 - positionInRow;
 
-            const rabbit = makeRabbitIcon(row, col, cellWidth);
-            rabbit.style.top = ((row + .5) * cellHeight) + 'px';
-            rabbit.style.width = Math.max(58, cellWidth * .84) + 'px';
-            rabbit.style.height = Math.max(48, cellHeight * .80) + 'px';
-            field.appendChild(rabbit);
+            activeRabbit = makeRabbitIcon(row, col, cellWidth, cellHeight);
+            field.appendChild(activeRabbit);
             created += 1;
         }, interval);
     };

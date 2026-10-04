@@ -2603,7 +2603,7 @@ html.rabbit-attack-active body {
     display: block;
     background:
         repeating-conic-gradient(
-            #e6e6df 0 25%,
+            #e6e6df 0 37.5%,
             transparent 0 50%
         ) 0 0 / 4px 4px;
     image-rendering: pixelated;
@@ -2613,7 +2613,7 @@ html.rabbit-attack-active body {
 .rabbit-glitch-block.glitch-1 {
     background:
         repeating-conic-gradient(
-            #c8c8c1 0 25%,
+            #c8c8c1 0 33%,
             transparent 0 50%
         ) 1px 0 / 6px 6px;
 }
@@ -2622,8 +2622,8 @@ html.rabbit-attack-active body {
     background:
         repeating-linear-gradient(
             0deg,
-            #f2f2ec 0 2px,
-            transparent 2px 5px
+            #f2f2ec 0 3px,
+            transparent 3px 6px
         );
 }
 

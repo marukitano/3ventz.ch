@@ -2568,3 +2568,68 @@ footer a:hover,
 :root[data-theme="atari"] .event-span-icon-overlay img {
     filter: brightness(0) saturate(100%) !important;
 }
+
+
+/* HACK THE PLANET // lightweight unlocked background */
+.hack-rain {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: .16;
+    contain: strict;
+}
+
+:root[data-theme="hackers"] .hack-rain.is-enabled {
+    display: block;
+}
+
+body > .shell {
+    position: relative;
+    z-index: 1;
+}
+
+.hack-rain-column {
+    position: absolute;
+    top: -105vh;
+    width: 1.5em;
+    color: var(--green);
+    font-family: "Terminus", "Fixed", monospace;
+    font-size: clamp(.58rem, .72vw, .78rem);
+    line-height: 1.32;
+    text-align: center;
+    white-space: pre;
+    text-shadow: 0 0 4px rgba(57,255,20,.32);
+    will-change: transform;
+    animation: hack-rain-fall var(--rain-duration, 20s) linear infinite;
+    animation-delay: var(--rain-delay, 0s);
+}
+
+@keyframes hack-rain-fall {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(0, 210vh, 0); }
+}
+
+.terminal-suggestion-prompt {
+    color: var(--green);
+    text-shadow: 0 0 5px rgba(0,255,140,.45);
+}
+
+@media (max-width: 719px) {
+    .hack-rain {
+        opacity: .13;
+    }
+
+    .hack-rain-column {
+        font-size: .56rem;
+        line-height: 1.38;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hack-rain {
+        display: none !important;
+    }
+}

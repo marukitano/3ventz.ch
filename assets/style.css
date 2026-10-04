@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Silkscreen:wght@400;700&family=VT323&display=swap');
 
 @font-face {
     font-family: 'Terminus';
@@ -1868,4 +1868,36 @@ footer a:hover,
     background: none !important;
     box-shadow: none !important;
     filter: none !important;
+}
+
+
+/* SEGA // pixel event labels */
+:root[data-theme="sega"] .event-span-short-text {
+    display: block !important;
+    position: absolute !important;
+    z-index: 6 !important;
+    left: 7px !important;
+    right: 7px !important;
+    top: 50% !important;
+    max-width: calc(100% - 14px) !important;
+    overflow: hidden !important;
+    transform: translateY(-50%) !important;
+    color: #fff8cf !important;
+    font-family: "Silkscreen", "Terminus", monospace !important;
+    font-size: clamp(.47rem, .55vw, .64rem) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    text-shadow:
+        1px 1px 0 #704018,
+        -1px 0 0 rgba(76,38,8,.45) !important;
+    pointer-events: none !important;
+}
+
+/* Keep icon events vertically centered in the same platform. */
+:root[data-theme="sega"] .event-span-icon-overlay {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
 }

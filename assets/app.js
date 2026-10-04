@@ -570,7 +570,7 @@
                     window.location.href = '/export.php?' + params.toString();
                 }, reducedMotion ? 1800 : 8200);
             }, 80);
-        }, 2300);
+        }, 5200);
     };
 
     const startRabbitAttack = () => {

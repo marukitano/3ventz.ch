@@ -2416,7 +2416,7 @@ footer a:hover,
     overflow: hidden !important;
     color: #1f1207 !important;
     font-family: "Silkscreen", "Terminus", monospace !important;
-    font-size: clamp(.50rem, .58vw, .68rem) !important;
+    font-size: clamp(.75rem, .87vw, 1.02rem) !important;
     font-weight: 700 !important;
     line-height: 1 !important;
     letter-spacing: 0 !important;

@@ -69,17 +69,6 @@
     --pink: #ff6b35;
 }
 
-:root[data-theme="edgerunner"] {
-    --bg: #071014;
-    --panel: #0c171c;
-    --line: #28434d;
-    --text: #e9ffff;
-    --muted: #7a9398;
-    --cyan: #f6ff00;
-    --green: #00f5d4;
-    --pink: #ff2d95;
-}
-
 :root[data-theme="hackers"] {
     --bg: #020504;
     --panel: #06100b;

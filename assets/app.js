@@ -390,6 +390,15 @@
 
     const positionOutput = () => {
         const formRect = form.getBoundingClientRect();
+
+        if (touchUi) {
+            const inputRect = input.getBoundingClientRect();
+            output.style.left = '0px';
+            output.style.width = formRect.width + 'px';
+            output.style.top = Math.max(0, inputRect.bottom - formRect.top + 3) + 'px';
+            return;
+        }
+
         const cursorRect = cursor.getBoundingClientRect();
         const left = Math.max(0, cursorRect.right - formRect.left + 8);
 
@@ -415,6 +424,12 @@
     };
 
     const resizeInput = () => {
+        if (touchUi) {
+            input.style.width = '';
+            requestAnimationFrame(positionOutput);
+            return;
+        }
+
         const styles = getComputedStyle(input);
 
         inputSizer.style.fontFamily = styles.fontFamily;
@@ -1203,7 +1218,16 @@
         marker.addEventListener('blur', hideEventTooltip);
     });
 
-    document.querySelector('.brand-terminal')?.addEventListener('click', () => input.focus());
+    document.querySelector('.brand-terminal')?.addEventListener('click', (event) => {
+        if (event.target === input || event.target.closest('.terminal-output')) return;
+
+        focusTerminalInput();
+
+        if (touchUi) {
+            const end = input.value.length;
+            window.requestAnimationFrame(() => input.setSelectionRange(end, end));
+        }
+    });
 
     restoreCategoryFilters();
     applyCategoryFilters();
@@ -1224,6 +1248,9 @@
 
     requestAnimationFrame(() => {
         positionOutput();
-        input.focus({ preventScroll: true });
+
+        if (!touchUi) {
+            input.focus({ preventScroll: true });
+        }
     });
 })();

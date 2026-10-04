@@ -1879,21 +1879,27 @@ footer a:hover,
     left: 7px !important;
     right: 7px !important;
     top: 50% !important;
-    max-width: calc(100% - 14px) !important;
+    max-width: none !important;
     overflow: hidden !important;
     transform: translateY(-50%) !important;
     color: #fff8cf !important;
     font-family: "Silkscreen", "Terminus", monospace !important;
-    font-size: clamp(.47rem, .55vw, .64rem) !important;
+    font-size: clamp(.56rem, .66vw, .76rem) !important;
     font-weight: 700 !important;
     line-height: 1 !important;
     letter-spacing: 0 !important;
     white-space: nowrap !important;
-    text-align: left !important;
+    text-align: center !important;
     text-shadow:
         1px 1px 0 #704018,
         -1px 0 0 rgba(76,38,8,.45) !important;
     pointer-events: none !important;
+}
+
+/* Keep icon events vertically centered in the same platform. */
+:root[data-theme="sega"] .event-span-icon-overlay {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
 }
 
 /* Keep icon events vertically centered in the same platform. */

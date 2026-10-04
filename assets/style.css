@@ -1738,3 +1738,20 @@ footer a:hover,
         drop-shadow(0 0 2px rgba(214,255,58,.30))
         drop-shadow(0 0 5px rgba(162,255,44,.16)) !important;
 }
+
+
+/* HACKERS // strong UV tape glow */
+:root[data-theme="hackers"] .event-span::before,
+:root[data-theme="hackers"] .event-span[style*="--event-text-mask"]::before {
+    filter:
+        drop-shadow(0 0 2px rgba(235,255,90,.95))
+        drop-shadow(0 0 5px rgba(202,255,55,.78))
+        drop-shadow(0 0 10px rgba(165,255,35,.52))
+        drop-shadow(0 0 18px rgba(125,255,25,.30)) !important;
+}
+
+:root[data-theme="hackers"] .event-span {
+    filter:
+        drop-shadow(0 0 4px rgba(205,255,55,.45))
+        drop-shadow(0 0 10px rgba(150,255,30,.24)) !important;
+}

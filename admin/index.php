@@ -86,6 +86,12 @@ function admin_date_display(?string $date): string
                     </select>
                 </label>
                 <label>
+                    Ort
+                    <input name="location" maxlength="255"
+                           value="<?= h($edit['location'] ?? '') ?>"
+                           placeholder="z.B. Schaffhausen, Schweiz">
+                </label>
+                <label>
                     Start
                     <input type="text" inputmode="numeric" name="start_date" required
                            placeholder="TT.MM.JJJJ" pattern="\d{2}\.\d{2}\.\d{4}"
@@ -147,6 +153,7 @@ function admin_date_display(?string $date): string
                         <td>
                             <strong><?= h($event['title']) ?></strong>
                             <?php if ($event['category']): ?><br><small><?= h($event['category']) ?></small><?php endif; ?>
+                            <?php if (!empty($event['location'])): ?><br><small><?= h($event['location']) ?></small><?php endif; ?>
                         </td>
                         <td>
                             <div class="actions">

@@ -1300,7 +1300,7 @@
         if (hasUrl) {
             const action = document.createElement('div');
             action.className = 'event-tooltip-action';
-            action.textContent = 'click // open website';
+            action.textContent = touchUi ? 'tap again // open website' : 'click // open website';
             eventTooltip.appendChild(action);
         }
 
@@ -1308,15 +1308,40 @@
         requestAnimationFrame(() => positionEventTooltip(marker));
     };
 
+    let activeTouchEventMarker = null;
+
     const hideEventTooltip = () => {
         eventTooltip.hidden = true;
+        if (touchUi) activeTouchEventMarker = null;
     };
 
     document.querySelectorAll('.event-span').forEach((marker) => {
-        marker.addEventListener('mouseenter', () => showEventTooltip(marker));
-        marker.addEventListener('mouseleave', hideEventTooltip);
+        if (!touchUi) {
+            marker.addEventListener('mouseenter', () => showEventTooltip(marker));
+            marker.addEventListener('mouseleave', hideEventTooltip);
+        }
+
         marker.addEventListener('focus', () => showEventTooltip(marker));
         marker.addEventListener('blur', hideEventTooltip);
+
+        marker.addEventListener('click', (event) => {
+            if (!touchUi) return;
+
+            const hasUrl = Boolean(marker.dataset.eventUrl);
+            const isSecondTap = activeTouchEventMarker === marker && !eventTooltip.hidden;
+
+            if (!isSecondTap || !hasUrl) {
+                event.preventDefault();
+                activeTouchEventMarker = marker;
+                showEventTooltip(marker);
+            }
+        });
+    });
+
+    document.addEventListener('pointerdown', (event) => {
+        if (!touchUi || !activeTouchEventMarker) return;
+        if (event.target.closest('.event-span')) return;
+        hideEventTooltip();
     });
 
     document.querySelector('.brand-terminal')?.addEventListener('click', (event) => {

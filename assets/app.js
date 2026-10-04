@@ -497,16 +497,12 @@
                 params.set('filtered', '1');
                 params.set('categories', activeCategories.join(','));
 
-                say(
-                    'ALL DATA ACQUIRED // EXPORTING '
-                    + (activeCategories.length ? activeCategories.join('+') : '0 VISIBLE EVENTS')
-                    + '...'
-                );
+                say('ATTACK SUCCESSFUL // ALL DATA COLLECTED');
 
                 // Real iCalendar export of exactly the categories currently visible.
                 window.setTimeout(() => {
                     window.location.href = '/export.php?' + params.toString();
-                }, 700);
+                }, 1300);
             }, 80);
         }, 2300);
     };

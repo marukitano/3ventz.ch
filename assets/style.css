@@ -1281,3 +1281,119 @@ footer a:hover,
 :root[data-theme="hackers"] .event-span-short-text {
     right: 11px;
 }
+
+
+/* HACKERS // tape layer fix v3 */
+/* The outer event is NOT clipped. The torn tape lives only in ::before,
+   so handwriting/icons can sit freely above it. */
+:root[data-theme="hackers"] .event-span,
+:root[data-theme="hackers"] .week-row:nth-child(even) .event-span,
+:root[data-theme="hackers"] .week-row:nth-child(2n) .event-span {
+    background: transparent !important;
+    clip-path: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    isolation: isolate;
+}
+
+/* Actual tape layer */
+:root[data-theme="hackers"] .event-span::before,
+:root[data-theme="hackers"] .event-span[style*="--event-text-mask"]::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    opacity: .94 !important;
+    mix-blend-mode: normal !important;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.14) 0%,
+            rgba(255,255,255,.03) 22%,
+            rgba(20,35,0,.05) 68%,
+            rgba(10,20,0,.10) 100%
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255,255,255,.035) 0 1px,
+            transparent 1px 5px
+        ),
+        linear-gradient(
+            180deg,
+            #eaff38 0%,
+            #d5ff21 18%,
+            #bfff16 54%,
+            #a9ed12 100%
+        ) !important;
+    clip-path: polygon(
+        9px 0,
+        calc(100% - 9px) 0,
+        100% 7%,
+        calc(100% - 5px) 15%,
+        100% 24%,
+        calc(100% - 8px) 33%,
+        100% 43%,
+        calc(100% - 4px) 53%,
+        100% 63%,
+        calc(100% - 7px) 73%,
+        100% 83%,
+        calc(100% - 5px) 92%,
+        calc(100% - 9px) 100%,
+        9px 100%,
+        0 92%,
+        6px 83%,
+        0 73%,
+        8px 63%,
+        0 53%,
+        5px 43%,
+        0 33%,
+        7px 24%,
+        0 15%,
+        5px 7%
+    ) !important;
+    -webkit-mask: none !important;
+    mask: none !important;
+    pointer-events: none;
+}
+
+/* Alternate torn edge only on the tape layer */
+:root[data-theme="hackers"] .week-row:nth-child(even) .event-span::before {
+    clip-path: polygon(
+        8px 0,
+        calc(100% - 10px) 0,
+        100% 8%,
+        calc(100% - 7px) 18%,
+        100% 29%,
+        calc(100% - 4px) 39%,
+        100% 51%,
+        calc(100% - 8px) 62%,
+        100% 74%,
+        calc(100% - 5px) 86%,
+        100% 93%,
+        calc(100% - 8px) 100%,
+        10px 100%,
+        0 91%,
+        7px 81%,
+        0 70%,
+        4px 59%,
+        0 47%,
+        8px 36%,
+        0 25%,
+        5px 14%,
+        0 7%
+    ) !important;
+}
+
+/* Handwriting always above the tape and never clipped */
+:root[data-theme="hackers"] .event-span-short-text {
+    z-index: 20 !important;
+    right: 9px !important;
+    max-width: none !important;
+    overflow: visible !important;
+    clip-path: none !important;
+}
+
+/* Same for icons */
+:root[data-theme="hackers"] .event-span-icon-overlay {
+    z-index: 20 !important;
+}

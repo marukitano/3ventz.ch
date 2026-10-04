@@ -2880,3 +2880,35 @@ html.rabbit-attack-active body {
         pointer-events: none;
     }
 }
+
+
+/* Mobile terminal output lives in normal document flow so menus and quiz choices
+   cannot be clipped below the command line. */
+@media (pointer: coarse) {
+    .brand-terminal {
+        overflow: visible;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .terminal-output {
+        position: static !important;
+        flex: 0 0 100%;
+        width: 100% !important;
+        max-width: 100%;
+        min-height: 0;
+        margin-top: .18em;
+        overflow-x: hidden;
+        overflow-y: visible;
+        white-space: nowrap;
+    }
+
+    .terminal-output:empty {
+        display: none;
+        margin-top: 0;
+    }
+
+    .terminal-output:not(:empty) {
+        display: block;
+    }
+}

@@ -1729,3 +1729,12 @@ footer a:hover,
     text-align: left !important;
     z-index: 20 !important;
 }
+
+
+/* HACKERS // subtle UV tape glow */
+:root[data-theme="hackers"] .event-span::before,
+:root[data-theme="hackers"] .event-span[style*="--event-text-mask"]::before {
+    filter:
+        drop-shadow(0 0 2px rgba(214,255,58,.30))
+        drop-shadow(0 0 5px rgba(162,255,44,.16)) !important;
+}

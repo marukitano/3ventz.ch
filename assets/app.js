@@ -164,6 +164,11 @@
     };
 
     const sayManual = (command, description) => {
+        if (!touchUi) {
+            sayTicker(command + ' // ' + description);
+            return;
+        }
+
         suggestions = [];
         suggestionIndex = -1;
         suggestionLead = '';
@@ -209,6 +214,7 @@
         suggestionPrompt = '';
         stopOutputScroll();
         stopTicker();
+        output.classList.remove('is-quiz', 'is-manual-page');
         outputScrollX = 0;
         output.scrollLeft = 0;
         output.replaceChildren();

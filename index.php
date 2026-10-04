@@ -346,6 +346,8 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                aria-label="<?= h($event['title']) ?>">
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php elseif ($eventShortText !== ''): ?>
+                                    <span class="event-span-short-text" aria-hidden="true"><?= h($eventShortText) ?></span>
                                 <?php endif; ?>
                             </a>
                         <?php else: ?>
@@ -361,6 +363,8 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                   tabindex="0">
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
+                                <?php elseif ($eventShortText !== ''): ?>
+                                    <span class="event-span-short-text" aria-hidden="true"><?= h($eventShortText) ?></span>
                                 <?php endif; ?>
                             </span>
                         <?php endif; ?>

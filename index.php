@@ -158,10 +158,10 @@ function event_short_text(string $text, int $days): string
         return '';
     }
 
-    // Total visible capacity including the leading terminal prompt:
-    // 1 day = 5 chars, 2 = 11, 3 = 17, then +6/day.
-    $maxChars = max(5, ($days * 6) - 1);
-    $textChars = max(1, $maxChars - 1);
+    // Calendar strips have a little more usable width than the old estimate.
+    // Keep single-day labels compact, but allow 12 characters across two days
+    // so labels such as "DISKETTE LAN" fit without needless truncation.
+    $textChars = max(5, ($days * 7) - 2);
 
     if (function_exists('mb_substr')) {
         $text = mb_substr($text, 0, $textChars, 'UTF-8');
@@ -388,7 +388,7 @@ $legalReady =
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>3ventz // <?= $year ?></title>
-    <link rel="stylesheet" href="/assets/style.css?v=mobile-cli-11">
+    <link rel="stylesheet" href="/assets/style.css?v=event-display-12">
 </head>
 <body>
     <main class="shell<?= $demoMode ? ' demo-mode' : '' ?>">

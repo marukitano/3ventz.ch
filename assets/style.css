@@ -333,6 +333,7 @@ a { color: inherit; }
 }
 
 .terminal-output {
+    touch-action: pan-y;
     position: absolute;
     display: block;
     left: 0;
@@ -2823,4 +2824,18 @@ html.rabbit-attack-active body {
 .terminal-suggestion {
     cursor: pointer;
     touch-action: manipulation;
+}
+
+
+@media (pointer: coarse) {
+    .terminal-suggestion {
+        display: inline-block;
+        padding: .2em .3em;
+        min-height: 1.4em;
+        touch-action: manipulation;
+    }
+
+    .terminal-output {
+        touch-action: pan-y;
+    }
 }

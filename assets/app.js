@@ -1283,7 +1283,9 @@
         const category = marker.dataset.eventCategory || '';
         const description = marker.dataset.eventDescription || '';
         const hasUrl = Boolean(marker.dataset.eventUrl);
+        const eventColor = getComputedStyle(marker).getPropertyValue('--event-color').trim();
 
+        eventTooltip.style.setProperty('--event-tooltip-color', eventColor || 'var(--cyan)');
         eventTooltip.replaceChildren();
 
         const heading = document.createElement('div');

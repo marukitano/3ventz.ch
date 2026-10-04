@@ -791,7 +791,7 @@
 
         // Mobile has no Tab key: tapping just behind "theme" performs both
         // desktop Tab steps and opens the theme picker immediately.
-        if (touchUi && trimmed.toLowerCase() === 'theme') {
+        if (touchUi && trimmed.trimEnd().toLowerCase() === 'theme') {
             input.value = 'theme ';
             suggestions = [...themes];
             suggestionIndex = 0;
@@ -892,12 +892,16 @@
         if (Math.hypot(dx, dy) > 12) return;
 
         const rect = input.getBoundingClientRect();
-        const textWidth = Math.ceil(inputSizer.getBoundingClientRect().width);
+        const previousSizerText = inputSizer.textContent;
+        inputSizer.textContent = input.value.trimEnd() || ' ';
+        const visibleTextWidth = Math.ceil(inputSizer.getBoundingClientRect().width);
+        inputSizer.textContent = previousSizerText;
+
         const tapX = event.clientX - rect.left + input.scrollLeft;
 
-        // Inside the rendered word = ordinary caret placement.
-        // A little space to its right = the touch equivalent of Tab.
-        if (tapX <= textWidth + 8) return;
+        // Only the visible glyphs count. Trailing spaces created by completion
+        // are intentionally excluded, so a second tap after "theme" opens choices.
+        if (tapX <= visibleTextWidth + 2) return;
 
         complete();
 

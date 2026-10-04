@@ -5,6 +5,7 @@
     const cursor = document.getElementById('terminal-cursor');
     const hint = document.getElementById('terminal-hint');
     const themeIndicator = document.getElementById('theme-indicator');
+    const nerdIndicator = document.getElementById('nerd-indicator');
     const navStack = document.querySelector('.nav-stack');
 
     if (!form || !input || !output) return;
@@ -51,9 +52,9 @@
             correct: 1
         },
         {
-            question: 'RFC 1149 transports IP over...?',
-            answers: ['ham radio', 'carrier pigeons', 'fax', 'sneakernet'],
-            correct: 1
+            question: 'Was ist unser Lieblingstier?',
+            answers: ['der Pinguin', 'der Tux', 'die Katze', 'das Capybara'],
+            correct: 0
         },
         {
             question: 'Vim: save + quit?',
@@ -61,7 +62,7 @@
             correct: 1
         },
         {
-            question: 'The Answer to Life, the Universe and Everything?',
+            question: 'Antwort auf alles?',
             answers: ['23', '404', '42', '1337'],
             correct: 2
         }
@@ -340,6 +341,12 @@
         }
     };
 
+    const updateNerdIndicator = () => {
+        if (!nerdIndicator) return;
+        nerdIndicator.hidden = !isHackUnlocked();
+        nerdIndicator.textContent = 'echo $nerd=true';
+    };
+
     const applySavedAppearance = () => {
         const themeKey = '3ventz-theme';
         const migrationKey = '3ventz-theme-default-hackers-v1';
@@ -393,7 +400,7 @@
         suggestionIndex = 0;
         suggestionLead = '';
         suggestionMode = 'quiz';
-        suggestionPrompt = 'Q' + (quizIndex + 1) + '/' + quizQuestions.length + ' ' + question.question + ' //';
+        suggestionPrompt = question.question + ' //';
         renderSuggestions();
     };
 
@@ -416,6 +423,7 @@
 
         localStorage.setItem(hackUnlockKey, '1');
         refreshCommands();
+        updateNerdIndicator();
         quizIndex = -1;
         renderMatrixBackground();
         say('ACCESS GRANTED // PLANET HACKED // matrix unlocked');
@@ -1034,6 +1042,7 @@
     applyCategoryFilters();
     applySavedAppearance();
     refreshCommands();
+    updateNerdIndicator();
     renderMatrixBackground();
     resizeInput();
     updateHint();

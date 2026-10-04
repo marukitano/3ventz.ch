@@ -2607,7 +2607,7 @@ html.rabbit-attack-active body {
             transparent 0 50%
         ) 0 0 / 4px 4px;
     image-rendering: pixelated;
-    animation: rabbit-block-jitter 155ms steps(2, end) infinite;
+    animation: rabbit-block-jitter 1100ms steps(2, end) infinite;
 }
 
 .rabbit-glitch-block.glitch-1 {

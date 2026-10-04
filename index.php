@@ -383,7 +383,7 @@ $legalReady =
     !empty($legal['email']);
 ?>
 <!doctype html>
-<html lang="de">
+<html lang="de" data-theme="hackers">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -422,7 +422,7 @@ $legalReady =
                 </div>
             </div>
             <div class="nav-stack">
-                <div class="theme-indicator" id="theme-indicator">echo $theme=sega</div>
+                <div class="theme-indicator" id="theme-indicator">echo $theme=hackers</div>
                 <nav class="year-nav" aria-label="Jahr wählen">
                     <a href="?year=<?= $year - 1 ?>">‹</a>
                     <strong><?= $year ?></strong>
@@ -464,6 +464,6 @@ $legalReady =
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=sega-1"></script>
+    <script src="/assets/app.js?v=hackers-default-1"></script>
 </body>
 </html>

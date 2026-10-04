@@ -1718,3 +1718,14 @@ footer a:hover,
     color: #18b8ff;
 }
 
+
+
+/* HACKERS // left-aligned tape labels */
+:root[data-theme="hackers"] .event-span-short-text {
+    left: 9px !important;
+    right: auto !important;
+    max-width: calc(100% - 18px) !important;
+    overflow: visible !important;
+    text-align: left !important;
+    z-index: 20 !important;
+}

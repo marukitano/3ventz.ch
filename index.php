@@ -347,7 +347,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
                                 <?php elseif ($eventShortText !== ''): ?>
-                                    <span class="event-span-short-text" aria-hidden="true"><?= h($eventShortText) ?></span>
+                                    <span class="event-span-short-text" aria-hidden="true"><?= h(ltrim($eventShortText, '>')) ?></span>
                                 <?php endif; ?>
                             </a>
                         <?php else: ?>
@@ -364,7 +364,7 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
                                 <?php if ($eventIconMarkup !== ''): ?>
                                     <span class="event-span-icon-overlay" aria-hidden="true"><?= $eventIconMarkup ?></span>
                                 <?php elseif ($eventShortText !== ''): ?>
-                                    <span class="event-span-short-text" aria-hidden="true"><?= h($eventShortText) ?></span>
+                                    <span class="event-span-short-text" aria-hidden="true"><?= h(ltrim($eventShortText, '>')) ?></span>
                                 <?php endif; ?>
                             </span>
                         <?php endif; ?>

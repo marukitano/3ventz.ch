@@ -370,7 +370,7 @@ a { color: inherit; }
     display: inline-block;
     width: max-content;
     white-space: nowrap;
-    animation: terminal-ticker-run 8s linear 1 both;
+    animation: terminal-ticker-run 8s linear infinite;
 }
 
 @keyframes terminal-ticker-run {

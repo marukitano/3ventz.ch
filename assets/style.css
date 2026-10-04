@@ -2641,7 +2641,7 @@ html.rabbit-attack-active body {
             transparent 0 50%
         ) 0 0 / 4px 4px;
     image-rendering: pixelated;
-    animation: rabbit-block-jitter 1100ms steps(2, end) infinite;
+    animation: rabbit-block-jitter 2800ms steps(2, end) infinite;
 }
 
 .rabbit-glitch-block.glitch-1 {
@@ -2684,7 +2684,7 @@ html.rabbit-attack-active body {
         background-position: 0 0;
     }
     50% {
-        transform: translate(var(--glitch-shift-x, 1px), var(--glitch-shift-y, 0));
+        transform: translate(var(--glitch-shift-x, 0), var(--glitch-shift-y, 0));
         background-position: 2px 1px;
     }
     100% {

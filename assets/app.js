@@ -12,7 +12,7 @@
 
     const state = window.THREEVENTZ || {};
     const root = document.documentElement;
-    const touchUi = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+    // A touchscreen laptop still has a fine primary pointer (trackpad/mouse).\n    // Do not switch the whole desktop layout into mobile-touch mode merely because\n    // navigator.maxTouchPoints is non-zero; that caused mobile JS to fight desktop CSS.\n    const touchUi = window.matchMedia('(pointer: coarse)').matches;
 
     const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari'];
     const hackUnlockKey = '3ventz-hack-unlocked';

@@ -3261,3 +3261,173 @@ html.rabbit-attack-active body {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
+
+
+/* AMIGA // Workbench 1.x / Amiga 500 pass */
+:root[data-theme="amiga"] {
+    --bg: #0055aa;
+    --panel: #c0c0c0;
+    --line: #ffffff;
+    --text: #ffffff;
+    --muted: #9fd0ff;
+    --cyan: #ffffff;
+    --green: #ffffff;
+    --pink: #ff8800;
+}
+
+:root[data-theme="amiga"] body,
+:root[data-theme="amiga"] .shell {
+    background: #0055aa !important;
+    color: #ffffff !important;
+    image-rendering: pixelated;
+}
+
+:root[data-theme="amiga"] .month {
+    position: relative;
+    overflow: hidden;
+    background: #0055aa !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 0 !important;
+    box-shadow:
+        2px 2px 0 #000000,
+        -1px -1px 0 #7fbfff !important;
+    padding-top: 20px;
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+:root[data-theme="amiga"] .month h2 {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 !important;
+    height: 18px;
+    min-height: 18px !important;
+    line-height: 18px !important;
+    padding: 0 18px !important;
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 0 !important;
+    border-bottom: 2px solid #6a6a6a !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-family: "Silkscreen", "Terminus", monospace !important;
+    font-size: clamp(.58rem, .66vw, .76rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    text-transform: uppercase;
+}
+
+:root[data-theme="amiga"] .month h2 span {
+    color: #000000 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font: inherit !important;
+}
+
+:root[data-theme="amiga"] .month h2::before,
+:root[data-theme="amiga"] .month h2::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    box-shadow: none !important;
+}
+
+:root[data-theme="amiga"] .month h2::before {
+    left: 4px;
+}
+
+:root[data-theme="amiga"] .month h2::after {
+    right: 4px;
+}
+
+:root[data-theme="amiga"] .weekdays {
+    color: #ffffff !important;
+    text-shadow: none !important;
+    font-family: "Silkscreen", "Terminus", monospace !important;
+    font-weight: 700 !important;
+}
+
+:root[data-theme="amiga"] .days {
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+}
+
+:root[data-theme="amiga"] .week-row {
+    height: 100%;
+    min-height: 0;
+}
+
+:root[data-theme="amiga"] .day,
+:root[data-theme="amiga"] .week-events {
+    height: 100%;
+    min-height: 0;
+}
+
+:root[data-theme="amiga"] .day {
+    background: transparent !important;
+    border-color: rgba(255,255,255,.28) !important;
+    color: #ffffff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+:root[data-theme="amiga"] .day::before,
+:root[data-theme="amiga"] .day::after {
+    background: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+:root[data-theme="amiga"] .number {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+
+:root[data-theme="amiga"] .event-span {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 0 !important;
+    box-shadow:
+        inset -1px -1px 0 #6a6a6a,
+        inset 1px 1px 0 #ffffff !important;
+    text-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+:root[data-theme="amiga"] .event-span:hover,
+:root[data-theme="amiga"] .event-span:focus-visible {
+    background: #ff8800 !important;
+    color: #000000 !important;
+}
+
+:root[data-theme="amiga"] .category-filter,
+:root[data-theme="amiga"] .category-filter.is-active,
+:root[data-theme="amiga"] footer {
+    text-shadow: none !important;
+}
+
+:root[data-theme="amiga"] .category-filter.is-active {
+    color: #ff8800 !important;
+}
+
+:root[data-theme="amiga"] .event-tooltip {
+    background: #c0c0c0 !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 0 !important;
+    box-shadow: 2px 2px 0 #000000 !important;
+    text-shadow: none !important;
+}

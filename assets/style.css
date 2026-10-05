@@ -3223,3 +3223,21 @@ html.rabbit-attack-active body {
         text-align: left;
     }
 }
+
+
+/* SEGA // centered full-page logo watermark */
+:root[data-theme="sega"] .shell {
+    position: relative;
+    isolation: isolate;
+}
+
+:root[data-theme="sega"] .shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    background: url("/assets/sega-logo.png") center center / 48% auto no-repeat;
+    opacity: .10;
+    filter: blur(3px);
+}

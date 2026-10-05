@@ -3508,10 +3508,14 @@ html.rabbit-attack-active body {
     --today-mark-text: #4d2608;
 }
 
-:root .day.is-today {
+:root .day.is-today:not(.is-today-on-event) {
     box-shadow:
         inset 0 0 0 2px var(--today-mark),
         inset 0 0 10px color-mix(in srgb, var(--today-mark) 24%, transparent) !important;
+}
+
+:root .day.is-today.is-today-on-event {
+    box-shadow: none !important;
 }
 
 :root .day.is-today .number {

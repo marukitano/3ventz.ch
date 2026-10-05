@@ -3431,3 +3431,21 @@ html.rabbit-attack-active body {
     box-shadow: 2px 2px 0 #000000 !important;
     text-shadow: none !important;
 }
+
+
+/* AMIGA // centered logo watermark */
+:root[data-theme="amiga"] .shell {
+    position: relative;
+    isolation: isolate;
+}
+
+:root[data-theme="amiga"] .shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    background: url("/assets/amiga-logo.png") center center / 72% auto no-repeat;
+    opacity: .10;
+    filter: blur(3px);
+}

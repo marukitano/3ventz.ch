@@ -2720,6 +2720,30 @@ footer a:hover,
 
 
 /* ATARI // warm gold striped event markers */
+/* ATARI // subtle Fuji watermark across the complete calendar */
+:root[data-theme="atari"] .calendar-grid {
+    position: relative;
+    isolation: isolate;
+}
+
+:root[data-theme="atari"] .calendar-grid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: url("/assets/atari-fuji.svg") center / 66% auto no-repeat;
+    opacity: .055;
+    filter: blur(4px);
+    transform: scale(1.04);
+    transform-origin: center;
+}
+
+:root[data-theme="atari"] .calendar-grid > .month {
+    position: relative;
+    z-index: 1;
+}
+
 :root[data-theme="atari"] .event-span {
     border: 1px solid #5a2f0b !important;
     border-radius: 0 !important;

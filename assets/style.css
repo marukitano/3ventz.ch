@@ -2731,13 +2731,13 @@ footer a:hover,
 :root[data-theme="atari"] .shell::before {
     content: "";
     position: absolute;
-    top: -3%;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 20;
     pointer-events: none;
-    background: url("/assets/atari-fuji.svg?v=flush-top-7") center top / 48% auto no-repeat;
+    background: url("/assets/atari-fuji.svg?v=flush-top-8") center top / 48% auto no-repeat;
     opacity: .10;
     filter: blur(3px);
 }

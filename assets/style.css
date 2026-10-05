@@ -2732,10 +2732,10 @@ footer a:hover,
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    background: url("/assets/atari-fuji.svg") center top / 78% auto no-repeat;
+    background: url("/assets/atari-fuji.svg") center / 48% auto no-repeat;
     opacity: .055;
     filter: blur(3px);
-    transform: scale(1.08);
+    transform: translateY(-58px) scale(1.04);
     transform-origin: center top;
 }
 

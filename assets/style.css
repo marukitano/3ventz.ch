@@ -3446,6 +3446,6 @@ html.rabbit-attack-active body {
     z-index: 20;
     pointer-events: none;
     background: url("/assets/amiga-logo.png") center center / 72% auto no-repeat;
-    opacity: .10;
-    filter: blur(3px);
+    opacity: .18;
+    filter: blur(2px);
 }

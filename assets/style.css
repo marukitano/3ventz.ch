@@ -3241,3 +3241,23 @@ html.rabbit-attack-active body {
     opacity: .10;
     filter: blur(3px);
 }
+
+
+/* C64 // centered, hard-edged Commodore watermark */
+:root[data-theme="c64"] .shell {
+    position: relative;
+    isolation: isolate;
+}
+
+:root[data-theme="c64"] .shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    background: url("/assets/c64-logo.svg") center center / 72% auto no-repeat;
+    opacity: .10;
+    filter: none !important;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}

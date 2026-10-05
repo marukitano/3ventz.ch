@@ -447,7 +447,7 @@ $indexSchema = [
     <meta name="twitter:title" content="<?= h($pageTitle) ?>">
     <meta name="twitter:description" content="<?= h($pageDescription) ?>">
 
-    <link rel="stylesheet" href="/assets/style.css?v=atari-watermark-4">
+    <link rel="stylesheet" href="/assets/style.css?v=atari-watermark-5">
     <script type="application/ld+json"><?= json_encode($indexSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
 </head>
 <body>

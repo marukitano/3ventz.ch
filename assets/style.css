@@ -2738,7 +2738,7 @@ footer a:hover,
     z-index: 20;
     pointer-events: none;
     background: url("/assets/atari-fuji.svg?v=flush-top-4") center top / 48% auto no-repeat;
-    opacity: .055;
+    opacity: .08;
     filter: blur(3px);
 }
 

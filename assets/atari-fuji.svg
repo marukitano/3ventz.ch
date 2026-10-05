@@ -1,7 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 360" role="img" aria-label="Atari-style Fuji mark">
-  <g fill="#ffffff">
-    <path d="M238 34h36c5 72 16 137 35 195 15 47 37 84 65 111h-58c-25-31-45-69-59-115-14-45-21-95-19-151z"/>
-    <path d="M155 74c33 8 58 30 76 65-8 34-11 69-9 104-16-37-38-62-66-75-18-8-38-12-59-11 10-35 29-63 58-83z"/>
-    <path d="M357 74c29 20 48 48 58 83-21-1-41 3-59 11-28 13-50 38-66 75 2-35-1-70-9-104 18-35 43-57 76-65z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 760" role="img" aria-label="Atari logo">
+  <g fill="#ed1c24">
+    <!-- Fuji mark -->
+    <path d="M292 60h116v415H292z"/>
+    <path d="M200 60h42v92c0 116-18 203-55 261-34 54-87 90-159 104v-67c55-13 94-42 120-88 35-61 52-145 52-252z"/>
+    <path d="M458 60h42v50c0 107 17 191 52 252 26 46 65 75 120 88v67c-72-14-125-50-159-104-37-58-55-145-55-261z"/>
+    <!-- ATARI wordmark approximation matching supplied stacked logo -->
+    <path d="M20 720l70-218h58l72 218h-55l-14-49H87l-14 49zm80-95h38l-19-68z"/>
+    <path d="M204 502h141v48h-44v170h-54V550h-43z"/>
+    <path d="M324 720l70-218h58l72 218h-55l-14-49h-64l-14 49zm80-95h38l-19-68z"/>
+    <path d="M511 502h77c44 0 72 25 72 63 0 31-16 50-43 59l55 96h-61l-65-118v118h-35zm35 43v49h27c20 0 31-8 31-24 0-17-11-25-31-25z"/>
+    <path d="M658 502h42v218h-42z"/>
+    <circle cx="681" cy="690" r="17" fill="none" stroke="#ed1c24" stroke-width="5"/>
+    <path d="M673 700v-21h9c8 0 12 4 12 10 0 4-2 7-6 8l7 10h-7l-6-10h-3v10zm6-15v7h3c4 0 6-1 6-4s-2-3-6-3z"/>
   </g>
 </svg>

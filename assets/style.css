@@ -2984,7 +2984,7 @@ html.rabbit-attack-active body {
 
 
 /* Mobile CLI: use a real, stable native text input instead of the desktop fake caret. */
-@media (pointer: coarse) {
+@media (max-width: 719px) {
     .brand-command-wrap {
         position: relative;
         flex: 1 1 100%;
@@ -3026,7 +3026,7 @@ html.rabbit-attack-active body {
 
 /* Mobile terminal output lives in normal document flow so menus and quiz choices
    cannot be clipped below the command line. */
-@media (pointer: coarse) {
+@media (max-width: 719px) {
     .brand-terminal {
         overflow: visible;
         flex-wrap: wrap;
@@ -3058,7 +3058,7 @@ html.rabbit-attack-active body {
 
 /* Mobile header: give the CLI the full viewport width.
    Status/year navigation moves onto its own row below it. */
-@media (pointer: coarse) {
+@media (max-width: 719px) {
     .topbar {
         flex-wrap: wrap;
         overflow: visible;
@@ -3089,7 +3089,7 @@ html.rabbit-attack-active body {
 
 
 /* Mobile choices are tap-only now; wrap instead of horizontal scrolling. */
-@media (pointer: coarse) {
+@media (max-width: 719px) {
     .terminal-output {
         overflow-x: visible !important;
     }
@@ -3104,7 +3104,7 @@ html.rabbit-attack-active body {
 
 
 /* Mobile manual: use the same multiline choice layout as the quiz. */
-@media (pointer: coarse) {
+@media (max-width: 719px) {
     .terminal-suggestion-list.manual-list {
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3124,7 +3124,7 @@ html.rabbit-attack-active body {
 
 
 /* Mobile quiz: fixed 2x2 answer grid below the question. */
-@media (pointer: coarse) {
+@media (max-width: 719px) {
     .terminal-output.is-quiz .terminal-suggestion-prompt {
         display: block;
         width: 100%;

@@ -2731,14 +2731,15 @@ footer a:hover,
 :root[data-theme="atari"] .shell::before {
     content: "";
     position: absolute;
-    inset: 0;
+    top: -18%;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 20;
     pointer-events: none;
-    background: url("/assets/atari-fuji.svg?v=flush-top-3") center top / 48% auto no-repeat;
+    background: url("/assets/atari-fuji.svg?v=flush-top-4") center top / 48% auto no-repeat;
     opacity: .055;
     filter: blur(3px);
-    transform: translateY(-14%) scale(1.04);
-    transform-origin: center top;
 }
 
 :root[data-theme="atari"] .event-span {

@@ -1380,6 +1380,36 @@
         }
     });
 
+    const markCurrentDay = () => {
+        const now = new Date();
+        const calendarYear = Number(window.THREEVENTZ?.year || 0);
+
+        document.querySelectorAll('.day.is-today').forEach((day) => {
+            day.classList.remove('is-today');
+            day.querySelector('.number[aria-current="date"]')?.removeAttribute('aria-current');
+        });
+
+        if (calendarYear !== now.getFullYear()) return;
+
+        const months = document.querySelectorAll('.month');
+        const month = months[now.getMonth()];
+        if (!month) return;
+
+        const number = month.querySelector(`.number[data-day="${now.getDate()}"]`);
+        const day = number?.closest('.day');
+        if (!day || !number) return;
+
+        day.classList.add('is-today');
+        number.setAttribute('aria-current', 'date');
+        day.setAttribute('title', 'Heute');
+    };
+
+    markCurrentDay();
+    window.setInterval(markCurrentDay, 60000);
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) markCurrentDay();
+    });
+
     restoreCategoryFilters();
     applyCategoryFilters();
     applySavedAppearance();

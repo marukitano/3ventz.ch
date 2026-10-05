@@ -3474,3 +3474,60 @@ html.rabbit-attack-active body {
     transform: rotate(-16deg);
     transform-origin: center center;
 }
+
+
+/* GLOBAL // current day marker */
+:root {
+    --today-mark: #7ef9ff;
+    --today-mark-text: #061016;
+}
+
+:root[data-theme="hackers"] {
+    --today-mark: #d8ff3d;
+    --today-mark-text: #11160a;
+}
+
+:root[data-theme="sega"],
+:root[data-theme="default"] {
+    --today-mark: #ffe229;
+    --today-mark-text: #05285f;
+}
+
+:root[data-theme="c64"] {
+    --today-mark: #a9a3e9;
+    --today-mark-text: #40318d;
+}
+
+:root[data-theme="amiga"] {
+    --today-mark: #ff8800;
+    --today-mark-text: #000000;
+}
+
+:root[data-theme="atari"] {
+    --today-mark: #f2c14e;
+    --today-mark-text: #4d2608;
+}
+
+:root .day.is-today {
+    box-shadow:
+        inset 0 0 0 2px var(--today-mark),
+        inset 0 0 10px color-mix(in srgb, var(--today-mark) 24%, transparent) !important;
+}
+
+:root .day.is-today .number {
+    position: relative;
+    z-index: 8;
+    display: inline-block;
+    padding: 1px 4px;
+    background: var(--today-mark) !important;
+    color: var(--today-mark-text) !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+:root[data-theme="c64"] .day.is-today .number,
+:root[data-theme="amiga"] .day.is-today .number,
+:root[data-theme="atari"] .day.is-today .number {
+    border-radius: 0;
+}

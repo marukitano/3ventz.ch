@@ -1253,6 +1253,7 @@
             button.setAttribute('aria-pressed', active ? 'true' : 'false');
             saveCategoryFilters();
             applyCategoryFilters();
+            markCurrentDay();
             if (!touchUi) focusTerminalInput();
         });
     });
@@ -1385,7 +1386,7 @@
         const calendarYear = Number(window.THREEVENTZ?.year || 0);
 
         document.querySelectorAll('.day.is-today').forEach((day) => {
-            day.classList.remove('is-today');
+            day.classList.remove('is-today', 'is-today-on-event');
             day.querySelector('.number[aria-current="date"]')?.removeAttribute('aria-current');
         });
 
@@ -1399,12 +1400,22 @@
         const day = number?.closest('.day');
         if (!day || !number) return;
 
+        const today = now.getDate();
+        const weekRow = day.closest('.week-row');
+        const hasVisibleEvent = weekRow
+            ? [...weekRow.querySelectorAll('.event-span:not(.category-filtered-out)')].some((marker) => {
+                const start = Number(marker.dataset.segmentStartDay || 0);
+                const end = Number(marker.dataset.segmentEndDay || 0);
+                return start <= today && today <= end;
+            })
+            : false;
+
         day.classList.add('is-today');
+        day.classList.toggle('is-today-on-event', hasVisibleEvent);
         number.setAttribute('aria-current', 'date');
         day.setAttribute('title', 'Heute');
     };
 
-    markCurrentDay();
     window.setInterval(markCurrentDay, 60000);
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) markCurrentDay();
@@ -1412,6 +1423,7 @@
 
     restoreCategoryFilters();
     applyCategoryFilters();
+    markCurrentDay();
     applySavedAppearance();
     refreshCommands();
     updateNerdIndicator();

@@ -3469,7 +3469,7 @@ html.rabbit-attack-active body {
     z-index: 20;
     pointer-events: none;
     background: url("/assets/hackers-cyber-band.svg") left center / auto 100% repeat-x;
-    opacity: .06;
+    opacity: .035;
     filter: blur(3px);
     transform: rotate(-16deg);
     transform-origin: center center;

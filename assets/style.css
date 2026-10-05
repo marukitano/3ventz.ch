@@ -3449,3 +3449,28 @@ html.rabbit-attack-active body {
     opacity: .18;
     filter: blur(2px);
 }
+
+
+/* HACKERS // diagonal CYBER band watermark */
+:root[data-theme="hackers"] .calendar-grid {
+    position: relative;
+    isolation: isolate;
+}
+
+:root[data-theme="hackers"] .calendar-grid::before {
+    content: "";
+    position: absolute;
+    left: -10%;
+    top: 43%;
+    width: 120%;
+    height: 14%;
+    min-height: 92px;
+    max-height: 138px;
+    z-index: 20;
+    pointer-events: none;
+    background: url("/assets/hackers-cyber-band.svg") left center / auto 100% repeat-x;
+    opacity: .10;
+    filter: blur(3px);
+    transform: rotate(-16deg);
+    transform-origin: center center;
+}

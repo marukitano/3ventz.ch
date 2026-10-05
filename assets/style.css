@@ -3531,3 +3531,9 @@ html.rabbit-attack-active body {
 :root[data-theme="atari"] .day.is-today .number {
     border-radius: 0;
 }
+
+
+/* HACKERS // month frames match current-day yellow */
+:root[data-theme="hackers"] .month {
+    border: 2px solid #d8ff3d !important;
+}

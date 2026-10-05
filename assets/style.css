@@ -3255,7 +3255,7 @@ html.rabbit-attack-active body {
     inset: 0;
     z-index: 20;
     pointer-events: none;
-    background: url("/assets/c64-logo.svg") center center / 72% auto no-repeat;
+    background: url("/assets/c64-logo.svg") center center / 58% auto no-repeat;
     opacity: .10;
     filter: none !important;
     image-rendering: pixelated;

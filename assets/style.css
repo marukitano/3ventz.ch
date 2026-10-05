@@ -2099,6 +2099,30 @@ footer a:hover,
         0 0 0 1px rgba(2,32,82,.36) !important;
 }
 
+/* SEGA // use the full month height for the six calendar weeks.
+   Other themes intentionally keep their existing layout untouched. */
+:root[data-theme="sega"] .month {
+    grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+:root[data-theme="sega"] .days {
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+}
+
+:root[data-theme="sega"] .week-row {
+    height: 100%;
+    min-height: 0;
+}
+
+:root[data-theme="sega"] .day,
+:root[data-theme="sega"] .week-events {
+    min-height: 0;
+    height: 100%;
+}
+
 
 /* C64 // authentic BASIC screen pass */
 :root[data-theme="c64"] {

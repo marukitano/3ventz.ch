@@ -528,6 +528,6 @@ $indexSchema = [
             pageViewNumber: <?= $pageViewNumber ?>
         };
     </script>
-    <script src="/assets/app.js?v=touch-laptop-fix-1"></script>
+    <script src="/assets/app.js?v=touch-laptop-fix-2"></script>
 </body>
 </html>

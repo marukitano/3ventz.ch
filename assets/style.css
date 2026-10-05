@@ -3518,6 +3518,10 @@ html.rabbit-attack-active body {
     box-shadow: none !important;
 }
 
+:root .day.is-today.is-today-on-event .number {
+    visibility: hidden !important;
+}
+
 :root .day.is-today .number {
     position: relative;
     z-index: 8;

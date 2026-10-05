@@ -2403,6 +2403,30 @@ footer a:hover,
     padding-top: 20px;
 }
 
+/* AMIGA // h2 is absolutely positioned, so only weekdays + days participate
+   in the month grid. Let the day grid consume all remaining window height. */
+:root[data-theme="amiga"] .month {
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+:root[data-theme="amiga"] .days {
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+}
+
+:root[data-theme="amiga"] .week-row {
+    height: 100%;
+    min-height: 0;
+}
+
+:root[data-theme="amiga"] .day,
+:root[data-theme="amiga"] .week-events {
+    height: 100%;
+    min-height: 0;
+}
+
 /* White Workbench title bar with orange close gadget. */
 :root[data-theme="amiga"] .month h2 {
     position: absolute !important;

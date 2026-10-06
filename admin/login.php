@@ -27,13 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>3ventz // admin login</title>
+    <title>tech3ventz // admin login</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
 <main class="admin-shell">
     <section class="admin-card">
-        <h1>3VENTZ // ADMIN</h1>
+        <h1>TECH3VENTZ // ADMIN</h1>
         <?php if ($error): ?><p class="error"><?= h($error) ?></p><?php endif; ?>
         <form method="post">
             <label>

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /config.local.php
 
-Sitemap: https://3ventz.ch/sitemap.xml
+Sitemap: https://techtech3ventz.ch/sitemap.xml

@@ -16,7 +16,7 @@ if (!$legalReady) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Impressum + Datenschutz // 3ventz.ch</title>
+    <title>Impressum + Datenschutz // tech3ventz.ch</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
@@ -26,7 +26,7 @@ if (!$legalReady) {
     <section class="legal-community">
         <h2>Von der Community für die Community</h2>
         <p>
-            3ventz.ch ist ein unabhängiges Community-Projekt ohne Werbung.
+            tech3ventz.ch ist ein unabhängiges Community-Projekt ohne Werbung.
             Jeder darf passende Hacker-, Maker-, Retro-, Coding- und Tech-Events einreichen.
             Die Seite bleibt kostenlos – für Besucherinnen und Besucher genauso wie für Veranstalter.
         </p>
@@ -60,7 +60,7 @@ if (!$legalReady) {
         </p>
 
         <p>
-            3ventz.ch verwendet keinen Analyse- oder Werbetracker. Für den sichtbaren Besucherzähler
+            tech3ventz.ch verwendet keinen Analyse- oder Werbetracker. Für den sichtbaren Besucherzähler
             wird bei jedem Aufruf lediglich ein gemeinsamer Zähler für das jeweilige Kalenderjahr um
             eins erhöht. Dabei wird für diesen Zähler keine Besucher-ID, IP-Adresse oder sonstige
             Kennung gespeichert.
@@ -69,7 +69,7 @@ if (!$legalReady) {
         <p>
             Die ausgewählte Darstellung («Theme») wird ausschliesslich lokal im Browser mittels
             localStorage gespeichert, damit die Auswahl beim nächsten Besuch wiederhergestellt werden
-            kann. Diese Theme-Einstellung wird nicht an 3ventz.ch übertragen und nicht zu Werbe- oder
+            kann. Diese Theme-Einstellung wird nicht an tech3ventz.ch übertragen und nicht zu Werbe- oder
             Profilingzwecken verwendet.
         </p>
 
@@ -84,7 +84,7 @@ if (!$legalReady) {
         </p>
     <?php endif; ?>
 
-    <a class="legal-back" href="/">← back to 3ventz</a>
+    <a class="legal-back" href="/">← back to tech3ventz</a>
 </main>
 </body>
 </html>

@@ -58,7 +58,7 @@ function site_base_url(): string
         return rtrim($configured, '/');
     }
 
-    return 'https://3ventz.ch';
+    return 'https://tech3ventz.ch';
 }
 
 function event_slug(array $event): string

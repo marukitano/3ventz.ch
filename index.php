@@ -388,7 +388,7 @@ $currentYear = (int)date('Y');
 $canonicalUrl = $year === $currentYear
     ? $baseUrl . '/'
     : $baseUrl . '/?year=' . $year;
-$pageTitle = '3ventz // Hacker-, Maker- & Tech-Events ' . $year;
+$pageTitle = 'tech3ventz // Hacker-, Maker- & Tech-Events ' . $year;
 $pageDescription = 'Jahreskalender ' . $year . ' für Hacker-, Maker-, Retro-, LAN-, Coding-, Demo- und weitere Tech-Events in der Schweiz und Umgebung.';
 
 $itemList = [];
@@ -410,14 +410,14 @@ $indexSchema = [
             '@type' => 'WebSite',
             '@id' => $baseUrl . '/#website',
             'url' => $baseUrl . '/',
-            'name' => '3ventz',
+            'name' => 'tech3ventz',
             'description' => 'Yearly calendar for hacker, maker and technology events.',
             'inLanguage' => 'de-CH',
         ],
         [
             '@type' => 'ItemList',
             '@id' => $canonicalUrl . '#events',
-            'name' => '3ventz Events ' . $year,
+            'name' => 'tech3ventz Events ' . $year,
             'url' => $canonicalUrl,
             'numberOfItems' => count($itemList),
             'itemListElement' => $itemList,
@@ -437,7 +437,7 @@ $indexSchema = [
 
     <meta property="og:type" content="website">
     <meta property="og:locale" content="de_CH">
-    <meta property="og:site_name" content="3ventz">
+    <meta property="og:site_name" content="tech3ventz">
     <meta property="og:title" content="<?= h($pageTitle) ?>">
     <meta property="og:description" content="<?= h($pageDescription) ?>">
     <meta property="og:url" content="<?= h($canonicalUrl) ?>">
@@ -464,7 +464,7 @@ $indexSchema = [
                             autocapitalize="none"
                             autocomplete="off"
                             enterkeyhint="go"
-                            aria-label="3ventz command line"
+                            aria-label="tech3ventz command line"
                             placeholder=""
                         >
                         <span class="cursor" id="terminal-cursor">_</span>
@@ -511,7 +511,7 @@ $indexSchema = [
 
         <footer>
             <span>
-                3ventz.ch
+                tech3ventz.ch
                 <?php if ($legalReady): ?>
                     · <a href="/impressum.php">impressum + datenschutz</a>
                 <?php endif; ?>

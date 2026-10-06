@@ -2,6 +2,8 @@
 
 A tiny cyberpunk-style yearly calendar for hacker, maker, open-source and security events.
 
+🌐 **Live:** https://tech3ventz.ch/
+
 ## V1
 
 - Public one-page yearly calendar

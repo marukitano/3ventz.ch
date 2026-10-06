@@ -111,10 +111,10 @@ function ics_fold(string $line): string
 $calendar = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//3VENTZ//Event Export//DE',
+    'PRODID:-//TECH3VENTZ//Event Export//DE',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    'X-WR-CALNAME:' . ics_escape('3VENTZ ' . $year . ($filterRequested && $selectedCategories ? ' // ' . implode('+', $selectedCategories) : '')),
+    'X-WR-CALNAME:' . ics_escape('TECH3VENTZ ' . $year . ($filterRequested && $selectedCategories ? ' // ' . implode('+', $selectedCategories) : '')),
 ];
 
 $stamp = gmdate('Ymd\\THis\\Z');
@@ -132,7 +132,7 @@ foreach ($events as $event) {
     ]);
 
     $calendar[] = 'BEGIN:VEVENT';
-    $calendar[] = 'UID:' . sha1($uidSeed) . '@3ventz.ch';
+    $calendar[] = 'UID:' . sha1($uidSeed) . '@tech3ventz.ch';
     $calendar[] = 'DTSTAMP:' . $stamp;
     $calendar[] = 'DTSTART;VALUE=DATE:' . ics_date($start->format('Y-m-d'));
     $calendar[] = 'DTEND;VALUE=DATE:' . ics_date($exclusiveEnd->format('Y-m-d'));
@@ -156,7 +156,7 @@ foreach ($events as $event) {
 $calendar[] = 'END:VCALENDAR';
 
 header('Content-Type: text/calendar; charset=utf-8');
-header('Content-Disposition: attachment; filename="3ventz_' . $year . '.ics"');
+header('Content-Disposition: attachment; filename="tech3ventz_' . $year . '.ics"');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 header('Pragma: no-cache');
 

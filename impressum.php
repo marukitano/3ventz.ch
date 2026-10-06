@@ -5,7 +5,6 @@ require __DIR__ . '/lib/bootstrap.php';
 $legal = $config['legal'] ?? [];
 $legalReady =
     !empty($legal['name']) &&
-    !empty($legal['address']) &&
     !empty($legal['email']);
 
 if (!$legalReady) {
@@ -24,12 +23,25 @@ if (!$legalReady) {
 <main class="legal-page">
     <h1>impressum + datenschutz</h1>
 
+    <section class="legal-community">
+        <h2>Von der Community für die Community</h2>
+        <p>
+            3ventz.ch ist ein unabhängiges Community-Projekt ohne Werbung.
+            Jeder darf passende Hacker-, Maker-, Retro-, Coding- und Tech-Events einreichen.
+            Die Seite bleibt kostenlos – für Besucherinnen und Besucher genauso wie für Veranstalter.
+        </p>
+        <p>
+            Wir verkaufen keine Personendaten und verwenden sie nicht für Werbung oder Profiling.
+            Es gibt keine Werbetracker und keine versteckten Nutzerprofile.
+        </p>
+    </section>
+
     <?php if (!$legalReady): ?>
         <p>Die rechtlichen Kontaktdaten sind noch nicht konfiguriert.</p>
     <?php else: ?>
         <h2>Impressum</h2>
         <address>
-            <?= nl2br(h((string)$legal['name'] . "\n" . (string)$legal['address'])) ?><br>
+            <?= h((string)$legal['name']) ?><br>
             E-Mail: <a href="mailto:<?= h((string)$legal['email']) ?>"><?= h((string)$legal['email']) ?></a>
         </address>
 
@@ -68,7 +80,7 @@ if (!$legalReady) {
 
         <p>
             Betroffene Personen können sich für Auskunft, Berichtigung oder Löschung ihrer bei uns
-            bearbeiteten Personendaten an die oben angegebene Kontaktadresse wenden.
+            bearbeiteten Personendaten an die oben angegebene E-Mail-Adresse wenden.
         </p>
     <?php endif; ?>
 

@@ -381,7 +381,6 @@ function month_calendar(int $year, int $month, array $eventsByDate): string
 $legal = $config['legal'] ?? [];
 $legalReady =
     !empty($legal['name']) &&
-    !empty($legal['address']) &&
     !empty($legal['email']);
 
 $baseUrl = site_base_url();

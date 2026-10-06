@@ -1,4 +1,4 @@
-# 3ventz.ch
+# tech3ventz.ch
 
 A tiny cyberpunk-style yearly calendar for hacker, maker, open-source and security events.
 

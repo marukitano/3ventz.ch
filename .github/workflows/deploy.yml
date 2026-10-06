@@ -1,4 +1,4 @@
-name: Deploy 3ventz.ch
+name: Deploy tech3ventz.ch
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 # Only the newest production deploy matters. If several commits arrive quickly,
 # cancel the older deploy and deploy the current main branch only.
 concurrency:
-  group: 3ventz-production-deploy
+  group: tech3ventz-production-deploy
   cancel-in-progress: true
 
 jobs:

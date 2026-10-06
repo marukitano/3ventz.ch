@@ -1,8 +1,8 @@
-# 3ventz
+# tech3ventz
 
-3ventz is a public yearly calendar for hacker, maker, retro-computing, LAN, coding, music, demo-scene and related technology events, with a focus on Switzerland and nearby communities.
+tech3ventz is a public yearly calendar for hacker, maker, retro-computing, LAN, coding, music, demo-scene and related technology events, with a focus on Switzerland and nearby communities.
 
-Canonical site: https://3ventz.ch/
-Event sitemap: https://3ventz.ch/sitemap.xml
+Canonical site: https://techtech3ventz.ch/
+Event sitemap: https://techtech3ventz.ch/sitemap.xml
 
 Individual events have crawlable detail pages under /event/ and may link to the organizer's official website. Event dates, categories, locations and descriptions come from the same database as the public yearly calendar.

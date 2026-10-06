@@ -92,13 +92,13 @@ $backYear = (int)$start->format('Y');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title><?= h($event['title']) ?> // 3ventz</title>
+    <title><?= h($event['title']) ?> // tech3ventz</title>
     <meta name="description" content="<?= h($metaDescription) ?>">
     <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
     <link rel="canonical" href="<?= h($canonicalUrl) ?>">
 
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="3ventz">
+    <meta property="og:site_name" content="tech3ventz">
     <meta property="og:title" content="<?= h($event['title']) ?>">
     <meta property="og:description" content="<?= h($metaDescription) ?>">
     <meta property="og:url" content="<?= h($canonicalUrl) ?>">
@@ -112,7 +112,7 @@ $backYear = (int)$start->format('Y');
 </head>
 <body>
     <main class="event-detail-shell">
-        <a class="event-detail-back" href="/<?= $backYear === (int)date('Y') ? '' : '?year=' . $backYear ?>">← 3ventz // <?= $backYear ?></a>
+        <a class="event-detail-back" href="/<?= $backYear === (int)date('Y') ? '' : '?year=' . $backYear ?>">← tech3ventz // <?= $backYear ?></a>
 
         <article class="event-detail-card" style="--event-color:<?= h((string)$event['color']) ?>">
             <div class="event-detail-tape" aria-hidden="true"></div>

@@ -53,7 +53,7 @@ function admin_date_display(?string $date): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>3ventz // admin</title>
+    <title>tech3ventz // admin</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body class="admin-page">

@@ -4,6 +4,10 @@ A tiny cyberpunk-style yearly calendar for hacker, maker, open-source and securi
 
 🌐 **Live:** https://tech3ventz.ch/
 
+<a href="https://tech3ventz.ch/">
+  <img src="doc/Screenshot%20from%202026-10-06%2018-31-27.png" alt="tech3ventz.ch yearly calendar" width="100%">
+</a>
+
 ## V1
 
 - Public one-page yearly calendar

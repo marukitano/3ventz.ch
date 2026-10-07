@@ -92,6 +92,7 @@ $backYear = (int)$start->format('Y');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon.png">
     <title><?= h($event['title']) ?> // tech3ventz</title>
     <meta name="description" content="<?= h($metaDescription) ?>">
     <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">

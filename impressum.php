@@ -16,6 +16,7 @@ if (!$legalReady) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon.png">
     <title>Impressum + Datenschutz // tech3ventz.ch</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>

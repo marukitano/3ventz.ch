@@ -26,8 +26,15 @@ if ($id > 0) {
         exit('Dieses Event darfst du nicht löschen.');
     }
 
-    $stmt = $pdo->prepare('DELETE FROM events WHERE id = ?');
-    $stmt->execute([$id]);
+    if (is_super_admin()) {
+        $stmt = $pdo->prepare('DELETE FROM events WHERE id = ?');
+        $stmt->execute([$id]);
+    } else {
+        $stmt = $pdo->prepare('DELETE FROM events WHERE id = ? AND owner_user_id = ?');
+        $stmt->execute([$id, current_user_id()]);
+    }
+
+    audit_event('event.delete', $id, (string)($event['title'] ?? ''));
 }
 
 header('Location: /admin/');

@@ -90,7 +90,10 @@ function admin_date_display(?string $date): string
         <a class="button secondary" href="/">← Kalender</a>
         <div class="actions">
             <span><?= h(current_user_name()) ?></span>
-            <?php if (is_super_admin()): ?><a class="button secondary" href="/admin/users.php">Users</a><?php endif; ?>
+            <?php if (is_super_admin()): ?>
+                <a class="button secondary" href="/admin/audit.php">Audit</a>
+                <a class="button secondary" href="/admin/users.php">Users</a>
+            <?php endif; ?>
             <a class="button secondary" href="/admin/logout.php">Logout</a>
         </div>
     </div>

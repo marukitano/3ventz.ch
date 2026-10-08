@@ -27,7 +27,7 @@ if (!$demoMode) {
         ]
     );
 
-    // Lightweight schema migrations for installations that predate newer event fields.
+    // Lightweight schema migrations for older installations.
     $shortTextColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'short_text'")->fetch();
     if (!$shortTextColumn) {
         $pdo->exec("ALTER TABLE events ADD COLUMN short_text VARCHAR(64) NULL AFTER icon");
@@ -36,6 +36,24 @@ if (!$demoMode) {
     $locationColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'location'")->fetch();
     if (!$locationColumn) {
         $pdo->exec("ALTER TABLE events ADD COLUMN location VARCHAR(255) NULL AFTER category");
+    }
+
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS users (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(80) NOT NULL UNIQUE,
+            display_name VARCHAR(120) NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            active TINYINT(1) NOT NULL DEFAULT 1,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    );
+
+    $ownerColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'owner_user_id'")->fetch();
+    if (!$ownerColumn) {
+        $pdo->exec("ALTER TABLE events ADD COLUMN owner_user_id INT UNSIGNED NULL AFTER short_text");
+        $pdo->exec("ALTER TABLE events ADD INDEX idx_events_owner_user_id (owner_user_id)");
     }
 }
 
@@ -47,7 +65,6 @@ function h(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
-
 
 function site_base_url(): string
 {
@@ -102,6 +119,25 @@ function xml_h(string $value): string
     return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
 }
 
+function is_super_admin(): bool
+{
+    return !empty($_SESSION['is_admin']);
+}
+
+function current_user_id(): ?int
+{
+    return empty($_SESSION['user_id']) ? null : (int)$_SESSION['user_id'];
+}
+
+function current_user_name(): string
+{
+    if (is_super_admin()) {
+        return 'Admin';
+    }
+
+    return (string)($_SESSION['display_name'] ?? $_SESSION['username'] ?? 'User');
+}
+
 function admin_required(): void
 {
     global $demoMode;
@@ -111,10 +147,32 @@ function admin_required(): void
         exit('Admin is disabled in local demo mode.');
     }
 
-    if (empty($_SESSION['is_admin'])) {
+    if (!is_super_admin() && current_user_id() === null) {
         header('Location: /admin/login.php');
         exit;
     }
+}
+
+function super_admin_required(): void
+{
+    admin_required();
+
+    if (!is_super_admin()) {
+        http_response_code(403);
+        exit('Nur der Administrator darf Benutzer verwalten.');
+    }
+}
+
+function can_manage_event(array $event): bool
+{
+    if (is_super_admin()) {
+        return true;
+    }
+
+    $userId = current_user_id();
+    return $userId !== null
+        && isset($event['owner_user_id'])
+        && (int)$event['owner_user_id'] === $userId;
 }
 
 function csrf_token(): string

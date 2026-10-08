@@ -105,6 +105,18 @@ if ($demoMode) {
     $events = $stmt->fetchAll();
 }
 
+$friends = [];
+if (!$demoMode) {
+    $friends = $pdo->query(
+        "SELECT display_name, website, logo_path
+         FROM users
+         WHERE active = 1
+           AND website IS NOT NULL
+           AND website <> ''
+         ORDER BY display_name"
+    )->fetchAll();
+}
+
 $eventsByDate = [];
 foreach ($events as $event) {
     $start = new DateTimeImmutable($event['start_date']);
@@ -485,6 +497,7 @@ $indexSchema = [
                 </div>
             </div>
             <div class="nav-stack">
+                <button class="friends-toggle" id="friends-toggle" type="button" aria-controls="friends-panel" aria-expanded="false">FRIENDS &gt;</button>
                 <div class="theme-indicator nerd-indicator" id="nerd-indicator" hidden>echo $nerd=true</div>
                 <div class="theme-indicator" id="theme-indicator">echo $theme=hackers</div>
                 <nav class="year-nav" aria-label="Jahr wählen">
@@ -501,14 +514,35 @@ $indexSchema = [
             </div>
         <?php endif; ?>
 
-        <section class="calendar-grid">
-            <?php for ($month = 1; $month <= 12; $month++): ?>
-                <article class="month">
-                    <h2><span><?= str_pad((string)$month, 2, '0', STR_PAD_LEFT) ?></span> <?= $monthNames[$month] ?></h2>
-                    <?= month_calendar($year, $month, $eventsByDate) ?>
-                </article>
-            <?php endfor; ?>
-        </section>
+        <div class="calendar-stage">
+            <section class="calendar-grid">
+                <?php for ($month = 1; $month <= 12; $month++): ?>
+                    <article class="month">
+                        <h2><span><?= str_pad((string)$month, 2, '0', STR_PAD_LEFT) ?></span> <?= $monthNames[$month] ?></h2>
+                        <?= month_calendar($year, $month, $eventsByDate) ?>
+                    </article>
+                <?php endfor; ?>
+            </section>
+
+            <aside class="friends-panel" id="friends-panel" aria-hidden="true">
+                <div class="friends-wall" id="friends-wall">
+                    <?php foreach ($friends as $friend): ?>
+                        <a class="friend-item"
+                           href="<?= h((string)$friend['website']) ?>"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <?php if (!empty($friend['logo_path'])): ?>
+                                <img src="<?= h((string)$friend['logo_path']) ?>" alt="">
+                            <?php endif; ?>
+                            <span><?= h((string)$friend['display_name']) ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                    <?php if (!$friends): ?>
+                        <span class="friends-empty">NO FRIENDS CONFIGURED</span>
+                    <?php endif; ?>
+                </div>
+            </aside>
+        </div>
 
         <footer>
             <span>

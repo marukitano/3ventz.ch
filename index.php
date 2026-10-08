@@ -105,6 +105,26 @@ if ($demoMode) {
     $events = $stmt->fetchAll();
 }
 
+function friend_wall_label(array $friend): string
+{
+    $displayName = trim((string)($friend['display_name'] ?? ''));
+    $website = trim((string)($friend['website'] ?? ''));
+    $host = (string)(parse_url($website, PHP_URL_HOST) ?: '');
+    $host = preg_replace('/^www\./i', '', $host) ?? $host;
+
+    if ($host === '') {
+        return $displayName;
+    }
+
+    // Keep the intentionally chosen capitalization of the account name when
+    // the hostname starts with it: "Diskette" + ".ch" => "Diskette.ch".
+    if ($displayName !== '' && strncasecmp($host, $displayName, strlen($displayName)) === 0) {
+        return $displayName . substr($host, strlen($displayName));
+    }
+
+    return $host;
+}
+
 $friends = [];
 if (!$demoMode) {
     $friends = $pdo->query(
@@ -534,7 +554,7 @@ $indexSchema = [
                             <?php if (!empty($friend['logo_path'])): ?>
                                 <img src="<?= h((string)$friend['logo_path']) ?>" alt="">
                             <?php endif; ?>
-                            <span><?= h((string)$friend['display_name']) ?></span>
+                            <span><?= h(friend_wall_label($friend)) ?></span>
                         </a>
                     <?php endforeach; ?>
                     <?php if (!$friends): ?>

@@ -974,9 +974,15 @@ button, .button {
         grid-template-rows: auto auto minmax(0, 1fr) auto;
     }
 
+    .calendar-stage {
+        min-height: 0;
+    }
+
     .calendar-grid {
         min-height: 0;
-        height: 100%;
+        /* .calendar-grid has a 5px top margin. Subtract it from the available
+           stage height so the third row's bottom border is not clipped. */
+        height: calc(100% - 5px);
         grid-template-rows: repeat(3, minmax(0, 1fr));
     }
 }

@@ -63,11 +63,6 @@ if (!$demoMode) {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
 
-    $mustChangeColumn = $pdo->query("SHOW COLUMNS FROM users LIKE 'must_change_password'")->fetch();
-    if (!$mustChangeColumn) {
-        $pdo->exec("ALTER TABLE users ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 0 AFTER password_hash");
-    }
-
     $ownerColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'owner_user_id'")->fetch();
     if (!$ownerColumn) {
         $pdo->exec("ALTER TABLE events ADD COLUMN owner_user_id INT UNSIGNED NULL AFTER short_text");

@@ -572,19 +572,38 @@
             item.style.top = '';
             item.style.transform = '';
 
+            if (!item.dataset.friendTilt) {
+                const direction = Math.random() < 0.5 ? -1 : 1;
+                const magnitude = 4 + Math.random() * 36;
+                item.dataset.friendTilt = (direction * magnitude).toFixed(1);
+            }
+
+            const angle = parseFloat(item.dataset.friendTilt || '0');
             const rect = item.getBoundingClientRect();
             const itemW = Math.min(rect.width || 120, width * .7);
             const itemH = Math.min(rect.height || 60, height * .25);
 
-            let x = 12;
-            let y = 12;
+            // Keep rotated logos safely inside the panel. This uses the
+            // bounding box of the rotated rectangle plus a visual margin.
+            const angleRad = Math.abs(angle) * Math.PI / 180;
+            const rotatedW = Math.abs(Math.cos(angleRad)) * itemW + Math.abs(Math.sin(angleRad)) * itemH;
+            const rotatedH = Math.abs(Math.sin(angleRad)) * itemW + Math.abs(Math.cos(angleRad)) * itemH;
+            const edgePadding = 18;
+
+            const minX = edgePadding;
+            const maxX = Math.max(minX, width - rotatedW - edgePadding);
+            const minY = edgePadding;
+            const maxY = Math.max(minY, height - rotatedH - edgePadding);
+
+            let x = minX;
+            let y = minY;
             let found = false;
 
             for (let attempt = 0; attempt < 60; attempt += 1) {
-                x = 10 + Math.random() * Math.max(1, width - itemW - 20);
-                y = 10 + Math.random() * Math.max(1, height - itemH - 20);
+                x = minX + Math.random() * Math.max(1, maxX - minX);
+                y = minY + Math.random() * Math.max(1, maxY - minY);
 
-                const box = { x, y, w: itemW, h: itemH };
+                const box = { x, y, w: rotatedW, h: rotatedH };
                 const overlaps = placed.some((p) =>
                     !(box.x + box.w + 8 < p.x ||
                       p.x + p.w + 8 < box.x ||
@@ -607,19 +626,9 @@
                 y = 12 + row * 86;
             }
 
-            // Give every Friend a persistent random tilt. Keep a small
-            // minimum angle so every logo looks intentionally a little crooked,
-            // but never exceed 40 degrees from upright.
-            if (!item.dataset.friendTilt) {
-                const direction = Math.random() < 0.5 ? -1 : 1;
-                const magnitude = 4 + Math.random() * 36;
-                item.dataset.friendTilt = (direction * magnitude).toFixed(1);
-            }
-
-            const angle = item.dataset.friendTilt;
             item.style.left = x.toFixed(1) + 'px';
             item.style.top = y.toFixed(1) + 'px';
-            item.style.transform = 'rotate(' + angle + 'deg)';
+            item.style.transform = 'rotate(' + angle.toFixed(1) + 'deg)';
         });
     };
 

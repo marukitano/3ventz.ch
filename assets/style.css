@@ -3607,6 +3607,28 @@ body {
     width: 100%;
     height: 100%;
     min-height: 420px;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Repeating diagonal OPEN YOUR MIND watermark behind the Friends wall. */
+.friends-wall::before {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .20;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='430' height='190' viewBox='0 0 430 190'%3E%3Cg transform='rotate(-18 215 95)' fill='%23323232' font-family='monospace' font-size='34' font-weight='700' letter-spacing='2'%3E%3Ctext x='8' y='76'%3EOPEN YOUR MIND%3C/text%3E%3Ctext x='8' y='156'%3EOPEN YOUR MIND%3C/text%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 430px 190px;
+    background-position: center;
+    transform: translateZ(0);
+}
+
+.friends-wall > * {
+    position: relative;
+    z-index: 1;
 }
 
 .friend-item {

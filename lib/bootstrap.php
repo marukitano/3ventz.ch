@@ -63,6 +63,16 @@ if (!$demoMode) {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
 
+    $websiteColumn = $pdo->query("SHOW COLUMNS FROM users LIKE 'website'")->fetch();
+    if (!$websiteColumn) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN website VARCHAR(500) NULL AFTER display_name");
+    }
+
+    $logoColumn = $pdo->query("SHOW COLUMNS FROM users LIKE 'logo_path'")->fetch();
+    if (!$logoColumn) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN logo_path VARCHAR(255) NULL AFTER website");
+    }
+
     $ownerColumn = $pdo->query("SHOW COLUMNS FROM events LIKE 'owner_user_id'")->fetch();
     if (!$ownerColumn) {
         $pdo->exec("ALTER TABLE events ADD COLUMN owner_user_id INT UNSIGNED NULL AFTER short_text");

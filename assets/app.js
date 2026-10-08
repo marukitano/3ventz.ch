@@ -563,14 +563,47 @@
 
         const items = [...friendsWall.querySelectorAll('.friend-item')];
         const wallRect = friendsWall.getBoundingClientRect();
-        const width = Math.max(1, wallRect.width);
-        const height = Math.max(1, wallRect.height);
+        const edgePadding = 28;
+        const collisionGap = 16;
         const placed = [];
 
-        items.forEach((item, index) => {
-            item.style.left = '';
-            item.style.top = '';
-            item.style.transform = '';
+        const relativeBox = (rect) => ({
+            x: rect.left - wallRect.left,
+            y: rect.top - wallRect.top,
+            w: rect.width,
+            h: rect.height,
+        });
+
+        const isInsideWall = (box) =>
+            box.x >= edgePadding &&
+            box.y >= edgePadding &&
+            box.x + box.w <= wallRect.width - edgePadding &&
+            box.y + box.h <= wallRect.height - edgePadding;
+
+        const overlapsPlaced = (box) => placed.some((p) =>
+            !(box.x + box.w + collisionGap <= p.x ||
+              p.x + p.w + collisionGap <= box.x ||
+              box.y + box.h + collisionGap <= p.y ||
+              p.y + p.h + collisionGap <= box.y)
+        );
+
+        const tryPosition = (item, x, y, angle) => {
+            item.style.left = x.toFixed(1) + 'px';
+            item.style.top = y.toFixed(1) + 'px';
+            item.style.transform = 'rotate(' + angle.toFixed(1) + 'deg)';
+
+            const box = relativeBox(item.getBoundingClientRect());
+            if (!isInsideWall(box) || overlapsPlaced(box)) {
+                return null;
+            }
+
+            return box;
+        };
+
+        items.forEach((item) => {
+            item.style.left = '0px';
+            item.style.top = '0px';
+            item.style.transform = 'none';
 
             if (!item.dataset.friendTilt) {
                 const direction = Math.random() < 0.5 ? -1 : 1;
@@ -579,70 +612,62 @@
             }
 
             const angle = parseFloat(item.dataset.friendTilt || '0');
-            const rect = item.getBoundingClientRect();
-            const itemW = Math.min(rect.width || 120, width * .7);
-            const itemH = Math.min(rect.height || 60, height * .25);
+            const baseRect = item.getBoundingClientRect();
+            const itemW = Math.min(baseRect.width || 120, wallRect.width * .7);
+            const itemH = Math.min(baseRect.height || 60, wallRect.height * .3);
 
-            // Keep rotated logos safely inside the panel. This uses the
-            // bounding box of the rotated rectangle plus a visual margin.
-            const angleRad = Math.abs(angle) * Math.PI / 180;
-            const rotatedW = Math.abs(Math.cos(angleRad)) * itemW + Math.abs(Math.sin(angleRad)) * itemH;
-            const rotatedH = Math.abs(Math.sin(angleRad)) * itemW + Math.abs(Math.cos(angleRad)) * itemH;
-            const edgePadding = 28;
+            const maxLeft = Math.max(edgePadding, wallRect.width - itemW - edgePadding);
+            const maxTop = Math.max(edgePadding, wallRect.height - itemH - edgePadding);
 
-            // left/top position the unrotated element. Rotating around its
-            // center makes the visual bounding box extend beyond those
-            // coordinates, especially for wide logos. Account for that extra
-            // overhang on every side.
-            const extraX = Math.max(0, (rotatedW - itemW) / 2);
-            const extraY = Math.max(0, (rotatedH - itemH) / 2);
+            let accepted = null;
 
-            const minX = edgePadding + extraX;
-            const maxX = Math.max(minX, width - itemW - edgePadding - extraX);
-            const minY = edgePadding + extraY;
-            const maxY = Math.max(minY, height - itemH - edgePadding - extraY);
+            // Use the browser's real transformed bounding box for validation.
+            // This is more reliable than estimating rotated widths for very wide
+            // or unusually shaped logos.
+            for (let attempt = 0; attempt < 300 && !accepted; attempt += 1) {
+                const x = edgePadding + Math.random() * Math.max(0, maxLeft - edgePadding);
+                const y = edgePadding + Math.random() * Math.max(0, maxTop - edgePadding);
+                accepted = tryPosition(item, x, y, angle);
+            }
 
-            let x = minX;
-            let y = minY;
-            let found = false;
-
-            for (let attempt = 0; attempt < 60; attempt += 1) {
-                x = minX + Math.random() * Math.max(1, maxX - minX);
-                y = minY + Math.random() * Math.max(1, maxY - minY);
-
-                const box = {
-                    x: x - extraX,
-                    y: y - extraY,
-                    w: rotatedW,
-                    h: rotatedH
-                };
-                const overlaps = placed.some((p) =>
-                    !(box.x + box.w + 8 < p.x ||
-                      p.x + p.w + 8 < box.x ||
-                      box.y + box.h + 8 < p.y ||
-                      p.y + p.h + 8 < box.y)
-                );
-
-                if (!overlaps) {
-                    placed.push(box);
-                    found = true;
-                    break;
+            // Deterministic fallback: scan the panel for the first genuinely
+            // safe position. Never accept an overlapping or clipped result.
+            if (!accepted) {
+                const step = 12;
+                for (let y = edgePadding; y <= maxTop && !accepted; y += step) {
+                    for (let x = edgePadding; x <= maxLeft && !accepted; x += step) {
+                        accepted = tryPosition(item, x, y, angle);
+                    }
                 }
             }
 
-            if (!found) {
-                const columns = Math.max(1, Math.floor(width / 140));
-                const col = index % columns;
-                const row = Math.floor(index / columns);
-                const candidateX = minX + col * Math.max(120, (maxX - minX) / columns);
-                const candidateY = minY + row * 86;
-                x = Math.min(maxX, Math.max(minX, candidateX));
-                y = Math.min(maxY, Math.max(minY, candidateY));
+            // If the chosen angle itself makes placement impossible, reduce only
+            // this logo's tilt until a valid position exists.
+            if (!accepted) {
+                for (let fallbackAngle = Math.min(30, Math.abs(angle)); fallbackAngle >= 0 && !accepted; fallbackAngle -= 5) {
+                    const signedAngle = angle < 0 ? -fallbackAngle : fallbackAngle;
+
+                    for (let y = edgePadding; y <= maxTop && !accepted; y += 12) {
+                        for (let x = edgePadding; x <= maxLeft && !accepted; x += 12) {
+                            accepted = tryPosition(item, x, y, signedAngle);
+                            if (accepted) {
+                                item.dataset.friendTilt = signedAngle.toFixed(1);
+                            }
+                        }
+                    }
+                }
             }
 
-            item.style.left = x.toFixed(1) + 'px';
-            item.style.top = y.toFixed(1) + 'px';
-            item.style.transform = 'rotate(' + angle.toFixed(1) + 'deg)';
+            if (accepted) {
+                placed.push(accepted);
+            } else {
+                // Extremely crowded panels: keep the item hidden rather than
+                // rendering it outside the board or on top of another Friend.
+                item.style.visibility = 'hidden';
+                return;
+            }
+
+            item.style.visibility = '';
         });
     };
 

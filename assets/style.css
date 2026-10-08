@@ -3736,13 +3736,13 @@ body {
 @media (max-width: 719px) {
     .friends-panel {
         position: fixed;
-        inset: 0 0 0 auto;
-        width: min(92vw, 430px);
+        inset: 0;
+        width: 100vw;
         min-width: 0;
         height: 100dvh;
         z-index: 10010;
-        border-left: 1px solid var(--line);
-        box-shadow: -16px 0 40px rgba(0,0,0,.45);
+        border-left: 0;
+        box-shadow: none;
     }
 
     /* When the Friends board is open, only the < FRIENDS control stays above
@@ -3760,8 +3760,9 @@ body {
     }
 
     .friends-open .calendar-grid {
-        width: 100%;
-        transform: translateX(-18vw);
+        visibility: hidden;
+        pointer-events: none;
+        transform: none;
     }
 
     .friends-wall {

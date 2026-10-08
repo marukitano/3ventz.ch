@@ -1,3 +1,13 @@
+CREATE TABLE users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(80) NOT NULL UNIQUE,
+    display_name VARCHAR(120) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE events (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(180) NOT NULL,
@@ -10,12 +20,13 @@ CREATE TABLE events (
     color VARCHAR(20) NOT NULL DEFAULT '#00f5ff',
     icon VARCHAR(32) NULL DEFAULT 'none',
     short_text VARCHAR(64) NULL,
+    owner_user_id INT UNSIGNED NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_events_start_date (start_date),
-    INDEX idx_events_end_date (end_date)
+    INDEX idx_events_end_date (end_date),
+    INDEX idx_events_owner_user_id (owner_user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE pageview_counter (
     visit_year SMALLINT UNSIGNED NOT NULL PRIMARY KEY,

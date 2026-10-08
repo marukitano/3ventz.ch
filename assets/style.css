@@ -3657,7 +3657,7 @@ body {
 :root[data-theme="atari"] .friends-wallpaper {
     --friends-pattern-color: #5f4328;
     --friends-pattern-opacity: .28;
-    --friends-pattern-size: 12px;
+    --friends-pattern-size: 24px;
 }
 
 

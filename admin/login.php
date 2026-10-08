@@ -85,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Password
                 <input type="password" name="password" autocomplete="current-password" required autofocus>
             </label>
-            <p><small>Admin: Username leer lassen.</small></p>
             <p><button type="submit">LOGIN</button></p>
         </form>
     </section>

@@ -62,11 +62,11 @@
     --bg: #100b08;
     --panel: #1a120c;
     --line: #5a3b20;
-    --text: #ffe4bb;
-    --muted: #aa8158;
-    --cyan: #ffb347;
-    --green: #b6ff66;
-    --pink: #ff6b35;
+    --text: #fff3d6;
+    --muted: #d3a978;
+    --cyan: #ffd08a;
+    --green: #d8ff9a;
+    --pink: #ff8a5a;
 }
 
 :root[data-theme="hackers"] {

@@ -3589,10 +3589,10 @@ body {
 
 .friends-panel {
     position: absolute;
-    top: 0;
+    top: 5px;
     right: 0;
     width: 33.333%;
-    height: 100%;
+    height: calc(100% - 5px);
     min-width: 280px;
     transform: translateX(105%);
     transition: transform 360ms cubic-bezier(.2,.78,.2,1);

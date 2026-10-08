@@ -3132,8 +3132,7 @@ html.rabbit-attack-active body {
 }
 
 
-/* Mobile header: give the CLI the full viewport width.
-   Status/year navigation moves onto its own row below it. */
+/* Mobile header: keep Friends/theme/year above the CLI, aligned right. */
 @media (max-width: 719px) {
     .topbar {
         flex-wrap: wrap;
@@ -3141,18 +3140,20 @@ html.rabbit-attack-active body {
         gap: 6px;
     }
 
-    .identity {
-        flex: 0 0 100%;
-        width: 100%;
-        max-width: 100%;
-        overflow: visible;
-    }
-
     .nav-stack {
+        order: -1;
         flex: 0 0 100%;
         width: 100%;
         min-width: 0;
         align-items: flex-end;
+    }
+
+    .identity {
+        order: 0;
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+        overflow: visible;
     }
 
     .brand-terminal,

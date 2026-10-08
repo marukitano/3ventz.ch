@@ -94,6 +94,7 @@ function admin_date_display(?string $date): string
                 <a class="button secondary" href="/admin/audit.php">Audit</a>
                 <a class="button secondary" href="/admin/users.php">Users</a>
             <?php else: ?>
+                <a class="button secondary" href="/admin/profile.php">Profil</a>
                 <a class="button secondary" href="/admin/password.php">Passwort ändern</a>
             <?php endif; ?>
             <a class="button secondary" href="/admin/logout.php">Logout</a>

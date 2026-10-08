@@ -5,12 +5,40 @@ admin_required();
 
 $edit = null;
 if (isset($_GET['edit'])) {
-    $stmt = $pdo->prepare('SELECT * FROM events WHERE id = ?');
-    $stmt->execute([(int)$_GET['edit']]);
+    if (is_super_admin()) {
+        $stmt = $pdo->prepare('SELECT * FROM events WHERE id = ?');
+        $stmt->execute([(int)$_GET['edit']]);
+    } else {
+        $stmt = $pdo->prepare('SELECT * FROM events WHERE id = ? AND owner_user_id = ?');
+        $stmt->execute([(int)$_GET['edit'], current_user_id()]);
+    }
+
     $edit = $stmt->fetch() ?: null;
+
+    if (!$edit) {
+        http_response_code(403);
+        exit('Dieses Event darfst du nicht bearbeiten.');
+    }
 }
 
-$events = $pdo->query('SELECT * FROM events ORDER BY start_date DESC, title')->fetchAll();
+if (is_super_admin()) {
+    $events = $pdo->query(
+        'SELECT e.*, u.display_name AS owner_name
+         FROM events e
+         LEFT JOIN users u ON u.id = e.owner_user_id
+         ORDER BY e.start_date DESC, e.title'
+    )->fetchAll();
+} else {
+    $stmt = $pdo->prepare(
+        'SELECT e.*, u.display_name AS owner_name
+         FROM events e
+         LEFT JOIN users u ON u.id = e.owner_user_id
+         WHERE e.owner_user_id = ?
+         ORDER BY e.start_date DESC, e.title'
+    );
+    $stmt->execute([current_user_id()]);
+    $events = $stmt->fetchAll();
+}
 
 $categoryOptions = [
     'CCC',
@@ -60,11 +88,19 @@ function admin_date_display(?string $date): string
 <main class="admin-shell">
     <div class="actions" style="justify-content:space-between;margin-bottom:18px">
         <a class="button secondary" href="/">← Kalender</a>
-        <a class="button secondary" href="/admin/logout.php">Logout</a>
+        <div class="actions">
+            <span><?= h(current_user_name()) ?></span>
+            <?php if (is_super_admin()): ?><a class="button secondary" href="/admin/users.php">Users</a><?php endif; ?>
+            <a class="button secondary" href="/admin/logout.php">Logout</a>
+        </div>
     </div>
 
     <section class="admin-card">
         <h1><?= $edit ? 'EVENT EDIT' : 'NEW EVENT' ?></h1>
+
+        <?php if (!is_super_admin()): ?>
+            <p><small>Du kannst nur deine eigenen Events anlegen, bearbeiten und löschen.</small></p>
+        <?php endif; ?>
 
         <form method="post" action="/admin/save.php">
             <input type="hidden" name="csrf" value="<?= h(csrf_token()) ?>">
@@ -105,7 +141,7 @@ function admin_date_display(?string $date): string
                 </label>
                 <label>
                     URL
-                    <input type="text" name="url" maxlength="500" value="<?= h($edit['url'] ?? '') ?>" placeholder="odenwilusenz.ch oder https://...">
+                    <input type="text" name="url" maxlength="500" value="<?= h($edit['url'] ?? '') ?>" placeholder="example.org oder https://...">
                 </label>
                 <label>
                     Neonfarbe
@@ -142,10 +178,17 @@ function admin_date_display(?string $date): string
     </section>
 
     <section class="admin-card">
-        <h2>EVENT DATABASE</h2>
+        <h2><?= is_super_admin() ? 'EVENT DATABASE' : 'MY EVENTS' ?></h2>
         <div style="overflow:auto">
             <table class="event-list">
-                <thead><tr><th>Datum</th><th>Event</th><th>Aktion</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Event</th>
+                        <?php if (is_super_admin()): ?><th>Owner</th><?php endif; ?>
+                        <th>Aktion</th>
+                    </tr>
+                </thead>
                 <tbody>
                 <?php foreach ($events as $event): ?>
                     <tr>
@@ -155,6 +198,9 @@ function admin_date_display(?string $date): string
                             <?php if ($event['category']): ?><br><small><?= h($event['category']) ?></small><?php endif; ?>
                             <?php if (!empty($event['location'])): ?><br><small><?= h($event['location']) ?></small><?php endif; ?>
                         </td>
+                        <?php if (is_super_admin()): ?>
+                            <td><?= h($event['owner_name'] ?? 'Admin') ?></td>
+                        <?php endif; ?>
                         <td>
                             <div class="actions">
                                 <a class="button secondary" href="?edit=<?= (int)$event['id'] ?>">Edit</a>
@@ -168,7 +214,7 @@ function admin_date_display(?string $date): string
                     </tr>
                 <?php endforeach; ?>
                 <?php if (!$events): ?>
-                    <tr><td colspan="3">Noch keine Events.</td></tr>
+                    <tr><td colspan="<?= is_super_admin() ? '4' : '3' ?>">Noch keine Events.</td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>

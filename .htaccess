@@ -1,5 +1,12 @@
 RewriteEngine On
 
+# Canonical host + HTTPS.
+# Keeps the requested path, e.g.:
+# http://3ventz.ch/impressum.php -> https://tech3ventz.ch/impressum.php
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} !^tech3ventz\.ch$ [NC]
+RewriteRule ^ https://tech3ventz.ch%{REQUEST_URI} [R=301,L,NE]
+
 RewriteRule ^event/([0-9]+)/([^/]+)/?$ event.php?id=$1&slug=$2 [L,QSA]
 RewriteRule ^event/([0-9]+)/?$ event.php?id=$1 [L,QSA]
 RewriteRule ^sitemap\.xml$ sitemap.php [L,QSA]

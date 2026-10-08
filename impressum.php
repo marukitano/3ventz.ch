@@ -74,6 +74,47 @@ if (!$legalReady) {
             Profilingzwecken verwendet.
         </p>
 
+
+        <h2>Partner-Accounts und Passwortsicherheit</h2>
+        <p>
+            Für Veranstalter können geschützte Partner-Accounts eingerichtet werden. Dabei werden
+            insbesondere Benutzername, Anzeigename, Account-Status und die dem Account zugeordneten
+            Events verarbeitet. Passwörter werden nicht im Klartext gespeichert, sondern ausschliesslich
+            als kryptografischer Passwort-Hash mittels der von PHP bereitgestellten
+            <code>password_hash()</code>-Funktion.
+        </p>
+
+        <p>
+            Änderungen an Events werden aus Sicherheits- und Nachvollziehbarkeitsgründen in einem
+            internen Audit-Protokoll festgehalten. Dabei werden insbesondere der verwendete Account,
+            die Art der Änderung, das betroffene Event und der Zeitpunkt gespeichert. Dieses Protokoll
+            ist nur für die Administration zugänglich und wird nicht für Werbung oder Profiling verwendet.
+        </p>
+
+        <p>
+            Wenn ein Partner freiwillig ein neues Passwort setzt, wird dieses vor der Speicherung gegen
+            den Dienst «Pwned Passwords» von Have I Been Pwned geprüft, um bereits aus bekannten
+            Datenleaks kompromittierte Passwörter zu erkennen. Das Passwort selbst wird dabei niemals an
+            Have I Been Pwned übertragen.
+        </p>
+
+        <p>
+            Für diese Prüfung wird auf dem Server lokal ein SHA-1-Hash des eingegebenen Passworts
+            erzeugt. An die Pwned-Passwords-API werden ausschliesslich die ersten fünf Zeichen dieses
+            Hashes übertragen. Der vollständige Hash sowie das Klartext-Passwort verlassen
+            tech3ventz.ch nicht. Die API liefert eine Menge möglicher Hash-Endungen zurück; der eigentliche
+            Vergleich mit dem vollständigen Hash erfolgt ausschliesslich lokal auf unserem Server.
+            Dieses Verfahren wird als k-Anonymity bezeichnet.
+        </p>
+
+        <p>
+            Die Abfrage an Have I Been Pwned erfolgt serverseitig und nicht direkt aus dem Browser des
+            Benutzers. Dabei können beim externen Dienst technisch notwendige Verbindungsdaten der
+            Serveranfrage verarbeitet werden. Das Klartext-Passwort, der vollständige Passwort-Hash,
+            der Benutzername des tech3ventz-Accounts und die Browser-IP-Adresse werden von
+            tech3ventz.ch nicht als Bestandteil der Passwortprüfung an Have I Been Pwned übermittelt.
+        </p>
+
         <p>
             Externe Links führen zu Angeboten Dritter. Für deren Inhalte und Datenbearbeitungen gelten
             die jeweiligen Bestimmungen der Drittanbieter.

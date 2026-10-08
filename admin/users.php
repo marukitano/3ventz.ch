@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 $stmt = $pdo->prepare(
-                    'INSERT INTO users (username, display_name, password_hash, active)
-                     VALUES (?, ?, ?, 1)'
+                    'INSERT INTO users (username, display_name, password_hash, must_change_password, active)
+                     VALUES (?, ?, ?, 1, 1)'
                 );
                 $stmt->execute([$username, $displayName, password_hash($password, PASSWORD_DEFAULT)]);
                 $success = 'User angelegt.';
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($userId <= 0 || strlen($password) < 10) {
             $error = 'Neues Passwort muss mindestens 10 Zeichen lang sein.';
         } else {
-            $stmt = $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
+            $stmt = $pdo->prepare('UPDATE users SET password_hash = ?, must_change_password = 1 WHERE id = ?');
             $stmt->execute([password_hash($password, PASSWORD_DEFAULT), $userId]);
             $success = 'Passwort geändert.';
         }

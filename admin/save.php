@@ -86,6 +86,12 @@ if ($url !== '') {
         http_response_code(422);
         exit('Ungültige URL.');
     }
+
+    $scheme = strtolower((string)parse_url($url, PHP_URL_SCHEME));
+    if (!in_array($scheme, ['http', 'https'], true)) {
+        http_response_code(422);
+        exit('Nur http:// und https:// URLs sind erlaubt.');
+    }
 }
 
 if (!preg_match('/^#[0-9a-fA-F]{6}$/', $color)) {
@@ -121,13 +127,25 @@ if ($id > 0) {
     }
 
     $params['id'] = $id;
-    $stmt = $pdo->prepare(
-        'UPDATE events
-         SET title=:title, start_date=:start_date, end_date=:end_date,
-             category=:category, location=:location, url=:url, description=:description, color=:color, icon=:icon,
-             short_text=:short_text
-         WHERE id=:id'
-    );
+
+    if (is_super_admin()) {
+        $stmt = $pdo->prepare(
+            'UPDATE events
+             SET title=:title, start_date=:start_date, end_date=:end_date,
+                 category=:category, location=:location, url=:url, description=:description, color=:color, icon=:icon,
+                 short_text=:short_text
+             WHERE id=:id'
+        );
+    } else {
+        $params['owner_guard'] = current_user_id();
+        $stmt = $pdo->prepare(
+            'UPDATE events
+             SET title=:title, start_date=:start_date, end_date=:end_date,
+                 category=:category, location=:location, url=:url, description=:description, color=:color, icon=:icon,
+                 short_text=:short_text
+             WHERE id=:id AND owner_user_id=:owner_guard'
+        );
+    }
 } else {
     $params['owner_user_id'] = is_super_admin() ? null : current_user_id();
     $stmt = $pdo->prepare(
@@ -137,6 +155,13 @@ if ($id > 0) {
 }
 
 $stmt->execute($params);
+
+if ($id > 0) {
+    audit_event('event.update', $id, $title);
+} else {
+    $id = (int)$pdo->lastInsertId();
+    audit_event('event.create', $id, $title);
+}
 
 header('Location: /admin/');
 exit;

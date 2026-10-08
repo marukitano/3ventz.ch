@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
             $authenticated = true;
         } elseif ($username !== '') {
-            $stmt = $pdo->prepare('SELECT id, username, display_name, password_hash, must_change_password FROM users WHERE username = ? AND active = 1 LIMIT 1');
+            $stmt = $pdo->prepare('SELECT id, username, display_name, password_hash FROM users WHERE username = ? AND active = 1 LIMIT 1');
             $stmt->execute([$username]);
             $user = $stmt->fetch();
 
@@ -46,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'user_id' => (int)$user['id'],
                     'username' => (string)$user['username'],
                     'display_name' => (string)$user['display_name'],
-                    'must_change_password' => (int)$user['must_change_password'] === 1,
                     'csrf' => bin2hex(random_bytes(32)),
                 ];
                 $authenticated = true;
@@ -54,11 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($authenticated) {
-            if (!empty($_SESSION['must_change_password'])) {
-                header('Location: /admin/password.php');
-            } else {
-                header('Location: /admin/');
-            }
+            header('Location: /admin/');
             exit;
         }
 

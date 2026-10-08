@@ -692,13 +692,39 @@
         }
     };
 
+    const FRIENDS_HISTORY_KEY = 'tech3ventzFriends';
+
     const toggleFriends = () => {
-        setFriendsOpen(!document.documentElement.classList.contains('friends-open'));
+        const isOpen = document.documentElement.classList.contains('friends-open');
+
+        if (isOpen) {
+            // Closing via the button should consume the history entry we added
+            // when opening, so browser Back keeps its natural meaning.
+            if (history.state?.[FRIENDS_HISTORY_KEY]) {
+                history.back();
+            } else {
+                setFriendsOpen(false);
+            }
+            return;
+        }
+
+        history.pushState(
+            { ...(history.state || {}), [FRIENDS_HISTORY_KEY]: true },
+            '',
+            window.location.href
+        );
+        setFriendsOpen(true);
     };
 
     friendsToggle?.addEventListener('click', (event) => {
         event.preventDefault();
         toggleFriends();
+    });
+
+    window.addEventListener('popstate', () => {
+        if (document.documentElement.classList.contains('friends-open')) {
+            setFriendsOpen(false);
+        }
     });
 
     window.addEventListener('resize', () => {

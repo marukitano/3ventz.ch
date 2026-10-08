@@ -6,6 +6,19 @@ $demoMode = !is_file($configFile);
 $pdo = null;
 $config = [];
 
+// Baseline browser/session hardening. These headers are safe for both the public
+// calendar and the admin area and do not depend on web-server configuration.
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), camera=(), microphone=()');
+header("Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+
+if (strncmp((string)($_SERVER['REQUEST_URI'] ?? ''), '/admin', 6) === 0) {
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+}
+
 if (!$demoMode) {
     $config = require $configFile;
 
@@ -55,9 +68,44 @@ if (!$demoMode) {
         $pdo->exec("ALTER TABLE events ADD COLUMN owner_user_id INT UNSIGNED NULL AFTER short_text");
         $pdo->exec("ALTER TABLE events ADD INDEX idx_events_owner_user_id (owner_user_id)");
     }
+
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS login_attempts (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            ip_hash CHAR(64) NOT NULL,
+            username_hash CHAR(64) NOT NULL,
+            attempted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_login_attempts_ip_time (ip_hash, attempted_at),
+            INDEX idx_login_attempts_user_time (username_hash, attempted_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    );
+
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS audit_log (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            actor_user_id INT UNSIGNED NULL,
+            actor_name VARCHAR(120) NOT NULL,
+            action VARCHAR(40) NOT NULL,
+            event_id INT UNSIGNED NULL,
+            event_title VARCHAR(180) NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_audit_created_at (created_at),
+            INDEX idx_audit_event_id (event_id),
+            INDEX idx_audit_actor_user_id (actor_user_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    );
 }
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
     session_start();
 }
 
@@ -190,4 +238,78 @@ function csrf_check(): void
         http_response_code(403);
         exit('Invalid CSRF token');
     }
+}
+
+
+function login_fingerprint(string $username): array
+{
+    global $config;
+
+    $ip = (string)($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    $key = (string)($config['security']['rate_limit_key'] ?? $config['admin_password_hash'] ?? 'tech3ventz-rate-limit');
+    $normalizedUser = strtolower(trim($username));
+    if ($normalizedUser === '') {
+        $normalizedUser = '__admin__';
+    }
+
+    return [
+        'ip' => hash_hmac('sha256', $ip, $key),
+        'user' => hash('sha256', $normalizedUser),
+    ];
+}
+
+function login_rate_limited(string $username): bool
+{
+    global $pdo;
+
+    $fp = login_fingerprint($username);
+    $pdo->exec("DELETE FROM login_attempts WHERE attempted_at < (NOW() - INTERVAL 1 DAY)");
+
+    $stmt = $pdo->prepare(
+        "SELECT
+            SUM(CASE WHEN username_hash = ? AND attempted_at >= (NOW() - INTERVAL 15 MINUTE) THEN 1 ELSE 0 END) AS user_failures,
+            SUM(CASE WHEN attempted_at >= (NOW() - INTERVAL 15 MINUTE) THEN 1 ELSE 0 END) AS ip_failures
+         FROM login_attempts
+         WHERE ip_hash = ?"
+    );
+    $stmt->execute([$fp['user'], $fp['ip']]);
+    $row = $stmt->fetch() ?: [];
+
+    return (int)($row['user_failures'] ?? 0) >= 5
+        || (int)($row['ip_failures'] ?? 0) >= 20;
+}
+
+function record_login_failure(string $username): void
+{
+    global $pdo;
+
+    $fp = login_fingerprint($username);
+    $stmt = $pdo->prepare('INSERT INTO login_attempts (ip_hash, username_hash) VALUES (?, ?)');
+    $stmt->execute([$fp['ip'], $fp['user']]);
+}
+
+function clear_login_failures(string $username): void
+{
+    global $pdo;
+
+    $fp = login_fingerprint($username);
+    $stmt = $pdo->prepare('DELETE FROM login_attempts WHERE ip_hash = ? AND username_hash = ?');
+    $stmt->execute([$fp['ip'], $fp['user']]);
+}
+
+function audit_event(string $action, ?int $eventId, ?string $eventTitle): void
+{
+    global $pdo;
+
+    $stmt = $pdo->prepare(
+        'INSERT INTO audit_log (actor_user_id, actor_name, action, event_id, event_title)
+         VALUES (?, ?, ?, ?, ?)'
+    );
+    $stmt->execute([
+        current_user_id(),
+        current_user_name(),
+        $action,
+        $eventId,
+        $eventTitle,
+    ]);
 }

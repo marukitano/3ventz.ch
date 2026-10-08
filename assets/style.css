@@ -3595,7 +3595,6 @@ body {
     transform: translateX(105%);
     transition: transform 360ms cubic-bezier(.2,.78,.2,1);
     background: var(--bg);
-    border-left: 1px solid var(--line);
     overflow: hidden;
     z-index: 30;
 }

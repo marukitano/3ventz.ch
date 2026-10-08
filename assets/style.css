@@ -3745,6 +3745,20 @@ body {
         box-shadow: -16px 0 40px rgba(0,0,0,.45);
     }
 
+    /* When the Friends board is open, only the < FRIENDS control stays above
+       the panel. Theme/year/status belong behind the board. */
+    .friends-open .nav-stack > :not(.friends-toggle) {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .friends-open .friends-toggle {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        z-index: 10020;
+    }
+
     .friends-open .calendar-grid {
         width: 100%;
         transform: translateX(-18vw);

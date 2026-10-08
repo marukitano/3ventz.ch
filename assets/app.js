@@ -506,6 +506,58 @@
         updateThemeIndicator(theme);
     };
 
+    const buildFriendsWallpaper = () => {
+        if (!friendsWall) return;
+
+        let wallpaper = friendsWall.querySelector('.friends-wallpaper');
+        if (!wallpaper) {
+            wallpaper = document.createElement('div');
+            wallpaper.className = 'friends-wallpaper';
+            wallpaper.setAttribute('aria-hidden', 'true');
+            friendsWall.prepend(wallpaper);
+        }
+
+        const wallRect = friendsWall.getBoundingClientRect();
+        const wallWidth = Math.max(1, wallRect.width);
+        const wallHeight = Math.max(1, wallRect.height);
+
+        // Oversize one single text plane so rotating it can never expose an
+        // empty corner. The content itself is generated from repeated FRIENDS
+        // words instead of a tiled background image.
+        const diagonal = Math.hypot(wallWidth, wallHeight);
+        const planeWidth = Math.ceil(diagonal * 1.55);
+        const planeHeight = Math.ceil(diagonal * 1.55);
+
+        wallpaper.style.width = planeWidth + 'px';
+        wallpaper.style.height = planeHeight + 'px';
+
+        const styles = getComputedStyle(wallpaper);
+        const fontSize = Math.max(12, parseFloat(styles.fontSize) || 38);
+        const lineHeight = Math.max(fontSize, parseFloat(styles.lineHeight) || fontSize * 1.28);
+        const rowCount = Math.ceil(planeHeight / lineHeight) + 8;
+
+        // Monospace approximation: one FRIENDS + space is ~8 characters.
+        // Add plenty of extra words on both sides so staggered rows stay full.
+        const charsPerRow = Math.ceil(planeWidth / (fontSize * .62));
+        const wordsPerRow = Math.ceil(charsPerRow / 8) + 14;
+        const rowText = 'FRIENDS '.repeat(wordsPerRow);
+
+        const fragment = document.createDocumentFragment();
+        for (let row = 0; row < rowCount; row += 1) {
+            const line = document.createElement('div');
+            line.className = 'friends-wallpaper-row';
+            line.textContent = rowText;
+
+            // Shift every following line by about five monospace characters.
+            // Wrap the offset so it stays a continuous wallpaper.
+            const offsetCh = (row * 5) % 20;
+            line.style.transform = 'translateX(-' + offsetCh + 'ch)';
+            fragment.appendChild(line);
+        }
+
+        wallpaper.replaceChildren(fragment);
+    };
+
     const randomizeFriends = () => {
         if (!friendsWall) return;
 
@@ -576,6 +628,7 @@
 
         if (open) {
             window.requestAnimationFrame(() => {
+                buildFriendsWallpaper();
                 randomizeFriends();
                 window.requestAnimationFrame(randomizeFriends);
             });
@@ -593,7 +646,10 @@
 
     window.addEventListener('resize', () => {
         if (document.documentElement.classList.contains('friends-open')) {
-            window.requestAnimationFrame(randomizeFriends);
+            window.requestAnimationFrame(() => {
+                buildFriendsWallpaper();
+                randomizeFriends();
+            });
         }
     });
 
@@ -608,6 +664,9 @@
         root.dataset.theme = theme;
         localStorage.setItem('3ventz-theme', theme);
         updateThemeIndicator(theme);
+        if (document.documentElement.classList.contains('friends-open')) {
+            window.requestAnimationFrame(buildFriendsWallpaper);
+        }
         clearSuggestions();
     };
 

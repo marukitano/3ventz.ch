@@ -7,6 +7,9 @@
     const themeIndicator = document.getElementById('theme-indicator');
     const nerdIndicator = document.getElementById('nerd-indicator');
     const navStack = document.querySelector('.nav-stack');
+    const friendsToggle = document.getElementById('friends-toggle');
+    const friendsPanel = document.getElementById('friends-panel');
+    const friendsWall = document.getElementById('friends-wall');
 
     if (!form || !input || !output) return;
 
@@ -26,6 +29,7 @@
         'whoami',
         'sudo',
         'theme',
+        'friends',
         'man',
         'hack the planet',
         ...(isHackUnlocked() ? ['attack'] : [])
@@ -38,6 +42,7 @@
         whoami: 'show your page-view number for the current calendar year',
         sudo: 'access to the Gibson backbone',
         theme: 'theme NAME — change the website theme. With [TAB] you get the options',
+        friends: 'open or close the Friends wall',
         man: 'list available commands or show help with man COMMAND',
         'hack the planet': 'prove your nerd credentials to get full access',
         'attack': 'unleash the rabbit virus to the Gibson'
@@ -500,6 +505,97 @@
         localStorage.setItem(themeKey, theme);
         updateThemeIndicator(theme);
     };
+
+    const randomizeFriends = () => {
+        if (!friendsWall) return;
+
+        const items = [...friendsWall.querySelectorAll('.friend-item')];
+        const wallRect = friendsWall.getBoundingClientRect();
+        const width = Math.max(1, wallRect.width);
+        const height = Math.max(1, wallRect.height);
+        const placed = [];
+
+        items.forEach((item, index) => {
+            item.style.left = '';
+            item.style.top = '';
+            item.style.transform = '';
+
+            const rect = item.getBoundingClientRect();
+            const itemW = Math.min(rect.width || 120, width * .7);
+            const itemH = Math.min(rect.height || 60, height * .25);
+
+            let x = 12;
+            let y = 12;
+            let found = false;
+
+            for (let attempt = 0; attempt < 60; attempt += 1) {
+                x = 10 + Math.random() * Math.max(1, width - itemW - 20);
+                y = 10 + Math.random() * Math.max(1, height - itemH - 20);
+
+                const box = { x, y, w: itemW, h: itemH };
+                const overlaps = placed.some((p) =>
+                    !(box.x + box.w + 8 < p.x ||
+                      p.x + p.w + 8 < box.x ||
+                      box.y + box.h + 8 < p.y ||
+                      p.y + p.h + 8 < box.y)
+                );
+
+                if (!overlaps) {
+                    placed.push(box);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                const columns = Math.max(1, Math.floor(width / 140));
+                const col = index % columns;
+                const row = Math.floor(index / columns);
+                x = 12 + col * Math.max(120, width / columns);
+                y = 12 + row * 86;
+            }
+
+            const angle = (-4 + Math.random() * 8).toFixed(1);
+            item.style.left = x.toFixed(1) + 'px';
+            item.style.top = y.toFixed(1) + 'px';
+            item.style.transform = 'rotate(' + angle + 'deg)';
+        });
+    };
+
+    const setFriendsOpen = (open) => {
+        document.documentElement.classList.toggle('friends-open', open);
+
+        if (friendsToggle) {
+            friendsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            friendsToggle.textContent = open ? '< FRIENDS' : 'FRIENDS >';
+        }
+
+        if (friendsPanel) {
+            friendsPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        }
+
+        if (open) {
+            window.requestAnimationFrame(() => {
+                randomizeFriends();
+                window.requestAnimationFrame(randomizeFriends);
+            });
+        }
+    };
+
+    const toggleFriends = () => {
+        setFriendsOpen(!document.documentElement.classList.contains('friends-open'));
+    };
+
+    friendsToggle?.addEventListener('click', (event) => {
+        event.preventDefault();
+        toggleFriends();
+    });
+
+    window.addEventListener('resize', () => {
+        if (document.documentElement.classList.contains('friends-open')) {
+            window.requestAnimationFrame(randomizeFriends);
+        }
+    });
 
     const setTheme = (name) => {
         const theme = (name || '').toLowerCase();
@@ -1122,6 +1218,14 @@
             case 'man':
                 if (arg) showManual(arg);
                 else openManual();
+                break;
+            case 'friends':
+                if (arg) {
+                    say('usage: friends');
+                } else {
+                    toggleFriends();
+                    say(document.documentElement.classList.contains('friends-open') ? 'FRIENDS // OPEN' : 'FRIENDS // CLOSED');
+                }
                 break;
             case 'theme':
                 if (touchUi && !arg) {

@@ -3553,6 +3553,13 @@ html.rabbit-attack-active body {
 }
 
 
+
+
+/* ATARI // make the FRIENDS wallpaper lighter than the dark brown panel */
+:root[data-theme="atari"] .friends-wall::before {
+    opacity: .55;
+    filter: brightness(2.35) sepia(.28) saturate(.72);
+}
 /* FRIENDS // partner wall */
 html,
 body {

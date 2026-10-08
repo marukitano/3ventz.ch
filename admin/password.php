@@ -11,6 +11,40 @@ if (is_super_admin()) {
 $error = null;
 $success = null;
 
+function password_pwned_count(string $password): ?int
+{
+    $sha1 = strtoupper(sha1($password));
+    $prefix = substr($sha1, 0, 5);
+    $suffix = substr($sha1, 5);
+
+    $url = 'https://api.pwnedpasswords.com/range/' . rawurlencode($prefix);
+    $context = stream_context_create([
+        'http' => [
+            'method' => 'GET',
+            'timeout' => 5,
+            'header' => "User-Agent: tech3ventz-password-check\r\nAdd-Padding: true\r\n",
+        ],
+    ]);
+
+    $response = @file_get_contents($url, false, $context);
+    if ($response === false) {
+        return null;
+    }
+
+    foreach (preg_split('/\r\n|\r|\n/', $response) as $line) {
+        if ($line === '' || !str_contains($line, ':')) {
+            continue;
+        }
+
+        [$candidateSuffix, $count] = array_pad(explode(':', trim($line), 2), 2, null);
+        if (hash_equals($suffix, strtoupper((string)$candidateSuffix))) {
+            return max(0, (int)$count);
+        }
+    }
+
+    return 0;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
 
@@ -30,12 +64,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($newPassword !== $confirmPassword) {
         $error = 'Die neuen Passwörter stimmen nicht überein.';
     } else {
-        $stmt = $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
-        $stmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $userId]);
+        $pwnedCount = password_pwned_count($newPassword);
 
-        session_regenerate_id(true);
-        $_SESSION['csrf'] = bin2hex(random_bytes(32));
-        $success = 'Passwort erfolgreich geändert.';
+        if ($pwnedCount === null) {
+            $error = 'Der Passwort-Leak-Check ist derzeit nicht erreichbar. Bitte später erneut versuchen.';
+        } elseif ($pwnedCount > 0) {
+            $error = 'Dieses Passwort ist in bekannten Datenleaks aufgetaucht und wird deshalb nicht akzeptiert.';
+        } else {
+            $stmt = $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
+            $stmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $userId]);
+
+            session_regenerate_id(true);
+            $_SESSION['csrf'] = bin2hex(random_bytes(32));
+            $success = 'Passwort erfolgreich geändert.';
+        }
     }
 }
 ?>

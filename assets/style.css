@@ -3613,16 +3613,36 @@ body {
 
 /* Repeating diagonal OPEN YOUR MIND watermark behind the Friends wall. */
 .friends-wall::before {
-    content: "";
+    content:
+        "FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "     FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "          FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "               FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "                    FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "                         FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "                              FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "                                   FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "                                        FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS\A"
+        "                                             FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS";
     position: absolute;
-    inset: 0;
+    left: -38%;
+    top: -35%;
+    width: 220%;
+    height: 220%;
     z-index: 0;
     pointer-events: none;
-    opacity: .26;
-    background-repeat: repeat;
-    background-size: 900px 180px;
-    background-position: 0 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='180' viewBox='0 0 900 180'%3E%3Crect width='100%25' height='100%25' fill='none'/%3E%3Cg transform='rotate(-18 450 90)' fill='%23383838' font-family='VT323, monospace' font-size='30' font-weight='700' letter-spacing='1.5'%3E%3Ctext x='-220' y='35'%3EFRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS%3C/text%3E%3Ctext x='-120' y='75'%3EFRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS%3C/text%3E%3Ctext x='-20' y='115'%3EFRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS%3C/text%3E%3Ctext x='80' y='155'%3EFRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS FRIENDS%3C/text%3E%3C/g%3E%3C/svg%3E");
+    display: block;
+    overflow: hidden;
+    white-space: pre;
+    font-family: "VT323", monospace;
+    font-size: 2rem;
+    line-height: 1.65;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #343434;
+    opacity: .22;
+    transform: rotate(-18deg);
+    transform-origin: center;
 }
 
 .friends-wall > * {

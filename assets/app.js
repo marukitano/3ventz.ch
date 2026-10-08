@@ -588,12 +588,19 @@
             const angleRad = Math.abs(angle) * Math.PI / 180;
             const rotatedW = Math.abs(Math.cos(angleRad)) * itemW + Math.abs(Math.sin(angleRad)) * itemH;
             const rotatedH = Math.abs(Math.sin(angleRad)) * itemW + Math.abs(Math.cos(angleRad)) * itemH;
-            const edgePadding = 18;
+            const edgePadding = 28;
 
-            const minX = edgePadding;
-            const maxX = Math.max(minX, width - rotatedW - edgePadding);
-            const minY = edgePadding;
-            const maxY = Math.max(minY, height - rotatedH - edgePadding);
+            // left/top position the unrotated element. Rotating around its
+            // center makes the visual bounding box extend beyond those
+            // coordinates, especially for wide logos. Account for that extra
+            // overhang on every side.
+            const extraX = Math.max(0, (rotatedW - itemW) / 2);
+            const extraY = Math.max(0, (rotatedH - itemH) / 2);
+
+            const minX = edgePadding + extraX;
+            const maxX = Math.max(minX, width - itemW - edgePadding - extraX);
+            const minY = edgePadding + extraY;
+            const maxY = Math.max(minY, height - itemH - edgePadding - extraY);
 
             let x = minX;
             let y = minY;
@@ -603,7 +610,12 @@
                 x = minX + Math.random() * Math.max(1, maxX - minX);
                 y = minY + Math.random() * Math.max(1, maxY - minY);
 
-                const box = { x, y, w: rotatedW, h: rotatedH };
+                const box = {
+                    x: x - extraX,
+                    y: y - extraY,
+                    w: rotatedW,
+                    h: rotatedH
+                };
                 const overlaps = placed.some((p) =>
                     !(box.x + box.w + 8 < p.x ||
                       p.x + p.w + 8 < box.x ||
@@ -622,8 +634,10 @@
                 const columns = Math.max(1, Math.floor(width / 140));
                 const col = index % columns;
                 const row = Math.floor(index / columns);
-                x = 12 + col * Math.max(120, width / columns);
-                y = 12 + row * 86;
+                const candidateX = minX + col * Math.max(120, (maxX - minX) / columns);
+                const candidateY = minY + row * 86;
+                x = Math.min(maxX, Math.max(minX, candidateX));
+                y = Math.min(maxY, Math.max(minY, candidateY));
             }
 
             item.style.left = x.toFixed(1) + 'px';

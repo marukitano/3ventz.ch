@@ -607,7 +607,16 @@
                 y = 12 + row * 86;
             }
 
-            const angle = (-4 + Math.random() * 8).toFixed(1);
+            // Give every Friend a persistent random tilt. Keep a small
+            // minimum angle so every logo looks intentionally a little crooked,
+            // but never exceed 40 degrees from upright.
+            if (!item.dataset.friendTilt) {
+                const direction = Math.random() < 0.5 ? -1 : 1;
+                const magnitude = 4 + Math.random() * 36;
+                item.dataset.friendTilt = (direction * magnitude).toFixed(1);
+            }
+
+            const angle = item.dataset.friendTilt;
             item.style.left = x.toFixed(1) + 'px';
             item.style.top = y.toFixed(1) + 'px';
             item.style.transform = 'rotate(' + angle + 'deg)';

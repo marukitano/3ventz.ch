@@ -25,7 +25,6 @@ function normalize_admin_date(string $value): ?string
         return null;
     }
 
-    // Backward-compatible fallback for older/native date submissions.
     if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
         if ($date && $date->format('Y-m-d') === $value) {
@@ -44,26 +43,21 @@ $start = normalize_admin_date($startInput);
 $end = normalize_admin_date($endInput);
 $category = trim((string)($_POST['category'] ?? ''));
 $location = trim((string)($_POST['location'] ?? ''));
-if (function_exists('mb_substr')) {
-    $location = mb_substr($location, 0, 255, 'UTF-8');
-} else {
-    $location = substr($location, 0, 255);
-}
-$allowedCategories = ['CCC', 'DEMO', 'RETRO', 'MAKER', 'MOVIE', 'LAN', 'MUSIC', 'CODING', 'HACKING'];
+$location = function_exists('mb_substr') ? mb_substr($location, 0, 255, 'UTF-8') : substr($location, 0, 255);
+
+$allowedCategories = ['CCC','DEMO','RETRO','MAKER','MOVIE','LAN','MUSIC','CODING','HACKING'];
 if (!in_array($category, $allowedCategories, true)) {
     http_response_code(422);
     exit('Ungültige Kategorie.');
 }
+
 $url = trim((string)($_POST['url'] ?? ''));
 $description = trim((string)($_POST['description'] ?? ''));
 $color = (string)($_POST['color'] ?? '#00f5ff');
 $shortText = trim((string)($_POST['short_text'] ?? ''));
-if (function_exists('mb_substr')) {
-    $shortText = mb_substr($shortText, 0, 64, 'UTF-8');
-} else {
-    $shortText = substr($shortText, 0, 64);
-}
-$allowedIcons = ['none', 'terminal', 'pebble_rocket', 'pebble_console', 'pebble_toolbox', 'pebble_floppy', 'pebble_location', 'pebble_calendar', 'pebble_warning', 'pebble_microphone', 'pebble_radio'];
+$shortText = function_exists('mb_substr') ? mb_substr($shortText, 0, 64, 'UTF-8') : substr($shortText, 0, 64);
+
+$allowedIcons = ['none','terminal','pebble_rocket','pebble_console','pebble_toolbox','pebble_floppy','pebble_location','pebble_calendar','pebble_warning','pebble_microphone','pebble_radio'];
 $icon = trim((string)($_POST['icon'] ?? 'terminal'));
 if (!in_array($icon, $allowedIcons, true)) {
     $icon = 'terminal';
@@ -88,7 +82,6 @@ if ($url !== '') {
     if (!preg_match('~^[a-z][a-z0-9+.-]*://~i', $url)) {
         $url = 'https://' . $url;
     }
-
     if (filter_var($url, FILTER_VALIDATE_URL) === false) {
         http_response_code(422);
         exit('Ungültige URL.');
@@ -103,7 +96,7 @@ $params = [
     'title' => $title,
     'start_date' => $start,
     'end_date' => $end,
-    'category' => $category !== '' ? $category : null,
+    'category' => $category,
     'location' => $location !== '' ? $location : null,
     'url' => $url !== '' ? $url : null,
     'description' => $description !== '' ? $description : null,
@@ -113,6 +106,20 @@ $params = [
 ];
 
 if ($id > 0) {
+    $check = $pdo->prepare('SELECT id, owner_user_id FROM events WHERE id = ?');
+    $check->execute([$id]);
+    $existing = $check->fetch();
+
+    if (!$existing) {
+        http_response_code(404);
+        exit('Event nicht gefunden.');
+    }
+
+    if (!can_manage_event($existing)) {
+        http_response_code(403);
+        exit('Dieses Event darfst du nicht bearbeiten.');
+    }
+
     $params['id'] = $id;
     $stmt = $pdo->prepare(
         'UPDATE events
@@ -122,9 +129,10 @@ if ($id > 0) {
          WHERE id=:id'
     );
 } else {
+    $params['owner_user_id'] = is_super_admin() ? null : current_user_id();
     $stmt = $pdo->prepare(
-        'INSERT INTO events (title,start_date,end_date,category,location,url,description,color,icon,short_text)
-         VALUES (:title,:start_date,:end_date,:category,:location,:url,:description,:color,:icon,:short_text)'
+        'INSERT INTO events (title,start_date,end_date,category,location,url,description,color,icon,short_text,owner_user_id)
+         VALUES (:title,:start_date,:end_date,:category,:location,:url,:description,:color,:icon,:short_text,:owner_user_id)'
     );
 }
 

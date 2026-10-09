@@ -562,10 +562,23 @@
         if (!friendsWall) return;
 
         const items = [...friendsWall.querySelectorAll('.friend-item')];
+        if (!items.length) return;
+
         const wallRect = friendsWall.getBoundingClientRect();
-        const edgePadding = 28;
-        const collisionGap = 16;
-        const placed = [];
+        const wallWidth = Math.max(1, wallRect.width);
+        const wallHeight = Math.max(1, wallRect.height);
+
+        // Never drop a Friend. Start with the loose "sticker wall" look and
+        // progressively tighten scale/gaps/tilt until every entry fits.
+        const densitySteps = [
+            { scale: 1.00, padding: 28, gap: 16, tilt: 40 },
+            { scale: 0.92, padding: 22, gap: 12, tilt: 32 },
+            { scale: 0.84, padding: 18, gap: 9,  tilt: 25 },
+            { scale: 0.76, padding: 14, gap: 7,  tilt: 18 },
+            { scale: 0.68, padding: 10, gap: 5,  tilt: 12 },
+            { scale: 0.60, padding: 8,  gap: 3,  tilt: 7  },
+            { scale: 0.52, padding: 6,  gap: 2,  tilt: 3  }
+        ];
 
         const relativeBox = (rect) => ({
             x: rect.left - wallRect.left,
@@ -574,100 +587,133 @@
             h: rect.height,
         });
 
-        const isInsideWall = (box) =>
-            box.x >= edgePadding &&
-            box.y >= edgePadding &&
-            box.x + box.w <= wallRect.width - edgePadding &&
-            box.y + box.h <= wallRect.height - edgePadding;
-
-        const overlapsPlaced = (box) => placed.some((p) =>
-            !(box.x + box.w + collisionGap <= p.x ||
-              p.x + p.w + collisionGap <= box.x ||
-              box.y + box.h + collisionGap <= p.y ||
-              p.y + p.h + collisionGap <= box.y)
-        );
-
-        const tryPosition = (item, x, y, angle) => {
-            item.style.left = x.toFixed(1) + 'px';
-            item.style.top = y.toFixed(1) + 'px';
-            item.style.transform = 'rotate(' + angle.toFixed(1) + 'deg)';
-
-            const box = relativeBox(item.getBoundingClientRect());
-            if (!isInsideWall(box) || overlapsPlaced(box)) {
-                return null;
-            }
-
-            return box;
+        const clearPlacement = () => {
+            items.forEach((item) => {
+                item.style.left = '0px';
+                item.style.top = '0px';
+                item.style.transform = 'none';
+                item.style.visibility = '';
+            });
         };
 
-        items.forEach((item) => {
-            item.style.left = '0px';
-            item.style.top = '0px';
-            item.style.transform = 'none';
+        const tryDensity = ({ scale, padding, gap, tilt }) => {
+            const placed = [];
 
-            if (!item.dataset.friendTilt) {
-                const direction = Math.random() < 0.5 ? -1 : 1;
-                const magnitude = 4 + Math.random() * 36;
-                item.dataset.friendTilt = (direction * magnitude).toFixed(1);
-            }
+            const isInsideWall = (box) =>
+                box.x >= padding &&
+                box.y >= padding &&
+                box.x + box.w <= wallWidth - padding &&
+                box.y + box.h <= wallHeight - padding;
 
-            const angle = parseFloat(item.dataset.friendTilt || '0');
-            const baseRect = item.getBoundingClientRect();
-            const itemW = Math.min(baseRect.width || 120, wallRect.width * .7);
-            const itemH = Math.min(baseRect.height || 60, wallRect.height * .3);
+            const overlapsPlaced = (box) => placed.some((p) =>
+                !(box.x + box.w + gap <= p.x ||
+                  p.x + p.w + gap <= box.x ||
+                  box.y + box.h + gap <= p.y ||
+                  p.y + p.h + gap <= box.y)
+            );
 
-            const maxLeft = Math.max(edgePadding, wallRect.width - itemW - edgePadding);
-            const maxTop = Math.max(edgePadding, wallRect.height - itemH - edgePadding);
+            const tryPosition = (item, x, y, angle) => {
+                item.style.left = x.toFixed(1) + 'px';
+                item.style.top = y.toFixed(1) + 'px';
+                item.style.transform =
+                    'rotate(' + angle.toFixed(1) + 'deg) scale(' + scale.toFixed(3) + ')';
 
-            let accepted = null;
+                const box = relativeBox(item.getBoundingClientRect());
+                if (!isInsideWall(box) || overlapsPlaced(box)) return null;
+                return box;
+            };
 
-            // Use the browser's real transformed bounding box for validation.
-            // This is more reliable than estimating rotated widths for very wide
-            // or unusually shaped logos.
-            for (let attempt = 0; attempt < 300 && !accepted; attempt += 1) {
-                const x = edgePadding + Math.random() * Math.max(0, maxLeft - edgePadding);
-                const y = edgePadding + Math.random() * Math.max(0, maxTop - edgePadding);
-                accepted = tryPosition(item, x, y, angle);
-            }
+            for (const item of items) {
+                item.style.left = '0px';
+                item.style.top = '0px';
+                item.style.transform = 'none';
+                item.style.visibility = '';
 
-            // Deterministic fallback: scan the panel for the first genuinely
-            // safe position. Never accept an overlapping or clipped result.
-            if (!accepted) {
-                const step = 12;
-                for (let y = edgePadding; y <= maxTop && !accepted; y += step) {
-                    for (let x = edgePadding; x <= maxLeft && !accepted; x += step) {
-                        accepted = tryPosition(item, x, y, angle);
-                    }
+                if (!item.dataset.friendTilt) {
+                    const direction = Math.random() < 0.5 ? -1 : 1;
+                    const magnitude = 4 + Math.random() * 36;
+                    item.dataset.friendTilt = (direction * magnitude).toFixed(1);
                 }
-            }
 
-            // If the chosen angle itself makes placement impossible, reduce only
-            // this logo's tilt until a valid position exists.
-            if (!accepted) {
-                for (let fallbackAngle = Math.min(30, Math.abs(angle)); fallbackAngle >= 0 && !accepted; fallbackAngle -= 5) {
-                    const signedAngle = angle < 0 ? -fallbackAngle : fallbackAngle;
+                const storedAngle = parseFloat(item.dataset.friendTilt || '0');
+                const angle = Math.max(-tilt, Math.min(tilt, storedAngle));
 
-                    for (let y = edgePadding; y <= maxTop && !accepted; y += 12) {
-                        for (let x = edgePadding; x <= maxLeft && !accepted; x += 12) {
-                            accepted = tryPosition(item, x, y, signedAngle);
-                            if (accepted) {
-                                item.dataset.friendTilt = signedAngle.toFixed(1);
-                            }
+                // Measure unscaled size first; the actual collision box is read
+                // after transform, so rotated/scaled logos are validated exactly.
+                const baseRect = item.getBoundingClientRect();
+                const itemW = Math.min(baseRect.width * scale || 120 * scale, wallWidth * .82);
+                const itemH = Math.min(baseRect.height * scale || 60 * scale, wallHeight * .36);
+                const maxLeft = Math.max(padding, wallWidth - itemW - padding);
+                const maxTop = Math.max(padding, wallHeight - itemH - padding);
+
+                let accepted = null;
+
+                for (let attempt = 0; attempt < 220 && !accepted; attempt += 1) {
+                    const x = padding + Math.random() * Math.max(0, maxLeft - padding);
+                    const y = padding + Math.random() * Math.max(0, maxTop - padding);
+                    accepted = tryPosition(item, x, y, angle);
+                }
+
+                if (!accepted) {
+                    const step = Math.max(5, Math.round(12 * scale));
+                    for (let y = padding; y <= maxTop && !accepted; y += step) {
+                        for (let x = padding; x <= maxLeft && !accepted; x += step) {
+                            accepted = tryPosition(item, x, y, angle);
                         }
                     }
                 }
-            }
 
-            if (accepted) {
+                if (!accepted) return false;
                 placed.push(accepted);
-            } else {
-                // Extremely crowded panels: keep the item hidden rather than
-                // rendering it outside the board or on top of another Friend.
-                item.style.visibility = 'hidden';
-                return;
             }
 
+            return true;
+        };
+
+        clearPlacement();
+
+        for (const density of densitySteps) {
+            clearPlacement();
+            if (tryDensity(density)) return;
+        }
+
+        // Guaranteed final fallback for very crowded boards: arrange every Friend
+        // in an adaptive grid. This sacrifices some randomness, never visibility.
+        clearPlacement();
+
+        const count = items.length;
+        const aspect = wallWidth / wallHeight;
+        const columns = Math.max(1, Math.ceil(Math.sqrt(count * aspect)));
+        const rows = Math.max(1, Math.ceil(count / columns));
+        const cellWidth = wallWidth / columns;
+        const cellHeight = wallHeight / rows;
+
+        items.forEach((item, index) => {
+            const col = index % columns;
+            const row = Math.floor(index / columns);
+
+            item.style.left = '0px';
+            item.style.top = '0px';
+            item.style.transform = 'none';
             item.style.visibility = '';
+
+            const baseRect = item.getBoundingClientRect();
+            const fitX = Math.max(.28, (cellWidth * .78) / Math.max(1, baseRect.width));
+            const fitY = Math.max(.28, (cellHeight * .72) / Math.max(1, baseRect.height));
+            const scale = Math.min(1, fitX, fitY);
+            const angleLimit = count <= 12 ? 7 : 3;
+            const storedAngle = parseFloat(item.dataset.friendTilt || '0');
+            const angle = Math.max(-angleLimit, Math.min(angleLimit, storedAngle));
+
+            const x = col * cellWidth + cellWidth / 2;
+            const y = row * cellHeight + cellHeight / 2;
+
+            item.style.left = x.toFixed(1) + 'px';
+            item.style.top = y.toFixed(1) + 'px';
+            item.style.transformOrigin = 'center center';
+            item.style.transform =
+                'translate(-50%, -50%) rotate(' + angle.toFixed(1) +
+                'deg) scale(' + scale.toFixed(3) + ')';
         });
     };
 

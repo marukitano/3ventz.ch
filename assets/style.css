@@ -961,7 +961,7 @@ button, .button {
 .error { color: var(--pink); }
 
 /* On a normal desktop/laptop viewport, the entire year fits without scrolling. */
-@media (min-width: 1101px) and (min-height: 650px) {
+@media (min-width: 1101px) {
     html, body { height: 100%; overflow: hidden; }
 
     .shell {

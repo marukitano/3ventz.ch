@@ -1681,6 +1681,9 @@
             day.classList.remove('is-today', 'is-today-on-event');
             day.querySelector('.number[aria-current="date"]')?.removeAttribute('aria-current');
         });
+        document.querySelectorAll('.event-span.is-today-event').forEach((marker) => {
+            marker.classList.remove('is-today-event');
+        });
 
         if (calendarYear !== now.getFullYear()) return;
 
@@ -1694,13 +1697,16 @@
 
         const today = now.getDate();
         const weekRow = day.closest('.week-row');
-        const hasVisibleEvent = weekRow
-            ? [...weekRow.querySelectorAll('.event-span:not(.category-filtered-out)')].some((marker) => {
+        const matchingEvents = weekRow
+            ? [...weekRow.querySelectorAll('.event-span')].filter((marker) => {
                 const start = Number(marker.dataset.segmentStartDay || 0);
                 const end = Number(marker.dataset.segmentEndDay || 0);
                 return start <= today && today <= end;
             })
-            : false;
+            : [];
+
+        matchingEvents.forEach((marker) => marker.classList.add('is-today-event'));
+        const hasVisibleEvent = matchingEvents.some((marker) => !marker.classList.contains('category-filtered-out'));
 
         day.classList.add('is-today');
         day.classList.toggle('is-today-on-event', hasVisibleEvent);

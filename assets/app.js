@@ -15,10 +15,14 @@
 
     const state = window.THREEVENTZ || {};
     const root = document.documentElement;
-    // A touchscreen laptop still has a fine primary pointer (trackpad/mouse).
-    // Do not switch the whole desktop layout into mobile-touch mode merely because
-    // navigator.maxTouchPoints is non-zero; that caused mobile JS to fight desktop CSS.
-    const touchUi = window.matchMedia('(pointer: coarse)').matches;
+    // Keep JS interaction mode aligned with the CSS breakpoint.
+    // Touchscreen laptops such as the ThinkPad E16 can report a coarse primary
+    // pointer even at desktop widths. Treating those as mobile made `man` render
+    // the touch/manual layout inside the desktop-positioned terminal output,
+    // which caused overlapping content and blocked interaction.
+    const touchUi =
+        window.matchMedia('(max-width: 719px)').matches
+        && (navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches);
 
     const themes = ['hackers', 'sega', 'c64', 'amiga', 'atari'];
     const hackUnlockKey = '3ventz-hack-unlocked';

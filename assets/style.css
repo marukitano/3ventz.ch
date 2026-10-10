@@ -2172,6 +2172,14 @@ footer a:hover,
     text-shadow: none !important;
 }
 
+/* Silkscreen is noticeably wider than Terminus. Keep the C64 prompt compact
+   enough that complete commands such as "theme hackers" stay visible. */
+:root[data-theme="c64"] .brand-prefix,
+:root[data-theme="c64"] #terminal-input,
+:root[data-theme="c64"] .terminal-hint {
+    font-size: clamp(2.35rem, 4.4vw, 4.05rem);
+}
+
 :root[data-theme="c64"] .brand-prefix,
 :root[data-theme="c64"] #terminal-input,
 :root[data-theme="c64"] .theme-indicator,

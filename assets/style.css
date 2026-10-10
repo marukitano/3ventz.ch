@@ -3088,8 +3088,8 @@ html.rabbit-attack-active body {
     #terminal-input,
     #terminal-input:not(:placeholder-shown) {
         box-sizing: border-box;
-        width: 100% !important;
-        max-width: none !important;
+        width: 16ch !important;
+        max-width: min(16ch, 100%) !important;
         min-width: 8ch;
         padding: .06em 0 .1em;
         caret-color: currentColor;

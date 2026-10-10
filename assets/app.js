@@ -473,7 +473,17 @@
             ? Math.ceil(inputSizer.getBoundingClientRect().width) + 1
             : 0;
 
-        input.style.width = Math.min(width, window.innerWidth * 0.38) + 'px';
+        // Keep the command window compact. Once the text is wider than the
+        // visible input, the native text field scrolls horizontally so the
+        // newest characters and caret stay visible while older characters
+        // disappear on the left.
+        inputSizer.textContent = '0000000000000000';
+        const maxWidth = Math.ceil(inputSizer.getBoundingClientRect().width) + 1;
+
+        input.style.width = Math.min(width, maxWidth) + 'px';
+        if (input.value) {
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
         requestAnimationFrame(positionOutput);
     };
 

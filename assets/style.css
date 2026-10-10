@@ -3215,6 +3215,43 @@ html.rabbit-attack-active body {
 }
 
 
+/* Desktop / small-laptop quiz: keep all four answers visible.
+   Put the question on its own line and the four choices in a compact 2x2 grid
+   instead of letting one long nowrap row get clipped by the right-side nav. */
+@media (min-width: 720px) {
+    .terminal-output.is-quiz {
+        white-space: normal !important;
+        overflow: visible !important;
+    }
+
+    .terminal-output.is-quiz .terminal-suggestion-prompt {
+        display: block;
+        width: 100%;
+        margin-bottom: .08em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+
+    .terminal-output.is-quiz .terminal-suggestion-list.quiz-list {
+        display: grid !important;
+        grid-template-columns: repeat(2, max-content);
+        column-gap: .8em;
+        row-gap: .08em;
+        width: fit-content;
+        max-width: 100%;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+
+    .terminal-output.is-quiz .terminal-suggestion {
+        display: block;
+        min-width: 0;
+    }
+}
+
+
 /* Mobile quiz: fixed 2x2 answer grid below the question. */
 @media (max-width: 719px) {
     .terminal-output.is-quiz .terminal-suggestion-prompt {

@@ -3525,6 +3525,12 @@ html.rabbit-attack-active body {
     box-shadow: none !important;
 }
 
+/* When today falls on an event, mark the event itself instead of the day cell. */
+:root .event-span.is-today-event:not(.category-filtered-out) {
+    outline: 2px solid #ffe229 !important;
+    outline-offset: 2px;
+}
+
 :root .day.is-today.is-today-on-event .number {
     visibility: hidden !important;
 }

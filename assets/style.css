@@ -2371,6 +2371,13 @@ footer a:hover,
     text-shadow: none !important;
 }
 
+/* Silkscreen is wider than Terminus here too; keep full CLI commands visible. */
+:root[data-theme="amiga"] .brand-prefix,
+:root[data-theme="amiga"] #terminal-input,
+:root[data-theme="amiga"] .terminal-hint {
+    font-size: clamp(2.35rem, 4.4vw, 4.05rem);
+}
+
 :root[data-theme="amiga"] .brand-prefix,
 :root[data-theme="amiga"] #terminal-input {
     color: #ffffff !important;
